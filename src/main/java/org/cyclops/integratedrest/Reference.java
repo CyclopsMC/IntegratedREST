@@ -18,7 +18,7 @@ public class Reference {
     public static final String MOD_MC_VERSION = "@MC_VERSION@";
     public static final String MOD_FINGERPRINT = "@FINGERPRINT@";
     public static final String GA_TRACKING_ID = "UA-65307010-14";
-    public static final String VERSION_URL = "https://raw.githubusercontent.com/CyclopsMC/Versions/master/1.12/Integrated REST.txt";
+    public static final String VERSION_URL = "https://raw.githubusercontent.com/CyclopsMC/Versions/master/1.12/IntegratedREST.txt";
     
     // Paths
     public static final String TEXTURE_PATH_GUI = "textures/gui/";
@@ -37,9 +37,12 @@ public class Reference {
     public static final String MOD_CYCLOPSCORE = "cyclopscore";
     public static final String MOD_CYCLOPSCORE_VERSION = "@CYCLOPSCORE_VERSION@";
     public static final String MOD_CYCLOPSCORE_VERSION_MIN = "0.10.21";
+    public static final String MOD_INTEGRATEDDYNAMICS = "integrateddynamics";
+    public static final String MOD_INTEGRATEDDYNAMICS_VERSION_MIN = "0.10.0";
     
     // Dependencies
     public static final String MOD_DEPENDENCIES =
             "required-after:" + MOD_FORGE       + "@[" + MOD_FORGE_VERSION_MIN       + ",);" +
-            "required-after:" + MOD_CYCLOPSCORE + "@[" + MOD_CYCLOPSCORE_VERSION_MIN + ",);";
+            "required-after:" + MOD_CYCLOPSCORE + "@[" + MOD_CYCLOPSCORE_VERSION_MIN + ",);" +
+            "required-after:" + MOD_INTEGRATEDDYNAMICS + "@[" + MOD_INTEGRATEDDYNAMICS_VERSION_MIN + ",);";
 }
