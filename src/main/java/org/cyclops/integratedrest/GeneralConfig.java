@@ -54,6 +54,12 @@ public class GeneralConfig extends DummyConfig {
     public static boolean versionChecker = true;
 
     /**
+     * The port the API should be exposed on.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "The port the API should be exposed on.")
+    public static int apiPort = 3000;
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

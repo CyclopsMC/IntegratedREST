@@ -5,14 +5,24 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
-import org.cyclops.cyclopscore.config.extendedconfig.ItemConfigReference;
-import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
+import org.cyclops.integratedrest.api.http.request.IRequestHandlerRegistry;
+import org.cyclops.integratedrest.api.json.IValueTypeJsonHandlerRegistry;
+import org.cyclops.integratedrest.http.HttpServer;
+import org.cyclops.integratedrest.http.request.RequestHandlerRegistry;
+import org.cyclops.integratedrest.http.request.RequestHandlers;
+import org.cyclops.integratedrest.json.ValueTypeJsonHandlerRegistry;
+import org.cyclops.integratedrest.json.ValueTypeJsonHandlers;
 
 /**
  * The main mod class of this mod.
@@ -43,8 +53,11 @@ public class IntegratedRest extends ModBaseVersionable {
     @Instance(value = Reference.MOD_ID)
     public static IntegratedRest _instance;
 
+    protected final HttpServer server;
+
     public IntegratedRest() {
         super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION);
+        server = new HttpServer();
     }
 
     @Override
@@ -59,6 +72,13 @@ public class IntegratedRest extends ModBaseVersionable {
     @EventHandler
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        // Registries
+        getRegistryManager().addRegistry(IRequestHandlerRegistry.class, RequestHandlerRegistry.getInstance());
+        getRegistryManager().addRegistry(IValueTypeJsonHandlerRegistry.class, ValueTypeJsonHandlerRegistry.getInstance());
+
+        RequestHandlers.load();
+        ValueTypeJsonHandlers.load();
+
         super.preInit(event);
     }
     
@@ -100,6 +120,7 @@ public class IntegratedRest extends ModBaseVersionable {
     @Override
     public void onServerStarted(FMLServerStartedEvent event) {
         super.onServerStarted(event);
+        server.initialize();
     }
 
     /**
@@ -109,6 +130,7 @@ public class IntegratedRest extends ModBaseVersionable {
     @EventHandler
     @Override
     public void onServerStopping(FMLServerStoppingEvent event) {
+        server.deinitialize();
         super.onServerStopping(event);
     }
 
