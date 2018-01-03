@@ -11,8 +11,8 @@ import org.cyclops.integrateddynamics.api.network.IPartNetwork;
 import org.cyclops.integrateddynamics.api.network.IPartNetworkElement;
 import org.cyclops.integrateddynamics.core.helper.NetworkHelpers;
 import org.cyclops.integrateddynamics.core.persist.world.NetworkWorldStorage;
-import org.cyclops.integratedrest.json.JsonUtil;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
+import org.cyclops.integratedrest.json.JsonUtil;
 
 /**
  * Request handler for /network requests.
@@ -47,12 +47,12 @@ public class NetworkRequestHandler implements IRequestHandler {
                 JsonArray jsonElements = new JsonArray();
                 IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network);
                 for (INetworkElement networkElement : network.getElements()) {
-                    JsonObject jsonPart = new JsonObject();
-                    JsonUtil.addNetworkElementInfo(jsonPart, networkElement);
+                    JsonObject jsonElement = new JsonObject();
+                    JsonUtil.addNetworkElementInfo(jsonElement, networkElement);
                     if (partNetwork != null && networkElement instanceof IPartNetworkElement) {
-                        JsonUtil.addPartNetworkElementInfo(jsonPart, (IPartNetworkElement<?, ?>) networkElement, partNetwork);
+                        JsonUtil.addPartNetworkElementInfo(jsonElement, (IPartNetworkElement<?, ?>) networkElement, partNetwork);
                     }
-                    jsonElements.add(jsonPart);
+                    jsonElements.add(jsonElement);
                 }
                 responseObject.add("elements", jsonElements);
                 return HttpResponseStatus.OK;
