@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "integratedrest:blocks/http_top",
+        "down": "integratedrest:blocks/http_top",
+        "up": "integratedrest:blocks/http_top",
+        "north": "integratedrest:blocks/http_side",
+        "east": "integratedrest:blocks/http_side",
+        "south": "integratedrest:blocks/http_side",
+        "west": "integratedrest:blocks/http_side"
+    }
+}

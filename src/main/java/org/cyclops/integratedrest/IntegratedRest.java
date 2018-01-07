@@ -13,11 +13,19 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
+import org.cyclops.cyclopscore.config.extendedconfig.BlockItemConfigReference;
+import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
+import org.cyclops.integrateddynamics.IntegratedDynamics;
+import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
 import org.cyclops.integratedrest.api.http.request.IRequestHandlerRegistry;
 import org.cyclops.integratedrest.api.json.IValueTypeJsonHandlerRegistry;
+import org.cyclops.integratedrest.block.BlockHttpConfig;
+import org.cyclops.integratedrest.client.model.HttpVariableModelProviders;
+import org.cyclops.integratedrest.evaluate.HttpVariableFacadeHandler;
 import org.cyclops.integratedrest.http.HttpServer;
 import org.cyclops.integratedrest.http.request.RequestHandlerRegistry;
 import org.cyclops.integratedrest.http.request.RequestHandlers;
@@ -75,6 +83,12 @@ public class IntegratedRest extends ModBaseVersionable {
         // Registries
         getRegistryManager().addRegistry(IRequestHandlerRegistry.class, RequestHandlerRegistry.getInstance());
         getRegistryManager().addRegistry(IValueTypeJsonHandlerRegistry.class, ValueTypeJsonHandlerRegistry.getInstance());
+
+        IntegratedDynamics._instance.getRegistryManager().getRegistry(IVariableFacadeHandlerRegistry.class).registerHandler(HttpVariableFacadeHandler.getInstance());
+
+        if (MinecraftHelpers.isClientSide()) {
+            HttpVariableModelProviders.load();
+        }
 
         RequestHandlers.load();
         ValueTypeJsonHandlers.load();
@@ -136,14 +150,18 @@ public class IntegratedRest extends ModBaseVersionable {
 
     @Override
     public CreativeTabs constructDefaultCreativeTab() {
-        // Uncomment the following line and specify an item config class to add a creative tab
-        // return new ItemCreativeTab(this, new ItemConfigReference(ITEM CONFIG CLASS));
-        return null;
+        return new ItemCreativeTab(this, new BlockItemConfigReference(BlockHttpConfig.class));
     }
 
     @Override
     public void onGeneralConfigsRegister(ConfigHandler configHandler) {
         configHandler.add(new GeneralConfig());
+    }
+
+    @Override
+    public void onMainConfigsRegister(ConfigHandler configHandler) {
+        super.onMainConfigsRegister(configHandler);
+        configHandler.add(new BlockHttpConfig());
     }
 
     @Override

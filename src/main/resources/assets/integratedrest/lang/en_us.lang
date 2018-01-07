@@ -1,0 +1,12 @@
+# General
+itemGroup.integratedrest=Integrated Rest
+
+# Blocks
+tile.blocks.integratedrest.http.name=HTTP Proxy
+tile.blocks.integratedrest.http.info=Read values that have been provided by external HTTP PUT calls.
+
+# HTTP
+http.integratedrest.tooltip.delay_id=§e§oHTTP Proxy ID: §r§o%s
+http.integratedrest.error.http_not_in_network=HTTP Proxy with id %s could not be found within the current network.
+http.integratedrest.error.http_invalid=HTTP Proxy with id %s is not exposing a valid variable.
+http.integratedrest.error.http_invalid_type=HTTP Proxy with id %s is expected to expose a variable with type %s while %s is found.
