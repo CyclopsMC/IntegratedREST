@@ -134,6 +134,10 @@ public class TileHttp extends TileProxy {
         sendUpdate();
     }
 
+    public void setValue(IValue value) {
+        this.value = value;
+    }
+
     @Override
     public boolean hasVariable() {
         return this.value != null;

@@ -2,14 +2,12 @@ package org.cyclops.integratedrest.http.request.handler;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.network.INetwork;
 import org.cyclops.integrateddynamics.api.network.INetworkElement;
-import org.cyclops.integrateddynamics.api.network.IPartNetwork;
-import org.cyclops.integrateddynamics.api.network.IPartNetworkElement;
-import org.cyclops.integrateddynamics.core.helper.NetworkHelpers;
 import org.cyclops.integrateddynamics.core.persist.world.NetworkWorldStorage;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.json.JsonUtil;
@@ -21,6 +19,10 @@ import org.cyclops.integratedrest.json.JsonUtil;
 public class NetworkRequestHandler implements IRequestHandler {
     @Override
     public HttpResponseStatus handle(String[] path, HttpRequest request, JsonObject responseObject) {
+        if (!request.method().equals(HttpMethod.GET)) {
+            return HttpResponseStatus.BAD_REQUEST;
+        }
+
         NetworkWorldStorage worldStorage = NetworkWorldStorage.getInstance(IntegratedDynamics._instance);
         if (path.length == 0) {
             // All networks
@@ -45,13 +47,9 @@ public class NetworkRequestHandler implements IRequestHandler {
             if (network != null) {
                 JsonUtil.addNetworkInfo(responseObject, network);
                 JsonArray jsonElements = new JsonArray();
-                IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network);
                 for (INetworkElement networkElement : network.getElements()) {
                     JsonObject jsonElement = new JsonObject();
-                    JsonUtil.addNetworkElementInfo(jsonElement, networkElement);
-                    if (partNetwork != null && networkElement instanceof IPartNetworkElement) {
-                        JsonUtil.addPartNetworkElementInfo(jsonElement, (IPartNetworkElement<?, ?>) networkElement, partNetwork);
-                    }
+                    JsonUtil.addNetworkElementInfo(jsonElement, networkElement, network);
                     jsonElements.add(jsonElement);
                 }
                 responseObject.add("elements", jsonElements);

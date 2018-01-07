@@ -22,6 +22,7 @@ import org.cyclops.integrateddynamics.api.network.ISidedNetworkElement;
 import org.cyclops.integrateddynamics.api.part.PartPos;
 import org.cyclops.integrateddynamics.core.helper.NetworkHelpers;
 import org.cyclops.integratedrest.Capabilities;
+import org.cyclops.integratedrest.api.json.IReverseValueTypeJsonHandler;
 import org.cyclops.integratedrest.api.json.IValueTypeJsonHandler;
 
 import javax.annotation.Nullable;
@@ -50,7 +51,8 @@ public class JsonUtil {
         jsonObject.addProperty("initialized", network.isInitialized());
     }
 
-    public static void addNetworkElementInfo(JsonObject jsonObject, INetworkElement networkElement) {
+    public static void addNetworkElementInfo(JsonObject jsonObject, INetworkElement networkElement, INetwork network) {
+        IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network);
         JsonArray types = new JsonArray();
         types.add("NetworkElement");
         if (networkElement instanceof IPartNetworkElement) {
@@ -70,6 +72,10 @@ public class JsonUtil {
         IValueInterface valueInterface = getNetworkElementCapability(networkElement, Capabilities.VALUE_INTERFACE);
         if (valueInterface != null) {
             JsonUtil.addValueInterfaceInfo(jsonObject, valueInterface);
+        }
+
+        if (partNetwork != null && networkElement instanceof IPartNetworkElement) {
+            JsonUtil.addPartNetworkElementInfo(jsonObject, (IPartNetworkElement<?, ?>) networkElement, partNetwork);
         }
     }
 
@@ -110,17 +116,6 @@ public class JsonUtil {
         jsonObject.add("target", partPosToJson(networkElement.getTarget().getTarget()));
         jsonObject.addProperty("loaded", networkElement.isLoaded());
         ((JsonArray) jsonObject.get("@type")).add(networkElement.getPart().getUnlocalizedNameBase());
-
-        // TODO: rm?
-        /*IPartType partType = networkElement.getPart();
-        if (partType instanceof IPartTypeActiveVariable) {
-            IVariable<?> variable = ((IPartTypeActiveVariable) partType).getActiveVariable(partNetwork, networkElement.getTarget(), networkElement.getPartState());
-            if (variable != null) {
-                JsonObject jsonVariable = new JsonObject();
-                addVariableInfo(jsonVariable, variable);
-                jsonObject.add("value", jsonVariable);
-            }
-        }*/
     }
 
     public static void addValueInterfaceInfo(JsonObject jsonObject, IValueInterface valueInterface) {
@@ -167,6 +162,16 @@ public class JsonUtil {
         } else {
             return new JsonObject();
         }
+    }
+
+    public static Optional<IValue> jsonToValue(JsonElement jsonElement) {
+        for (IReverseValueTypeJsonHandler<?> handler : ValueTypeJsonHandlers.REGISTRY.getReverseHandlers()) {
+            IValue value = handler.handle(jsonElement);
+            if (value != null) {
+                return Optional.of(value);
+            }
+        }
+        return Optional.empty();
     }
 
 }

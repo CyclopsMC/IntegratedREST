@@ -2,8 +2,11 @@ package org.cyclops.integratedrest.http.request;
 
 import org.cyclops.integratedrest.IntegratedRest;
 import org.cyclops.integratedrest.api.http.request.IRequestHandlerRegistry;
+import org.cyclops.integratedrest.http.request.handler.ElementHttpRequestHandler;
+import org.cyclops.integratedrest.http.request.handler.ElementPartRequestHandler;
 import org.cyclops.integratedrest.http.request.handler.IndexRequestHandler;
 import org.cyclops.integratedrest.http.request.handler.NetworkRequestHandler;
+import org.cyclops.integratedrest.http.request.handler.ElementRequestHandler;
 
 /**
  * Registration code for request handlers.
@@ -16,7 +19,9 @@ public class RequestHandlers {
     public static void load() {
         REGISTRY.registerHandler("", new IndexRequestHandler());
         REGISTRY.registerHandler("network", new NetworkRequestHandler());
-        // TODO: part (part network elements from all networks)
+        REGISTRY.registerHandler("element", new ElementRequestHandler());
+        REGISTRY.registerHandler("element/part", new ElementPartRequestHandler());
+        REGISTRY.registerHandler("element/http", new ElementHttpRequestHandler());
         // TODO: part type
         // TODO: aspect type
         // TODO: value type

@@ -3,6 +3,7 @@ package org.cyclops.integratedrest.http;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 
@@ -16,6 +17,7 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline p = ch.pipeline();
         p.addLast(new HttpRequestDecoder());
         p.addLast(new HttpResponseEncoder());
+        p.addLast(new HttpObjectAggregator(1048576));
         p.addLast(new HttpServerHandler());
     }
 }

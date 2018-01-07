@@ -1,5 +1,6 @@
 package org.cyclops.integratedrest.http;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -19,6 +20,8 @@ import io.netty.util.CharsetUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.http.request.RequestHandlers;
+
+import java.util.List;
 
 /**
  * A handler for HTTP requests.
@@ -44,7 +47,25 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             JsonObject responseObject = new JsonObject();
 
             String[] path = request.uri().substring(1).split("/");
-            IRequestHandler requestHandler = RequestHandlers.REGISTRY.getHandler(path[0]);
+            List<String[]> paths = Lists.newArrayList();
+            while (path.length > 1) {
+                paths.add(path);
+                String prefix = path[0];
+                path = ArrayUtils.subarray(path, 1, path.length);
+                path[0] = prefix + '/' + path[0];
+            }
+            paths.add(path);
+            paths = Lists.reverse(paths); // Longest match first
+
+            IRequestHandler requestHandler = null;
+            for (String[] pathArray : paths) {
+                requestHandler = RequestHandlers.REGISTRY.getHandler(pathArray[0]);
+                if (requestHandler != null) {
+                    path = pathArray;
+                    break;
+                }
+            }
+
             HttpResponseStatus responseStatus;
             if (requestHandler == null) {
                 responseStatus = HttpResponseStatus.NOT_FOUND;
