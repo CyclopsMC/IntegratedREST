@@ -29,7 +29,6 @@ public abstract class ElementTypeRequestHandler implements IRequestHandler {
             try {
                 int id = Integer.parseInt(path[0]);
 
-                // TODO: improve http error msg when something goes wrong
                 for (INetwork network : worldStorage.getNetworks()) {
                     for (INetworkElement element : network.getElements()) {
                         HttpResponseStatus status = handleElement(id, network, element, request, responseObject);

@@ -46,7 +46,6 @@ public class ElementRequestHandler implements IRequestHandler {
                 try {
                     int id = Integer.parseInt(path[path.length - 1]);
 
-                    // TODO: improve http error msg when something goes wrong
                     for (INetwork network : worldStorage.getNetworks()) {
                         for (INetworkElement element : network.getElements()) {
                             HttpResponseStatus status = handleElement(groupPath, id, network, element, request, responseObject);
