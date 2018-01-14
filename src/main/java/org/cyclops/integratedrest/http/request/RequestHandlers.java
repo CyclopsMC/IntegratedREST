@@ -4,9 +4,12 @@ import org.cyclops.integratedrest.IntegratedRest;
 import org.cyclops.integratedrest.api.http.request.IRequestHandlerRegistry;
 import org.cyclops.integratedrest.http.request.handler.ElementHttpRequestHandler;
 import org.cyclops.integratedrest.http.request.handler.ElementPartRequestHandler;
+import org.cyclops.integratedrest.http.request.handler.ElementRequestHandler;
 import org.cyclops.integratedrest.http.request.handler.IndexRequestHandler;
 import org.cyclops.integratedrest.http.request.handler.NetworkRequestHandler;
-import org.cyclops.integratedrest.http.request.handler.ElementRequestHandler;
+import org.cyclops.integratedrest.http.request.handler.RegistryBlockRequestHandler;
+import org.cyclops.integratedrest.http.request.handler.RegistryItemRequestHandler;
+import org.cyclops.integratedrest.http.request.handler.RegistryModRequestHandler;
 import org.cyclops.integratedrest.http.request.handler.RegistryPartsRequestHandler;
 
 /**
@@ -26,7 +29,9 @@ public class RequestHandlers {
         REGISTRY.registerHandler("registry/part", new RegistryPartsRequestHandler());
         // TODO: aspect type
         // TODO: value type
-        // TODO: other registry entries?
+        REGISTRY.registerHandler("registry/item", new RegistryItemRequestHandler());
+        REGISTRY.registerHandler("registry/block", new RegistryBlockRequestHandler());
+        REGISTRY.registerHandler("registry/mod", new RegistryModRequestHandler());
     }
 
 }

@@ -11,7 +11,7 @@ import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.json.JsonUtil;
 
 /**
- * Request handler for registry/parts requests.
+ * Request handler for registry/part requests.
  * @author rubensworks
  */
 public class RegistryPartsRequestHandler implements IRequestHandler {

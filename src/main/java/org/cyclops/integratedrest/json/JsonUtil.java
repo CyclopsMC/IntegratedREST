@@ -4,9 +4,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.cyclopscore.helper.TileHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
@@ -206,6 +211,47 @@ public class JsonUtil {
     public static void addPartTypeInfo(JsonObject jsonObject, IPartType partType) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/part/" + partType.getName()));
         jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(partType.getItem().getRegistryName())));
+    }
+
+    public static void addItemInfo(JsonObject jsonObject, Item item) {
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(item.getRegistryName())));
+        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + item.getRegistryName().getResourceDomain()));
+        jsonObject.addProperty("unlocalizedName", item.getUnlocalizedName());
+        jsonObject.addProperty("resourceLocation", item.getRegistryName().toString());
+        Block block = Block.getBlockFromItem(item);
+        if (block != null && block != Blocks.AIR) {
+            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(block.getRegistryName())));
+        }
+    }
+
+    public static void addBlockInfo(JsonObject jsonObject, Block block) {
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(block.getRegistryName())));
+        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + block.getRegistryName().getResourceDomain()));
+        jsonObject.addProperty("unlocalizedName", block.getUnlocalizedName());
+        jsonObject.addProperty("resourceLocation", block.getRegistryName().toString());
+        Item item = Item.getItemFromBlock(block);
+        if (item != null && item != Items.AIR) {
+            jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(item.getRegistryName())));
+        }
+    }
+
+    public static void addModInfo(JsonObject jsonObject, ModContainer modContainer) {
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/mod/" + modContainer.getModId()));
+        jsonObject.addProperty("name", modContainer.getName());
+        jsonObject.addProperty("version", modContainer.getVersion());
+
+        JsonArray dependencies = new JsonArray();
+        for (ArtifactVersion artifactVersion : modContainer.getRequirements()) {
+            JsonObject jsonVersion = new JsonObject();
+            addDependencyInfo(jsonVersion, artifactVersion);
+            dependencies.add(jsonVersion);
+        }
+        jsonObject.add("dependencies", dependencies);
+    }
+
+    public static void addDependencyInfo(JsonObject jsonObject, ArtifactVersion artifactVersion) {
+        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + artifactVersion.getLabel()));
+        jsonObject.addProperty("versionRange", artifactVersion.getRangeString());
     }
 
 }
