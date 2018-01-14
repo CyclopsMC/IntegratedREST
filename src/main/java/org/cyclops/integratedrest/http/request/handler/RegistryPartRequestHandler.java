@@ -14,25 +14,25 @@ import org.cyclops.integratedrest.json.JsonUtil;
  * Request handler for registry/part requests.
  * @author rubensworks
  */
-public class RegistryPartsRequestHandler implements IRequestHandler {
+public class RegistryPartRequestHandler implements IRequestHandler {
 
     @Override
     public HttpResponseStatus handle(String[] path, HttpRequest request, JsonObject responseObject) {
-        IPartTypeRegistry partTypeRegistry = IntegratedDynamics._instance.getRegistryManager().getRegistry(IPartTypeRegistry.class);
+        IPartTypeRegistry registry = IntegratedDynamics._instance.getRegistryManager().getRegistry(IPartTypeRegistry.class);
         if (path.length == 0) {
-            JsonArray jsonParts = new JsonArray();
-            for (IPartType partType : partTypeRegistry.getPartTypes()) {
-                JsonObject partTypeObject = new JsonObject();
-                JsonUtil.addPartTypeInfo(partTypeObject, partType);
-                jsonParts.add(partTypeObject);
+            JsonArray array = new JsonArray();
+            for (IPartType element : registry.getPartTypes()) {
+                JsonObject object = new JsonObject();
+                JsonUtil.addPartTypeInfo(object, element);
+                array.add(object);
             }
-            responseObject.add("parts", jsonParts);
+            responseObject.add("parts", array);
             return HttpResponseStatus.OK;
         } else {
-            String partName = String.join("/", path);
-            IPartType partType = partTypeRegistry.getPartType(partName);
-            if (partType != null) {
-                JsonUtil.addPartTypeInfo(responseObject, partType);
+            String name = String.join(".", path);
+            IPartType element = registry.getPartType(name);
+            if (element != null) {
+                JsonUtil.addPartTypeInfo(responseObject, element);
                 return HttpResponseStatus.OK;
             }
         }

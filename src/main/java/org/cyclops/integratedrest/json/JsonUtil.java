@@ -13,6 +13,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 import org.cyclops.cyclopscore.datastructure.DimPos;
+import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.helper.TileHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
 import org.cyclops.integrateddynamics.api.evaluate.IValueInterface;
@@ -28,6 +29,11 @@ import org.cyclops.integrateddynamics.api.network.IPositionedNetworkElement;
 import org.cyclops.integrateddynamics.api.network.ISidedNetworkElement;
 import org.cyclops.integrateddynamics.api.part.IPartType;
 import org.cyclops.integrateddynamics.api.part.PartPos;
+import org.cyclops.integrateddynamics.api.part.aspect.IAspect;
+import org.cyclops.integrateddynamics.api.part.aspect.IAspectRead;
+import org.cyclops.integrateddynamics.api.part.aspect.IAspectWrite;
+import org.cyclops.integrateddynamics.api.part.read.IPartTypeReader;
+import org.cyclops.integrateddynamics.api.part.write.IPartTypeWriter;
 import org.cyclops.integrateddynamics.core.helper.NetworkHelpers;
 import org.cyclops.integratedrest.Capabilities;
 import org.cyclops.integratedrest.GeneralConfig;
@@ -210,7 +216,57 @@ public class JsonUtil {
 
     public static void addPartTypeInfo(JsonObject jsonObject, IPartType partType) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/part/" + partType.getName()));
+        JsonArray types = new JsonArray();
+        if (partType instanceof IPartTypeReader) {
+            types.add("ReadPart");
+        }
+        if (partType instanceof IPartTypeWriter) {
+            types.add("WritePart");
+        }
+        jsonObject.add("@type", types);
         jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(partType.getItem().getRegistryName())));
+        if (partType instanceof IPartTypeReader) {
+            JsonArray array = new JsonArray();
+            for (IAspect aspect : ((IPartTypeReader<?, ?>) partType).getReadAspects()) {
+                JsonObject object = new JsonObject();
+                addAspectTypeInfo(object, aspect);
+                array.add(object);
+            }
+            jsonObject.add("readAspects", array);
+        }
+        if (partType instanceof IPartTypeWriter) {
+            JsonArray array = new JsonArray();
+            for (IAspect aspect : ((IPartTypeWriter<?, ?>) partType).getWriteAspects()) {
+                JsonObject object = new JsonObject();
+                addAspectTypeInfo(object, aspect);
+                array.add(object);
+            }
+            jsonObject.add("writeAspects", array);
+        }
+    }
+
+    public static void addAspectTypeInfo(JsonObject jsonObject, IAspect aspect) {
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/aspect/" + aspect.getUnlocalizedName().replace('.', '/')));
+        JsonArray types = new JsonArray();
+        if (aspect instanceof IAspectRead) {
+            types.add("ReadAspect");
+        }
+        if (aspect instanceof IAspectWrite) {
+            types.add("WriteAspect");
+        }
+        jsonObject.add("@type", types);
+        jsonObject.addProperty("name", L10NHelpers.localize(aspect.getUnlocalizedName()));
+        jsonObject.addProperty("description", L10NHelpers.localize(aspect.getUnlocalizedName().replace("\\.name", ".info")));
+        jsonObject.addProperty("unlocalizedName", aspect.getUnlocalizedName());
+        jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + aspect.getValueType().getUnlocalizedName().replace('.', '/')));
+    }
+
+    public static void addValueTypeInfo(JsonObject jsonObject, IValueType valueType) {
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/value/" + valueType.getUnlocalizedName().replace('.', '/')));
+        jsonObject.addProperty("name", valueType.getTypeName());
+        jsonObject.addProperty("unlocalizedName", valueType.getUnlocalizedName());
+        jsonObject.add("value", JsonUtil.valueToJson(valueType.getDefault()));
+        jsonObject.addProperty("color", valueType.getDisplayColor());
     }
 
     public static void addItemInfo(JsonObject jsonObject, Item item) {
