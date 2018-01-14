@@ -7,6 +7,7 @@ import org.cyclops.integratedrest.http.request.handler.ElementPartRequestHandler
 import org.cyclops.integratedrest.http.request.handler.IndexRequestHandler;
 import org.cyclops.integratedrest.http.request.handler.NetworkRequestHandler;
 import org.cyclops.integratedrest.http.request.handler.ElementRequestHandler;
+import org.cyclops.integratedrest.http.request.handler.RegistryPartsRequestHandler;
 
 /**
  * Registration code for request handlers.
@@ -22,7 +23,7 @@ public class RequestHandlers {
         REGISTRY.registerHandler("element", new ElementRequestHandler());
         REGISTRY.registerHandler("element/integrateddynamics/part", new ElementPartRequestHandler());
         REGISTRY.registerHandler("element/integrateddynamics/http", new ElementHttpRequestHandler());
-        // TODO: part type
+        REGISTRY.registerHandler("registry/part", new RegistryPartsRequestHandler());
         // TODO: aspect type
         // TODO: value type
         // TODO: other registry entries?

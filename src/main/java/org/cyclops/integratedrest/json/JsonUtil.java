@@ -21,6 +21,7 @@ import org.cyclops.integrateddynamics.api.network.IPartNetwork;
 import org.cyclops.integrateddynamics.api.network.IPartNetworkElement;
 import org.cyclops.integrateddynamics.api.network.IPositionedNetworkElement;
 import org.cyclops.integrateddynamics.api.network.ISidedNetworkElement;
+import org.cyclops.integrateddynamics.api.part.IPartType;
 import org.cyclops.integrateddynamics.api.part.PartPos;
 import org.cyclops.integrateddynamics.core.helper.NetworkHelpers;
 import org.cyclops.integratedrest.Capabilities;
@@ -133,7 +134,7 @@ public class JsonUtil {
     public static void addPartNetworkElementInfo(JsonObject jsonObject, IPartNetworkElement<?, ?> networkElement, IPartNetwork partNetwork) {
         jsonObject.add("target", partPosToJson(networkElement.getTarget().getTarget()));
         jsonObject.addProperty("loaded", networkElement.isLoaded());
-        ((JsonArray) jsonObject.get("@type")).add(networkElement.getPart().getUnlocalizedNameBase());
+        ((JsonArray) jsonObject.get("@type")).add(JsonUtil.absolutizePath("registry/part/" + networkElement.getPart().getName()));
     }
 
     public static void addValueInterfaceInfo(JsonObject jsonObject, IValueInterface valueInterface) {
@@ -200,6 +201,11 @@ public class JsonUtil {
 
     public static String resourceLocationToPath(ResourceLocation resourceLocation) {
         return resourceLocation.getResourceDomain() + "/" + resourceLocation.getResourcePath();
+    }
+
+    public static void addPartTypeInfo(JsonObject jsonObject, IPartType partType) {
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/part/" + partType.getName()));
+        jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(partType.getItem().getRegistryName())));
     }
 
 }
