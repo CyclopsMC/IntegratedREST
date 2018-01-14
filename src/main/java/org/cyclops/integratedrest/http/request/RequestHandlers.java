@@ -20,8 +20,8 @@ public class RequestHandlers {
         REGISTRY.registerHandler("", new IndexRequestHandler());
         REGISTRY.registerHandler("network", new NetworkRequestHandler());
         REGISTRY.registerHandler("element", new ElementRequestHandler());
-        REGISTRY.registerHandler("element/part", new ElementPartRequestHandler());
-        REGISTRY.registerHandler("element/http", new ElementHttpRequestHandler());
+        REGISTRY.registerHandler("element/integrateddynamics/part", new ElementPartRequestHandler());
+        REGISTRY.registerHandler("element/integrateddynamics/http", new ElementHttpRequestHandler());
         // TODO: part type
         // TODO: aspect type
         // TODO: value type

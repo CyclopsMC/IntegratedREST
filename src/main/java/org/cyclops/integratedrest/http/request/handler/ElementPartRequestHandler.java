@@ -14,7 +14,7 @@ import org.cyclops.integratedrest.json.JsonUtil;
 import javax.annotation.Nullable;
 
 /**
- * Request handler for /part requests.
+ * Request handler for /element/part requests.
  * @author rubensworks
  */
 public class ElementPartRequestHandler extends ElementTypeRequestHandler {

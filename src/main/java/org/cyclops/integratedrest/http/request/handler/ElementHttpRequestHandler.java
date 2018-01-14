@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
- * Request handler for /part requests.
+ * Request handler for /element/http requests.
  * @author rubensworks
  */
 public class ElementHttpRequestHandler extends ElementTypeRequestHandler {

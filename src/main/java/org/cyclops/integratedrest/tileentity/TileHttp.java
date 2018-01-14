@@ -6,14 +6,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
+import org.cyclops.integrateddynamics.api.network.INetworkElement;
 import org.cyclops.integrateddynamics.api.network.IPartNetwork;
+import org.cyclops.integrateddynamics.capability.networkelementprovider.NetworkElementProviderConfig;
+import org.cyclops.integrateddynamics.capability.networkelementprovider.NetworkElementProviderSingleton;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueHelpers;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypeBoolean;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypes;
@@ -21,6 +27,7 @@ import org.cyclops.integrateddynamics.tileentity.TileProxy;
 import org.cyclops.integratedrest.api.item.IHttpVariableFacade;
 import org.cyclops.integratedrest.evaluate.HttpVariableFacadeHandler;
 import org.cyclops.integratedrest.item.HttpVariableFacade;
+import org.cyclops.integratedrest.network.HttpNetworkElement;
 
 /**
  * A tile entity for the http block.
@@ -63,6 +70,13 @@ public class TileHttp extends TileProxy {
                 return TileHttp.this.value;
             }
         };
+
+        addCapabilityInternal(NetworkElementProviderConfig.CAPABILITY, new NetworkElementProviderSingleton() {
+            @Override
+            public INetworkElement createNetworkElement(World world, BlockPos blockPos) {
+                return new HttpNetworkElement(DimPos.of(world, blockPos));
+            }
+        });
     }
 
     @Override

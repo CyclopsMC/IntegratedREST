@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.cyclopscore.helper.TileHelpers;
@@ -13,6 +14,7 @@ import org.cyclops.integrateddynamics.api.evaluate.IValueInterface;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
+import org.cyclops.integrateddynamics.api.network.IIdentifiableNetworkElement;
 import org.cyclops.integrateddynamics.api.network.INetwork;
 import org.cyclops.integrateddynamics.api.network.INetworkElement;
 import org.cyclops.integrateddynamics.api.network.IPartNetwork;
@@ -55,15 +57,26 @@ public class JsonUtil {
         IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network);
         JsonArray types = new JsonArray();
         types.add("NetworkElement");
-        if (networkElement instanceof IPartNetworkElement) {
-            types.add("PartNetworkElement");
-        } else {
-            DimPos pos = getNetworkElementPosition(networkElement);
-            if (pos != null) {
-                Block block = pos.getWorld().getBlockState(pos.getBlockPos()).getBlock();
-                types.add(block.getRegistryName().toString()); // TODO: make URI
-            }
+
+        if (networkElement instanceof IIdentifiableNetworkElement) {
+            IIdentifiableNetworkElement identifiable = (IIdentifiableNetworkElement) networkElement;
+            jsonObject.addProperty("@id", resourceLocationToPath(identifiable.getGroup()) + "/" + identifiable.getId());
         }
+
+        if (networkElement instanceof IPositionedNetworkElement) {
+            EnumFacing side = null;
+            if (networkElement instanceof ISidedNetworkElement) {
+                side = ((ISidedNetworkElement) networkElement).getSide();
+            }
+            jsonObject.add("position", posToJson(((IPositionedNetworkElement) networkElement).getPosition(), side));
+        }
+
+        DimPos pos = getNetworkElementPosition(networkElement);
+        if (pos != null) {
+            Block block = pos.getWorld().getBlockState(pos.getBlockPos()).getBlock();
+            types.add(block.getRegistryName().toString()); // TODO: make URI
+        }
+
         jsonObject.add("@type", types);
         jsonObject.addProperty("channel", networkElement.getChannel());
         jsonObject.addProperty("priority", networkElement.getPriority());
@@ -111,8 +124,6 @@ public class JsonUtil {
     }
 
     public static void addPartNetworkElementInfo(JsonObject jsonObject, IPartNetworkElement<?, ?> networkElement, IPartNetwork partNetwork) {
-        jsonObject.addProperty("@id", Integer.toString(networkElement.getPartState().getId()));
-        jsonObject.add("center", partPosToJson(networkElement.getTarget().getCenter()));
         jsonObject.add("target", partPosToJson(networkElement.getTarget().getTarget()));
         jsonObject.addProperty("loaded", networkElement.isLoaded());
         ((JsonArray) jsonObject.get("@type")).add(networkElement.getPart().getUnlocalizedNameBase());
@@ -132,12 +143,18 @@ public class JsonUtil {
     }
 
     public static JsonObject partPosToJson(PartPos partPos) {
+        return posToJson(partPos.getPos(), partPos.getSide());
+    }
+
+    public static JsonObject posToJson(DimPos pos, @Nullable EnumFacing side) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("world", partPos.getPos().getDimensionId());
-        jsonObject.addProperty("x", partPos.getPos().getBlockPos().getX());
-        jsonObject.addProperty("y", partPos.getPos().getBlockPos().getY());
-        jsonObject.addProperty("z", partPos.getPos().getBlockPos().getZ());
-        jsonObject.addProperty("side", partPos.getSide().name());
+        jsonObject.addProperty("world", pos.getDimensionId());
+        jsonObject.addProperty("x", pos.getBlockPos().getX());
+        jsonObject.addProperty("y", pos.getBlockPos().getY());
+        jsonObject.addProperty("z", pos.getBlockPos().getZ());
+        if (side != null) {
+            jsonObject.addProperty("side", side.name());
+        }
         return jsonObject;
     }
 
@@ -172,6 +189,10 @@ public class JsonUtil {
             }
         }
         return Optional.empty();
+    }
+
+    public static String resourceLocationToPath(ResourceLocation resourceLocation) {
+        return resourceLocation.getResourceDomain() + "/" + resourceLocation.getResourcePath();
     }
 
 }
