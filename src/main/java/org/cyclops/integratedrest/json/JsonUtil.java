@@ -86,7 +86,7 @@ public class JsonUtil {
         DimPos pos = getNetworkElementPosition(networkElement);
         if (pos != null) {
             Block block = pos.getWorld().getBlockState(pos.getBlockPos()).getBlock();
-            types.add(block.getRegistryName().toString()); // TODO: make URI
+            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(block.getRegistryName())));
         }
 
         jsonObject.add("@type", types);
