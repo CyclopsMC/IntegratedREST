@@ -87,6 +87,7 @@ public class JsonUtil {
         jsonObject.addProperty("channel", networkElement.getChannel());
         jsonObject.addProperty("priority", networkElement.getPriority());
         jsonObject.addProperty("updateInterval", networkElement.getUpdateInterval());
+        jsonObject.addProperty("network", JsonUtil.absolutizePath("network/" + network.hashCode()));
 
         IValueInterface valueInterface = getNetworkElementCapability(networkElement, Capabilities.VALUE_INTERFACE);
         if (valueInterface != null) {
