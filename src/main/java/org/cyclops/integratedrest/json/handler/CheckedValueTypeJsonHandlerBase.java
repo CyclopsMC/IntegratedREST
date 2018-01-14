@@ -18,7 +18,7 @@ public abstract class CheckedValueTypeJsonHandlerBase<V extends IValue> implemen
     public V handle(JsonElement jsonElement) {
         try {
             return handleUnchecked(jsonElement);
-        } catch (IllegalStateException | ClassCastException | NumberFormatException e) {
+        } catch (IllegalStateException | ClassCastException | NumberFormatException | UnsupportedOperationException e) {
             return null;
         }
     }
