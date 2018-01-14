@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
+import org.cyclops.integratedrest.json.JsonUtil;
 
 /**
  * The default request handler for the index page.
@@ -16,8 +17,8 @@ public class IndexRequestHandler implements IRequestHandler {
             return HttpResponseStatus.NOT_FOUND;
         }
 
-        responseObject.addProperty("parts", "TODO"); // TODO
-        responseObject.addProperty("networks", "TODO"); // TODO
+        responseObject.addProperty("elements", JsonUtil.absolutizePath("element"));
+        responseObject.addProperty("networks", JsonUtil.absolutizePath("network"));
 
         return HttpResponseStatus.OK;
     }

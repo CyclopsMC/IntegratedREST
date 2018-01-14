@@ -24,6 +24,7 @@ import org.cyclops.integrateddynamics.api.network.ISidedNetworkElement;
 import org.cyclops.integrateddynamics.api.part.PartPos;
 import org.cyclops.integrateddynamics.core.helper.NetworkHelpers;
 import org.cyclops.integratedrest.Capabilities;
+import org.cyclops.integratedrest.GeneralConfig;
 import org.cyclops.integratedrest.api.json.IReverseValueTypeJsonHandler;
 import org.cyclops.integratedrest.api.json.IValueTypeJsonHandler;
 
@@ -36,10 +37,15 @@ import java.util.Optional;
  */
 public class JsonUtil {
 
-    // TODO: make @ids URIs
+    public static String absolutizePath(String path) {
+        if (path.charAt(0) == '/') {
+            path = path.substring(1);
+        }
+        return GeneralConfig.apiBaseUrl + path;
+    }
 
     public static void addNetworkInfo(JsonObject jsonObject, INetwork network) {
-        jsonObject.addProperty("@id", Integer.toString(network.hashCode()));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("network/" + Integer.toString(network.hashCode())));
         IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network);
         JsonArray types = new JsonArray();
         types.add("Network");
@@ -60,7 +66,7 @@ public class JsonUtil {
 
         if (networkElement instanceof IIdentifiableNetworkElement) {
             IIdentifiableNetworkElement identifiable = (IIdentifiableNetworkElement) networkElement;
-            jsonObject.addProperty("@id", resourceLocationToPath(identifiable.getGroup()) + "/" + identifiable.getId());
+            jsonObject.addProperty("@id", JsonUtil.absolutizePath("element/" + resourceLocationToPath(identifiable.getGroup()) + "/" + identifiable.getId()));
         }
 
         if (networkElement instanceof IPositionedNetworkElement) {

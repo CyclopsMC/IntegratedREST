@@ -60,6 +60,12 @@ public class GeneralConfig extends DummyConfig {
     public static int apiPort = 3000;
 
     /**
+     * The base URL the API is exposed on, used for constructing URLs.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "The base URL the API is exposed on, used for constructing URLs.")
+    public static String apiBaseUrl = "http://localhost:3000/";
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;

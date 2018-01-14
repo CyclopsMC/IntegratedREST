@@ -36,7 +36,7 @@ public class ElementHttpRequestHandler extends ElementTypeRequestHandler {
                 if (tile.getProxyId() == id) {
                     if (request.method().equals(HttpMethod.GET)) {
                         JsonUtil.addNetworkElementInfo(responseObject, networkElement, network);
-                        responseObject.addProperty("http://www.w3.org/ns/ldp#inbox", "THIS"); // TODO: add element URI
+                        responseObject.addProperty("http://www.w3.org/ns/ldp#inbox", responseObject.get("@id").getAsString());
                         return HttpResponseStatus.OK;
                     } else if (request.method().equals(HttpMethod.POST) && request instanceof HttpContent) {
                         String content = ((HttpContent) request).content().toString(CharsetUtil.UTF_8);
