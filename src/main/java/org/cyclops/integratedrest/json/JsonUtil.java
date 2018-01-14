@@ -27,12 +27,14 @@ import org.cyclops.integrateddynamics.api.network.IPartNetwork;
 import org.cyclops.integrateddynamics.api.network.IPartNetworkElement;
 import org.cyclops.integrateddynamics.api.network.IPositionedNetworkElement;
 import org.cyclops.integrateddynamics.api.network.ISidedNetworkElement;
+import org.cyclops.integrateddynamics.api.part.IPartState;
 import org.cyclops.integrateddynamics.api.part.IPartType;
 import org.cyclops.integrateddynamics.api.part.PartPos;
 import org.cyclops.integrateddynamics.api.part.aspect.IAspect;
 import org.cyclops.integrateddynamics.api.part.aspect.IAspectRead;
 import org.cyclops.integrateddynamics.api.part.aspect.IAspectWrite;
 import org.cyclops.integrateddynamics.api.part.read.IPartTypeReader;
+import org.cyclops.integrateddynamics.api.part.write.IPartStateWriter;
 import org.cyclops.integrateddynamics.api.part.write.IPartTypeWriter;
 import org.cyclops.integrateddynamics.core.helper.NetworkHelpers;
 import org.cyclops.integratedrest.Capabilities;
@@ -146,6 +148,13 @@ public class JsonUtil {
         jsonObject.add("target", partPosToJson(networkElement.getTarget().getTarget()));
         jsonObject.addProperty("loaded", networkElement.isLoaded());
         ((JsonArray) jsonObject.get("@type")).add(JsonUtil.absolutizePath("registry/part/" + networkElement.getPart().getName()));
+
+        IPartState partState = networkElement.getPartState();
+        if (partState instanceof IPartStateWriter) {
+            JsonObject object = new JsonObject();
+            addAspectTypeInfo(object, ((IPartStateWriter) partState).getActiveAspect());
+            jsonObject.add("activeAspect", object);
+        }
     }
 
     public static void addValueInterfaceInfo(JsonObject jsonObject, IValueInterface valueInterface) {
