@@ -20,8 +20,11 @@ public class IndexRequestHandler implements IRequestHandler {
         responseObject.addProperty("elements", JsonUtil.absolutizePath("element"));
         responseObject.addProperty("networks", JsonUtil.absolutizePath("network"));
         responseObject.addProperty("parts", JsonUtil.absolutizePath("registry/part"));
+        responseObject.addProperty("aspects", JsonUtil.absolutizePath("registry/aspect"));
+        responseObject.addProperty("valueTypes", JsonUtil.absolutizePath("registry/value"));
         responseObject.addProperty("items", JsonUtil.absolutizePath("registry/item"));
         responseObject.addProperty("blocks", JsonUtil.absolutizePath("registry/block"));
+        responseObject.addProperty("fluids", JsonUtil.absolutizePath("registry/fluid"));
         responseObject.addProperty("mods", JsonUtil.absolutizePath("registry/mod"));
 
         return HttpResponseStatus.OK;

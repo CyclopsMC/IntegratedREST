@@ -23,6 +23,7 @@ public class RequestHandlers {
         REGISTRY.registerHandler("registry/value", new RegistryValueRequestHandler());
         REGISTRY.registerHandler("registry/item", new RegistryItemRequestHandler());
         REGISTRY.registerHandler("registry/block", new RegistryBlockRequestHandler());
+        REGISTRY.registerHandler("registry/fluid", new RegistryFluidRequestHandler());
         REGISTRY.registerHandler("registry/mod", new RegistryModRequestHandler());
     }
 

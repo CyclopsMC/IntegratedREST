@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 import org.cyclops.cyclopscore.datastructure.DimPos;
@@ -297,6 +298,14 @@ public class JsonUtil {
         Item item = Item.getItemFromBlock(block);
         if (item != null && item != Items.AIR) {
             jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(item.getRegistryName())));
+        }
+    }
+
+    public static void addFluidInfo(JsonObject jsonObject, Fluid fluid) {
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/fluid/" + fluid.getName()));
+        jsonObject.addProperty("unlocalizedName", fluid.getUnlocalizedName());
+        if (fluid.getBlock() != null) {
+            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(fluid.getBlock().getRegistryName())));
         }
     }
 
