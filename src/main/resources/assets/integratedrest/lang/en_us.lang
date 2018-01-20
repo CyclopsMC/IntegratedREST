@@ -3,7 +3,7 @@ itemGroup.integratedrest=Integrated Rest
 
 # Blocks
 tile.blocks.integratedrest.http.name=HTTP Proxy
-tile.blocks.integratedrest.http.info=Read values that have been provided by external HTTP PUT calls.
+tile.blocks.integratedrest.http.info=Read values that have been provided by external HTTP POST calls.
 
 # HTTP
 http.integratedrest.tooltip.delay_id=§e§oHTTP Proxy ID: §r§o%s
