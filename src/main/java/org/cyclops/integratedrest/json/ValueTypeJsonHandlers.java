@@ -142,7 +142,7 @@ public class ValueTypeJsonHandlers {
         REGISTRY.registerReverseHandler(new CheckedValueTypeJsonHandlerBase<ValueTypeNbt.ValueNbt>() {
             @Override
             public ValueTypeNbt.ValueNbt handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
-                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("nbt")) {
+                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueNbt")) {
                     try {
                         return ValueTypeNbt.ValueNbt.of(JsonToNBT.getTagFromJson(((JsonObject) jsonElement).get("nbt").toString()));
                     } catch (NBTException e) {
