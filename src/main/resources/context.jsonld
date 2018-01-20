@@ -10,7 +10,7 @@
     "label": { "@id": "rdfs:label" },
     "comment": { "@id": "rdfs:comment" },
 
-    "ir": "https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/",
+    "ir": "https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl",
     "networkElementsPage": { "@id": "ir:networkElementsPage", "@type": "@id" },
     "networksPage": { "@id": "ir:networksPage", "@type": "@id" },
     "partsPage": { "@id": "ir:partsPage", "@type": "@id" },
