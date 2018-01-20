@@ -134,7 +134,9 @@ public class IntegratedRest extends ModBaseVersionable {
     @Override
     public void onServerStarted(FMLServerStartedEvent event) {
         super.onServerStarted(event);
-        server.initialize();
+        if (GeneralConfig.startApi) {
+            server.initialize();
+        }
     }
 
     /**
@@ -144,7 +146,9 @@ public class IntegratedRest extends ModBaseVersionable {
     @EventHandler
     @Override
     public void onServerStopping(FMLServerStoppingEvent event) {
-        server.deinitialize();
+        if (GeneralConfig.startApi) {
+            server.deinitialize();
+        }
         super.onServerStopping(event);
     }
 

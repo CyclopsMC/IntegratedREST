@@ -54,6 +54,12 @@ public class GeneralConfig extends DummyConfig {
     public static boolean versionChecker = true;
 
     /**
+     * If the API should be enabled.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "If the API should be enabled.", requiresMcRestart = true)
+    public static boolean startApi = true;
+
+    /**
      * The port the API should be exposed on.
      */
     @ConfigurableProperty(category = ConfigurableTypeCategory.GENERAL, comment = "The port the API should be exposed on.")
