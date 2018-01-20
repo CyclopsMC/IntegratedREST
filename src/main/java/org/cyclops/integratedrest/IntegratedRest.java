@@ -15,12 +15,14 @@ import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.config.extendedconfig.BlockItemConfigReference;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.cyclopscore.infobook.IInfoBookRegistry;
 import org.cyclops.cyclopscore.init.ItemCreativeTab;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
 import org.cyclops.cyclopscore.init.RecipeHandler;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
+import org.cyclops.integrateddynamics.infobook.OnTheDynamicsOfIntegrationBook;
 import org.cyclops.integratedrest.api.http.request.IRequestHandlerRegistry;
 import org.cyclops.integratedrest.api.json.IValueTypeJsonHandlerRegistry;
 import org.cyclops.integratedrest.block.BlockHttpConfig;
@@ -114,6 +116,12 @@ public class IntegratedRest extends ModBaseVersionable {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
+
+        // Initialize info book
+        IntegratedDynamics._instance.getRegistryManager().getRegistry(IInfoBookRegistry.class)
+                .registerSection(
+                        OnTheDynamicsOfIntegrationBook.getInstance(), "info_book.integrateddynamics.manual",
+                        "/assets/" + Reference.MOD_ID + "/info/rest_info.xml");
     }
     
     /**

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section name="info_book.integratedrest.section.main">
+    <section name="info_book.integratedrest.introduction">
+        <paragraph>info_book.integratedrest.introduction.text1</paragraph>
+        <paragraph>info_book.integratedrest.introduction.text2</paragraph>
+        <paragraph>info_book.integratedrest.introduction.text3</paragraph>
+    </section>
+
+    <section name="info_book.integratedrest.http">
+        <tag>integratedrest:http</tag>
+        <paragraph>info_book.integratedrest.http.text1</paragraph>
+        <paragraph>info_book.integratedrest.http.text2</paragraph>
+        <paragraph>info_book.integratedrest.http.text3</paragraph>
+        <appendix type="crafting_recipe">integratedrest:http</appendix>
+    </section>
+</section>
