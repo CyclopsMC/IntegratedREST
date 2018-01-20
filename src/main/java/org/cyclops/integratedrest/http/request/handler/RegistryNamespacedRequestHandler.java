@@ -32,6 +32,7 @@ public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHan
                 handleElement(element, object);
                 array.add(object);
             }
+            responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
             responseObject.add(getElementsName(), array);
             return HttpResponseStatus.OK;
         } else {

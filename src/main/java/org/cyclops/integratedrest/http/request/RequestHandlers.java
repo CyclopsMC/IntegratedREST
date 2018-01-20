@@ -15,9 +15,9 @@ public class RequestHandlers {
     public static void load() {
         REGISTRY.registerHandler("", new IndexRequestHandler());
         REGISTRY.registerHandler("network", new NetworkRequestHandler());
-        REGISTRY.registerHandler("element", new ElementRequestHandler());
-        REGISTRY.registerHandler("element/integrateddynamics/part", new ElementPartRequestHandler());
-        REGISTRY.registerHandler("element/integrateddynamics/http", new ElementHttpRequestHandler());
+        REGISTRY.registerHandler("networkElement", new ElementRequestHandler());
+        REGISTRY.registerHandler("networkElement/integrateddynamics/part", new ElementPartRequestHandler());
+        REGISTRY.registerHandler("networkElement/integrateddynamics/http", new ElementHttpRequestHandler());
         REGISTRY.registerHandler("registry/part", new RegistryPartRequestHandler());
         REGISTRY.registerHandler("registry/aspect", new RegistryAspectRequestHandler());
         REGISTRY.registerHandler("registry/value", new RegistryValueRequestHandler());

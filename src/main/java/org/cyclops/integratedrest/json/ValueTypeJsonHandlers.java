@@ -95,7 +95,7 @@ public class ValueTypeJsonHandlers {
         REGISTRY.registerHandler(ValueTypes.LIST, value -> {
             if (value.getRawValue().isInfinite()) {
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("@type", "InfiniteList");
+                jsonObject.addProperty("@type", "ValueInfiniteList");
                 return jsonObject;
             } else {
                 JsonArray jsonArray = new JsonArray();
@@ -127,7 +127,7 @@ public class ValueTypeJsonHandlers {
 
         REGISTRY.registerHandler(ValueTypes.OPERATOR, value -> {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("@type", "Operator");
+            jsonObject.addProperty("@type", "ValueOperator");
             jsonObject.addProperty("@value", value.getRawValue().getUniqueName());
             return jsonObject;
         });
@@ -135,6 +135,7 @@ public class ValueTypeJsonHandlers {
 
         REGISTRY.registerHandler(ValueTypes.NBT, value -> {
             JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("@type", "ValueNbt");
             jsonObject.add("nbt", new JsonParser().parse(value.getRawValue().toString()));
             return jsonObject;
         });
@@ -154,10 +155,11 @@ public class ValueTypeJsonHandlers {
 
         REGISTRY.registerHandler(ValueTypes.OBJECT_BLOCK, value -> {
             JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("@type", "ValueBlock");
             if (value.getRawValue().isPresent()) {
                 IBlockState blockState = value.getRawValue().get();
                 jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(blockState.getBlock().getRegistryName())));
-                jsonObject.addProperty("blockId", blockState.getBlock().getRegistryName().toString());
+                jsonObject.addProperty("resourceLocation", blockState.getBlock().getRegistryName().toString());
                 jsonObject.addProperty("meta", blockState.getBlock().getMetaFromState(blockState));
                 JsonArray jsonProperties = new JsonArray();
                 for (IProperty<?> property : blockState.getPropertyKeys()) {
@@ -166,21 +168,18 @@ public class ValueTypeJsonHandlers {
                     jsonProperty.addProperty("value", blockState.getValue(property).toString());
                     jsonProperties.add(jsonProperty);
                 }
-            } else {
-                jsonObject.addProperty("block", "rdf:nil");
-                jsonObject.addProperty("blockId", "rdf:nil");
             }
             return jsonObject;
         });
         REGISTRY.registerReverseHandler(new CheckedValueTypeJsonHandlerBase<ValueObjectTypeBlock.ValueBlock>() {
             @Override
             public ValueObjectTypeBlock.ValueBlock handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
-                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("blockId")) {
+                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueBlock")) {
                     JsonObject jsonObject = (JsonObject) jsonElement;
-                    if (jsonObject.get("blockId").getAsString().equals("rdf:nil")) {
+                    if (!jsonObject.has("resourceLocation")) {
                         return ValueObjectTypeBlock.ValueBlock.of(null);
                     } else {
-                        ResourceLocation resourceLocation = new ResourceLocation(jsonObject.get("blockId").getAsString());
+                        ResourceLocation resourceLocation = new ResourceLocation(jsonObject.get("resourceLocation").getAsString());
                         Block block = Block.REGISTRY.getObject(resourceLocation);
                         if (block != null) {
                             return ValueObjectTypeBlock.ValueBlock.of(block.getStateFromMeta(jsonObject.get("meta").getAsInt()));
@@ -193,30 +192,28 @@ public class ValueTypeJsonHandlers {
 
         REGISTRY.registerHandler(ValueTypes.OBJECT_ITEMSTACK, value -> {
             JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("@type", "ValueItem");
             if (!value.getRawValue().isEmpty()) {
                 ItemStack itemStack = value.getRawValue();
                 jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(itemStack.getItem().getRegistryName())));
-                jsonObject.addProperty("itemId", itemStack.getItem().getRegistryName().toString());
+                jsonObject.addProperty("resourceLocation", itemStack.getItem().getRegistryName().toString());
                 jsonObject.addProperty("count", itemStack.getCount());
                 jsonObject.addProperty("meta", itemStack.getMetadata());
                 if (itemStack.hasTagCompound()) {
-                    jsonObject.add("tag", new JsonParser().parse(itemStack.getTagCompound().toString()));
+                    jsonObject.add("nbt", new JsonParser().parse(itemStack.getTagCompound().toString()));
                 }
-            } else {
-                jsonObject.addProperty("item", "rdf:nil");
-                jsonObject.addProperty("itemId", "rdf:nil");
             }
             return jsonObject;
         });
         REGISTRY.registerReverseHandler(new CheckedValueTypeJsonHandlerBase<ValueObjectTypeItemStack.ValueItemStack>() {
             @Override
             public ValueObjectTypeItemStack.ValueItemStack handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
-                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("itemId")) {
+                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueItem")) {
                     JsonObject jsonObject = (JsonObject) jsonElement;
-                    if (jsonObject.get("itemId").getAsString().equals("rdf:nil")) {
+                    if (!jsonObject.has("resourceLocation")) {
                         return ValueObjectTypeItemStack.ValueItemStack.of(ItemStack.EMPTY);
                     } else {
-                        ResourceLocation resourceLocation = new ResourceLocation(jsonObject.get("itemId").getAsString());
+                        ResourceLocation resourceLocation = new ResourceLocation(jsonObject.get("resourceLocation").getAsString());
                         Item item = Item.REGISTRY.getObject(resourceLocation);
                         if (item != null) {
                             int count = 1;
@@ -230,10 +227,10 @@ public class ValueTypeJsonHandlers {
                             }
 
                             ItemStack itemStack = new ItemStack(item, count, meta);
-                            if (jsonObject.has("tag")) {
+                            if (jsonObject.has("nbt")) {
                                 NBTTagCompound tag;
                                 try {
-                                    tag = JsonToNBT.getTagFromJson(jsonObject.get("tag").toString());
+                                    tag = JsonToNBT.getTagFromJson(jsonObject.get("nbt").toString());
                                 } catch (NBTException e) {
                                     throw new IllegalStateException(e);
                                 }
@@ -249,26 +246,25 @@ public class ValueTypeJsonHandlers {
 
         REGISTRY.registerHandler(ValueTypes.OBJECT_ENTITY, value -> {
             JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("@type", "ValueEntity");
             if (value.getUuid().isPresent()) {
-                jsonObject.addProperty("entityUuid", value.getUuid().get().toString());
-            } else {
-                jsonObject.addProperty("entityUuid", "rdf:nil");
+                jsonObject.addProperty("uuid", value.getUuid().get().toString());
             }
             return jsonObject;
         });
         REGISTRY.registerReverseHandler(new CheckedValueTypeJsonHandlerBase<ValueObjectTypeEntity.ValueEntity>() {
             @Override
             public ValueObjectTypeEntity.ValueEntity handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
-                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("entityUuid")) {
-                    String uuid = ((JsonObject) jsonElement).get("entityUuid").getAsString();
-                    if (uuid.equals("rdf:nil")) {
-                        return ValueObjectTypeEntity.ValueEntity.of((UUID) null);
-                    } else {
+                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueEntity")) {
+                    if (((JsonObject) jsonElement).has("uuid")) {
                         try {
+                            String uuid = ((JsonObject) jsonElement).get("uuid").getAsString();
                             return ValueObjectTypeEntity.ValueEntity.of(UUID.fromString(uuid));
                         } catch (IllegalArgumentException e) {
                             throw new IllegalStateException(e);
                         }
+                    } else {
+                        return ValueObjectTypeEntity.ValueEntity.of((UUID) null);
                     }
                 }
                 return null;
@@ -277,40 +273,38 @@ public class ValueTypeJsonHandlers {
 
         REGISTRY.registerHandler(ValueTypes.OBJECT_FLUIDSTACK, value -> {
             JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("@type", "ValueFluid");
             if (value.getRawValue().isPresent()) {
                 FluidStack fluidStack = value.getRawValue().get();
                 jsonObject.addProperty("fluid", JsonUtil.absolutizePath("registry/fluid/" + fluidStack.getFluid().getName()));
-                jsonObject.addProperty("fluidId", fluidStack.getFluid().getName());
-                jsonObject.addProperty("amount", fluidStack.amount);
+                jsonObject.addProperty("fluidName", fluidStack.getFluid().getName());
+                jsonObject.addProperty("count", fluidStack.amount);
                 if (fluidStack.tag != null) {
-                    jsonObject.add("tag", new JsonParser().parse(fluidStack.tag.toString()));
+                    jsonObject.add("nbt", new JsonParser().parse(fluidStack.tag.toString()));
                 }
-            } else {
-                jsonObject.addProperty("fluid", "rdf:nil");
-                jsonObject.addProperty("fluidId", "rdf:nil");
             }
             return jsonObject;
         });
         REGISTRY.registerReverseHandler(new CheckedValueTypeJsonHandlerBase<ValueObjectTypeFluidStack.ValueFluidStack>() {
             @Override
             public ValueObjectTypeFluidStack.ValueFluidStack handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
-                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("fluidId")) {
+                if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueFluid")) {
                     JsonObject jsonObject = (JsonObject) jsonElement;
-                    if (jsonObject.get("fluidId").getAsString().equals("rdf:nil")) {
+                    if (!jsonObject.has("fluidName")) {
                         return ValueObjectTypeFluidStack.ValueFluidStack.of(null);
                     } else {
-                        Fluid fluid = FluidRegistry.getFluid(jsonObject.get("fluidId").getAsString());
+                        Fluid fluid = FluidRegistry.getFluid(jsonObject.get("fluidName").getAsString());
                         if (fluid != null) {
                             int count = Fluid.BUCKET_VOLUME;
-                            if (jsonObject.has("amount")) {
-                                count = jsonObject.get("amount").getAsInt();
+                            if (jsonObject.has("count")) {
+                                count = jsonObject.get("count").getAsInt();
                             }
 
                             FluidStack fluidStack = new FluidStack(fluid, count);
-                            if (jsonObject.has("tag")) {
+                            if (jsonObject.has("nbt")) {
                                 NBTTagCompound tag;
                                 try {
-                                    tag = JsonToNBT.getTagFromJson(jsonObject.get("tag").toString());
+                                    tag = JsonToNBT.getTagFromJson(jsonObject.get("nbt").toString());
                                 } catch (NBTException e) {
                                     throw new IllegalStateException(e);
                                 }

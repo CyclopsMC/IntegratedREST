@@ -17,15 +17,16 @@ public class IndexRequestHandler implements IRequestHandler {
             return HttpResponseStatus.NOT_FOUND;
         }
 
-        responseObject.addProperty("elements", JsonUtil.absolutizePath("element"));
-        responseObject.addProperty("networks", JsonUtil.absolutizePath("network"));
-        responseObject.addProperty("parts", JsonUtil.absolutizePath("registry/part"));
-        responseObject.addProperty("aspects", JsonUtil.absolutizePath("registry/aspect"));
-        responseObject.addProperty("valueTypes", JsonUtil.absolutizePath("registry/value"));
-        responseObject.addProperty("items", JsonUtil.absolutizePath("registry/item"));
-        responseObject.addProperty("blocks", JsonUtil.absolutizePath("registry/block"));
-        responseObject.addProperty("fluids", JsonUtil.absolutizePath("registry/fluid"));
-        responseObject.addProperty("mods", JsonUtil.absolutizePath("registry/mod"));
+        responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
+        responseObject.addProperty("networkElementsPage", JsonUtil.absolutizePath("networkElement"));
+        responseObject.addProperty("networksPage", JsonUtil.absolutizePath("network"));
+        responseObject.addProperty("partsPage", JsonUtil.absolutizePath("registry/part"));
+        responseObject.addProperty("aspectsPage", JsonUtil.absolutizePath("registry/aspect"));
+        responseObject.addProperty("valueTypesPage", JsonUtil.absolutizePath("registry/value"));
+        responseObject.addProperty("itemsPage", JsonUtil.absolutizePath("registry/item"));
+        responseObject.addProperty("blocksPage", JsonUtil.absolutizePath("registry/block"));
+        responseObject.addProperty("fluidsPage", JsonUtil.absolutizePath("registry/fluid"));
+        responseObject.addProperty("modsPage", JsonUtil.absolutizePath("registry/mod"));
 
         return HttpResponseStatus.OK;
     }

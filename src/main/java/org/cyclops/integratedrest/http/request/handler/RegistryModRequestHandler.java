@@ -24,6 +24,7 @@ public class RegistryModRequestHandler implements IRequestHandler {
                 JsonUtil.addModInfo(object, element);
                 array.add(object);
             }
+            responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
             responseObject.add("mods", array);
             return HttpResponseStatus.OK;
         } else {

@@ -26,6 +26,7 @@ public class RegistryAspectRequestHandler implements IRequestHandler {
                 JsonUtil.addAspectTypeInfo(object, element);
                 array.add(object);
             }
+            responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
             responseObject.add("aspects", array);
             return HttpResponseStatus.OK;
         } else {

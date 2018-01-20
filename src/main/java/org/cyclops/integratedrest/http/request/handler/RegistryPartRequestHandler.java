@@ -26,6 +26,7 @@ public class RegistryPartRequestHandler implements IRequestHandler {
                 JsonUtil.addPartTypeInfo(object, element);
                 array.add(object);
             }
+            responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
             responseObject.add("parts", array);
             return HttpResponseStatus.OK;
         } else {

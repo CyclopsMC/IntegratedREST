@@ -27,7 +27,8 @@ public class RegistryFluidRequestHandler implements IRequestHandler {
                 JsonUtil.addFluidInfo(object, element);
                 array.add(object);
             }
-            responseObject.add("values", array);
+            responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
+            responseObject.add("fluids", array);
             return HttpResponseStatus.OK;
         } else {
             String name = String.join(".", path);

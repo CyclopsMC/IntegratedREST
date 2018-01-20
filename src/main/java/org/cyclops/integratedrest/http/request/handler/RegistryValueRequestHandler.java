@@ -26,7 +26,8 @@ public class RegistryValueRequestHandler implements IRequestHandler {
                 JsonUtil.addValueTypeInfo(object, element);
                 array.add(object);
             }
-            responseObject.add("values", array);
+            responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
+            responseObject.add("valueTypes", array);
             return HttpResponseStatus.OK;
         } else {
             String name = String.join(".", path);

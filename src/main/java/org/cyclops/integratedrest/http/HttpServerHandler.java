@@ -18,6 +18,7 @@ import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
 import org.apache.commons.lang3.ArrayUtils;
+import org.cyclops.integratedrest.Uris;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.http.request.RequestHandlers;
 
@@ -45,6 +46,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             }
 
             JsonObject responseObject = new JsonObject();
+            responseObject.addProperty("@context", Uris.IT + "context.jsonld");
 
             String[] path = request.uri().substring(1).split("/");
             List<String[]> paths = Lists.newArrayList();

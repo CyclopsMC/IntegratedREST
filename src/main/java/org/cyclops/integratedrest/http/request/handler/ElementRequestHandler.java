@@ -38,7 +38,8 @@ public class ElementRequestHandler implements IRequestHandler {
                     jsonParts.add(jsonElement);
                 }
             }
-            responseObject.add("parts", jsonParts);
+            responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
+            responseObject.add("networkElements", jsonParts);
             return HttpResponseStatus.OK;
         } else {
             if (path.length >= 2) {

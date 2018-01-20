@@ -1,0 +1,98 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "schema": "http://schema.org/",
+    "error": { "@id": "schema:error" },
+
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "label": { "@id": "rdfs:label" },
+    "comment": { "@id": "rdfs:comment" },
+
+    "ir": "https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/",
+    "networkElementsPage": { "@id": "ir:networkElementsPage", "@type": "@id" },
+    "networksPage": { "@id": "ir:networksPage", "@type": "@id" },
+    "partsPage": { "@id": "ir:partsPage", "@type": "@id" },
+    "aspectsPage": { "@id": "ir:aspectsPage", "@type": "@id" },
+    "valueTypesPage": { "@id": "ir:valueTypesPage", "@type": "@id" },
+    "itemsPage": { "@id": "ir:itemsPage", "@type": "@id" },
+    "blocksPage": { "@id": "ir:blocksPage", "@type": "@id" },
+    "fluidsPage": { "@id": "ir:fluidsPage", "@type": "@id" },
+    "modsPage": { "@id": "ir:modsPage", "@type": "@id" },
+
+    "Position": { "@id": "ir:Position" },
+    "NetworkElement": { "@id": "ir:NetworkElement" },
+    "Part": { "@id": "ir:Part" },
+    "WritePart": { "@id": "ir:WritePart" },
+    "ReadPart": { "@id": "ir:ReadPart" },
+    "Network": { "@id": "ir:Network" },
+    "PartNetwork": { "@id": "ir:PartNetwork" },
+    "Block": { "@id": "ir:Block" },
+    "Item": { "@id": "ir:Item" },
+    "Mod": { "@id": "ir:Mod" },
+    "Value": { "@id": "ir:Value" },
+    "Side": { "@id": "ir:Side" },
+    "ValueInfiniteList": { "@id": "ir:ValueInfiniteList" },
+    "ValueOperator": { "@id": "ir:ValueOperator" },
+    "ValueNbt": { "@id": "ir:ValueNbt" },
+    "ValueBlock": { "@id": "ir:ValueBlock" },
+    "ValueItem": { "@id": "ir:ValueItem" },
+    "ValueEntity": { "@id": "ir:ValueEntity" },
+    "ValueFluid": { "@id": "ir:ValueFluid" },
+    "Aspect": { "@id": "ir:Aspect" },
+    "WriteAspect": { "@id": "ir:WriteAspect" },
+    "ReadAspect": { "@id": "ir:ReadAspect" },
+
+    "position": { "@id": "ir:position" },
+    "target": { "@id": "ir:target" },
+    "world": { "@id": "ir:world" },
+    "x": { "@id": "ir:x" },
+    "y": { "@id": "ir:y" },
+    "z": { "@id": "ir:z" },
+    "side": { "@id": "ir:side", "@type": "@id" }
+
+    "networkElements": { "@id": "ir:networkElement" },
+    "channel": { "@id": "ir:channel" },
+    "priority": { "@id": "ir:priority" },
+    "updateInterval": { "@id": "ir:updateInterval" },
+    "loaded": { "@id": "ir:loaded" },
+    "activeAspect": { "@id": "ir:activeAspect" },
+
+    "value": { "@id": "ir:value" },
+    "valueType": { "@id": "ir:valueType" },
+    "valueTypes": { "@id": "ir:valueType" },
+    "nbt": { "@id": "ir:nbt" },
+    "block": { "@id": "ir:block" },
+    "blocks": { "@id": "ir:block" },
+    "item": { "@id": "ir:item" },
+    "items": { "@id": "ir:item" },
+    "fluid": { "@id": "ir:fluid" },
+    "fluids": { "@id": "ir:fluid" },
+    "resourceLocation": { "@id": "ir:resourceLocation" },
+    "meta": { "@id": "ir:meta" },
+    "count": { "@id": "ir:count" },
+    "fluidName": { "@id": "ir:fluidName" },
+    "uuid": { "@id": "ir:uuid" },
+    "mod": { "@id": "ir:mod" },
+    "mods": { "@id": "ir:mod" },
+
+    "networks": { "@id": "ir:network" },
+    "cablesCount": { "@id": "ir:cablesCount" },
+    "elementCount": { "@id": "ir:elementCount" },
+    "crashed": { "@id": "ir:crashed" },
+    "initialized": { "@id": "ir:initialized" },
+
+    "parts": { "@id": "ir:part" },
+
+    "unlocalizedName": { "@id": "ir:unlocalizedName" },
+    "aspects": { "@id": "ir:aspect" },
+    "writeAspects": { "@id": "ir:writeAspect" },
+    "readAspects": { "@id": "ir:readAspect" },
+
+    "color": { "@id": "ir:color" },
+
+    "dependency": { "@id": "ir:dependency" },
+    "dependencies": { "@id": "ir:dependency" }
+  }
+}

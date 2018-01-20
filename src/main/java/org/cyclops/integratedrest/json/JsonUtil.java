@@ -44,6 +44,7 @@ import org.cyclops.integratedrest.api.json.IReverseValueTypeJsonHandler;
 import org.cyclops.integratedrest.api.json.IValueTypeJsonHandler;
 
 import javax.annotation.Nullable;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -81,7 +82,7 @@ public class JsonUtil {
 
         if (networkElement instanceof IIdentifiableNetworkElement) {
             IIdentifiableNetworkElement identifiable = (IIdentifiableNetworkElement) networkElement;
-            jsonObject.addProperty("@id", JsonUtil.absolutizePath("element/" + resourceLocationToPath(identifiable.getGroup()) + "/" + identifiable.getId()));
+            jsonObject.addProperty("@id", JsonUtil.absolutizePath("networkElement/" + resourceLocationToPath(identifiable.getGroup()) + "/" + identifiable.getId()));
         }
 
         if (networkElement instanceof IPositionedNetworkElement) {
@@ -162,9 +163,7 @@ public class JsonUtil {
         try {
             Optional<IValue> value = valueInterface.getValue();
             if (value.isPresent()) {
-                JsonObject jsonVariable = new JsonObject();
-                addValueInfo(jsonVariable, value.get());;
-                jsonObject.add("value", jsonVariable);
+                addValueInfo(jsonObject, value.get());
             }
         } catch (EvaluationException e) {
             jsonObject.addProperty("error", e.getMessage());
@@ -182,7 +181,7 @@ public class JsonUtil {
         jsonObject.addProperty("y", pos.getBlockPos().getY());
         jsonObject.addProperty("z", pos.getBlockPos().getZ());
         if (side != null) {
-            jsonObject.addProperty("side", side.name());
+            jsonObject.addProperty("side", "ir:" + side.name().toLowerCase(Locale.ENGLISH));
         }
         return jsonObject;
     }
@@ -196,8 +195,7 @@ public class JsonUtil {
     }
 
     public static void addValueInfo(JsonObject jsonObject, IValue value) {
-        IValueType valueType = value.getType();
-        jsonObject.addProperty("@type", valueType.getUnlocalizedName());
+        jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + value.getType().getUnlocalizedName().replace('.', '/')));
         jsonObject.add("value", valueToJson(value));
     }
 
@@ -265,15 +263,15 @@ public class JsonUtil {
             types.add("WriteAspect");
         }
         jsonObject.add("@type", types);
-        jsonObject.addProperty("name", L10NHelpers.localize(aspect.getUnlocalizedName()));
-        jsonObject.addProperty("description", L10NHelpers.localize(aspect.getUnlocalizedName().replace("\\.name", ".info")));
+        jsonObject.addProperty("label", L10NHelpers.localize(aspect.getUnlocalizedName()));
+        jsonObject.addProperty("comment", L10NHelpers.localize(aspect.getUnlocalizedName().replace(".name", ".info")));
         jsonObject.addProperty("unlocalizedName", aspect.getUnlocalizedName());
         jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + aspect.getValueType().getUnlocalizedName().replace('.', '/')));
     }
 
     public static void addValueTypeInfo(JsonObject jsonObject, IValueType valueType) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/value/" + valueType.getUnlocalizedName().replace('.', '/')));
-        jsonObject.addProperty("name", valueType.getTypeName());
+        jsonObject.addProperty("label", valueType.getTypeName());
         jsonObject.addProperty("unlocalizedName", valueType.getUnlocalizedName());
         jsonObject.add("value", JsonUtil.valueToJson(valueType.getDefault()));
         jsonObject.addProperty("color", valueType.getDisplayColor());
@@ -311,7 +309,7 @@ public class JsonUtil {
 
     public static void addModInfo(JsonObject jsonObject, ModContainer modContainer) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/mod/" + modContainer.getModId()));
-        jsonObject.addProperty("name", modContainer.getName());
+        jsonObject.addProperty("label", modContainer.getName());
         jsonObject.addProperty("version", modContainer.getVersion());
 
         JsonArray dependencies = new JsonArray();

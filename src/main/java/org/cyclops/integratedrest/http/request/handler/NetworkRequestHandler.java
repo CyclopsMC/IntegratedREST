@@ -32,6 +32,7 @@ public class NetworkRequestHandler implements IRequestHandler {
                 JsonUtil.addNetworkInfo(jsonNetwork, network);
                 jsonNetworks.add(jsonNetwork);
             }
+            responseObject.addProperty("@id", JsonUtil.absolutizePath("/"));
             responseObject.add("networks", jsonNetworks);
             return HttpResponseStatus.OK;
         } else if (path.length == 1) {
