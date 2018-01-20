@@ -80,7 +80,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             }
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String responseString = gson.toJson(responseObject);
+            String responseString = gson.toJson(responseObject) + "\n";
             if (!writeResponse(request, context, responseString, responseStatus)) {
                 // If keep-alive is off, close the connection once the content is fully written.
                 context.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);

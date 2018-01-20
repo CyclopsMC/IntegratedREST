@@ -44,6 +44,7 @@ public class ElementHttpRequestHandler extends ElementTypeRequestHandler {
                             JsonObject jsonObject = new JsonParser().parse(content).getAsJsonObject();
                             JsonElement jsonElement = jsonObject.get("value");
                             if (jsonElement == null) {
+                                responseObject.addProperty("error", "No value property was found in the root object.");
                                 return HttpResponseStatus.BAD_REQUEST;
                             }
                             Optional<IValue> valueOptional = JsonUtil.jsonToValue(jsonElement);
@@ -52,14 +53,18 @@ public class ElementHttpRequestHandler extends ElementTypeRequestHandler {
                                 if (tile.getValueType().correspondsTo(value.getType())) {
                                     tile.setValue(valueOptional.get());
                                 } else {
+                                    responseObject.addProperty("error", "Invalid value type, HTTP Proxy expects " + tile.getValueType().getTypeName() + " but " + value.getType().getTypeName() + " was given.");
                                     return HttpResponseStatus.BAD_REQUEST;
                                 }
                             } else {
+                                responseObject.addProperty("error", "No valid value was given.");
                                 return HttpResponseStatus.BAD_REQUEST;
                             }
                         } catch (JsonSyntaxException | ClassCastException e) {
+                            responseObject.addProperty("error", e.getMessage());
                             return HttpResponseStatus.BAD_REQUEST;
                         }
+                        responseObject.addProperty("ok", "Value was successfully updated.");
                         return HttpResponseStatus.OK;
                     } else {
                         return HttpResponseStatus.METHOD_NOT_ALLOWED;
