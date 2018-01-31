@@ -161,10 +161,13 @@ public class JsonUtil {
 
     public static void addValueInterfaceInfo(JsonObject jsonObject, IValueInterface valueInterface) {
         try {
-            Optional<IValue> value = valueInterface.getValue();
-            if (value.isPresent()) {
-                addValueInfo(jsonObject, value.get());
+            JsonArray values = new JsonArray();
+            for (IValue ivalue : valueInterface.getValues()) {
+                JsonObject value = new JsonObject();
+                addValueInfo(value, ivalue);
+                values.add(value);
             }
+            jsonObject.add("values", values);
         } catch (EvaluationException e) {
             jsonObject.addProperty("error", e.getMessage());
         }
