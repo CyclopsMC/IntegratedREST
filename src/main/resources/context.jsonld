@@ -60,6 +60,7 @@
     "activeAspect": { "@id": "ir:activeAspect" },
 
     "value": { "@id": "ir:value" },
+    "values": { "@id": "ir:value" },
     "valueType": { "@id": "ir:valueType" },
     "valueTypes": { "@id": "ir:valueType" },
     "nbt": { "@id": "ir:nbt" },
