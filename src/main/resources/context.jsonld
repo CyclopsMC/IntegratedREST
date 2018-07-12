@@ -50,7 +50,7 @@
     "x": { "@id": "ir:x" },
     "y": { "@id": "ir:y" },
     "z": { "@id": "ir:z" },
-    "side": { "@id": "ir:side", "@type": "@id" }
+    "side": { "@id": "ir:side", "@type": "@id" },
 
     "networkElements": { "@id": "ir:networkElement" },
     "channel": { "@id": "ir:channel" },
