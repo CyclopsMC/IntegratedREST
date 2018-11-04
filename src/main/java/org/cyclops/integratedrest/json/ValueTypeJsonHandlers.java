@@ -117,7 +117,12 @@ public class ValueTypeJsonHandlers {
                         JsonUtil.jsonToValue(element).ifPresent(elements::add);
                     }
                     if (elements.size() > 0) {
-                        type = elements.get(0).getType();
+                        IValueType maybeType = elements.get(0).getType();
+                        if(elements.stream().map(IValue::getType).allMatch(maybeType::equals)) {
+                            // If all of the elements are the same type, then use that type as the list's type.
+                            // Otherwise, use Any as the list's type.
+                            type = maybeType;
+                        }
                     }
                     return ValueTypeList.ValueList.ofList(type, elements);
                 }
