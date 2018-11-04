@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.Constants;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
+import org.cyclops.integrateddynamics.api.evaluate.expression.VariableAdapter;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
@@ -56,7 +57,7 @@ public class TileHttp extends TileProxy {
         addSlotsToSide(EnumFacing.WEST, Sets.newHashSet(SLOT_WRITE_OUT));
         addSlotsToSide(EnumFacing.EAST, Sets.newHashSet(SLOT_WRITE_IN));
 
-        this.variable = new IVariable() {
+        this.variable = new VariableAdapter() {
             @Override
             public IValueType getType() {
                 return TileHttp.this.valueType;
