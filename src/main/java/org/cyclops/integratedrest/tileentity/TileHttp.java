@@ -146,6 +146,7 @@ public class TileHttp extends TileProxy {
         } else {
             this.value = ValueTypeBoolean.ValueBoolean.of(false);
         }
+        this.variable.invalidate();
         sendUpdate();
     }
 
