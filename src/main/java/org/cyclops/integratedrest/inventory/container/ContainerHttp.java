@@ -35,7 +35,7 @@ public class ContainerHttp extends ContainerActiveVariableBase<TileHttp> {
 
     @Override
     protected void initializeValues() {
-        ValueNotifierHelpers.setValue(this, getValueTypeId(), getTile().getValueType().getUnlocalizedName());
+        ValueNotifierHelpers.setValue(this, getValueTypeId(), getTile().getValueType().getTranslationKey());
     }
 
     public int getValueTypeId() {

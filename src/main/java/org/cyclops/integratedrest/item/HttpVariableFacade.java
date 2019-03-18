@@ -43,8 +43,8 @@ public class HttpVariableFacade extends ProxyVariableFacade implements IHttpVari
                                                                      IValueType containingValueType,
                                                                      IValueType actualType) {
         return new L10NHelpers.UnlocalizedString("http.integratedrest.error.http_invalid_type",
-                new L10NHelpers.UnlocalizedString(containingValueType.getUnlocalizedName()),
-                new L10NHelpers.UnlocalizedString(actualType.getUnlocalizedName()));
+                new L10NHelpers.UnlocalizedString(containingValueType.getTranslationKey()),
+                new L10NHelpers.UnlocalizedString(actualType.getTranslationKey()));
     }
 
     protected String getProxyTooltip() {

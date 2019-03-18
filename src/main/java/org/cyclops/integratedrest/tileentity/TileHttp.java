@@ -119,7 +119,7 @@ public class TileHttp extends TileProxy {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         tag = super.writeToNBT(tag);
-        tag.setString("valueType", valueType.getUnlocalizedName());
+        tag.setString("valueType", valueType.getTranslationKey());
         tag.setTag("value", ValueHelpers.serialize(value));
         return tag;
     }

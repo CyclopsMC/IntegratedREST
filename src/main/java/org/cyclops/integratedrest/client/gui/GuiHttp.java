@@ -70,7 +70,7 @@ public class GuiHttp extends GuiActiveVariableBase<ContainerHttp, TileHttp> {
         valueTypes.add(ValueTypes.CATEGORY_ANY);
         valueTypeSelector = new GuiArrowedListField<>(0, Minecraft.getMinecraft().fontRenderer,
                 guiLeft + 38, guiTop + 18, 105, 14, true, true, valueTypes);
-        valueTypeSelector.setListener(() -> ValueNotifierHelpers.setValue(getContainer(), getContainer().getValueTypeId(), valueTypeSelector.getActiveElement().getUnlocalizedName()));
+        valueTypeSelector.setListener(() -> ValueNotifierHelpers.setValue(getContainer(), getContainer().getValueTypeId(), valueTypeSelector.getActiveElement().getTranslationKey()));
         valueTypeSelector.setActiveElement(getContainer().getValueType());
     }
 

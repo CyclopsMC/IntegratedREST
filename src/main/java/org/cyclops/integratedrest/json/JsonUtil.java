@@ -195,7 +195,7 @@ public class JsonUtil {
     }
 
     public static void addValueInfo(JsonObject jsonObject, IValue value) {
-        jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + value.getType().getUnlocalizedName().replace('.', '/')));
+        jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + value.getType().getTranslationKey().replace('.', '/')));
         jsonObject.add("value", valueToJson(value));
     }
 
@@ -219,7 +219,7 @@ public class JsonUtil {
     }
 
     public static String resourceLocationToPath(ResourceLocation resourceLocation) {
-        return resourceLocation.getResourceDomain() + "/" + resourceLocation.getResourcePath();
+        return resourceLocation.getNamespace() + "/" + resourceLocation.getPath();
     }
 
     public static void addPartTypeInfo(JsonObject jsonObject, IPartType partType) {
@@ -254,7 +254,7 @@ public class JsonUtil {
     }
 
     public static void addAspectTypeInfo(JsonObject jsonObject, IAspect aspect) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/aspect/" + aspect.getUnlocalizedName().replace('.', '/')));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/aspect/" + aspect.getTranslationKey().replace('.', '/')));
         JsonArray types = new JsonArray();
         if (aspect instanceof IAspectRead) {
             types.add("ReadAspect");
@@ -263,24 +263,24 @@ public class JsonUtil {
             types.add("WriteAspect");
         }
         jsonObject.add("@type", types);
-        jsonObject.addProperty("label", L10NHelpers.localize(aspect.getUnlocalizedName()));
-        jsonObject.addProperty("comment", L10NHelpers.localize(aspect.getUnlocalizedName().replace(".name", ".info")));
-        jsonObject.addProperty("unlocalizedName", aspect.getUnlocalizedName());
-        jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + aspect.getValueType().getUnlocalizedName().replace('.', '/')));
+        jsonObject.addProperty("label", L10NHelpers.localize(aspect.getTranslationKey()));
+        jsonObject.addProperty("comment", L10NHelpers.localize(aspect.getTranslationKey().replace(".name", ".info")));
+        jsonObject.addProperty("unlocalizedName", aspect.getTranslationKey());
+        jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + aspect.getValueType().getTranslationKey().replace('.', '/')));
     }
 
     public static void addValueTypeInfo(JsonObject jsonObject, IValueType valueType) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/value/" + valueType.getUnlocalizedName().replace('.', '/')));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/value/" + valueType.getTranslationKey().replace('.', '/')));
         jsonObject.addProperty("label", valueType.getTypeName());
-        jsonObject.addProperty("unlocalizedName", valueType.getUnlocalizedName());
+        jsonObject.addProperty("unlocalizedName", valueType.getTranslationKey());
         jsonObject.add("value", JsonUtil.valueToJson(valueType.getDefault()));
         jsonObject.addProperty("color", valueType.getDisplayColor());
     }
 
     public static void addItemInfo(JsonObject jsonObject, Item item) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(item.getRegistryName())));
-        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + item.getRegistryName().getResourceDomain()));
-        jsonObject.addProperty("unlocalizedName", item.getUnlocalizedName());
+        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + item.getRegistryName().getNamespace()));
+        jsonObject.addProperty("unlocalizedName", item.getTranslationKey());
         jsonObject.addProperty("resourceLocation", item.getRegistryName().toString());
         Block block = Block.getBlockFromItem(item);
         if (block != null && block != Blocks.AIR) {
@@ -290,8 +290,8 @@ public class JsonUtil {
 
     public static void addBlockInfo(JsonObject jsonObject, Block block) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(block.getRegistryName())));
-        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + block.getRegistryName().getResourceDomain()));
-        jsonObject.addProperty("unlocalizedName", block.getUnlocalizedName());
+        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + block.getRegistryName().getNamespace()));
+        jsonObject.addProperty("unlocalizedName", block.getTranslationKey());
         jsonObject.addProperty("resourceLocation", block.getRegistryName().toString());
         Item item = Item.getItemFromBlock(block);
         if (item != null && item != Items.AIR) {
