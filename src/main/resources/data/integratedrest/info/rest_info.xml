@@ -11,6 +11,6 @@
         <paragraph>info_book.integratedrest.http.text1</paragraph>
         <paragraph>info_book.integratedrest.http.text2</paragraph>
         <paragraph>info_book.integratedrest.http.text3</paragraph>
-        <appendix type="crafting_recipe">integratedrest:http</appendix>
+        <appendix type="minecraft:crafting">integratedrest:crafting/http</appendix>
     </section>
 </section>

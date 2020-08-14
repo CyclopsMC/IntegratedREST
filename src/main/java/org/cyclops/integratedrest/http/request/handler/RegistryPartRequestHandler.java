@@ -30,8 +30,7 @@ public class RegistryPartRequestHandler implements IRequestHandler {
             responseObject.add("parts", array);
             return HttpResponseStatus.OK;
         } else {
-            String name = String.join(".", path);
-            IPartType element = registry.getPartType(name);
+            IPartType element = registry.getPartType(RegistryNamespacedRequestHandler.pathToResourceLocation(path));
             if (element != null) {
                 JsonUtil.addPartTypeInfo(responseObject, element);
                 return HttpResponseStatus.OK;

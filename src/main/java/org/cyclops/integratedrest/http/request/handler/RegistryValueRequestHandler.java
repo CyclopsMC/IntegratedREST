@@ -30,8 +30,7 @@ public class RegistryValueRequestHandler implements IRequestHandler {
             responseObject.add("valueTypes", array);
             return HttpResponseStatus.OK;
         } else {
-            String name = String.join(".", path);
-            IValueType element = registry.getValueType(name);
+            IValueType element = registry.getValueType(RegistryNamespacedRequestHandler.pathToResourceLocation(path));
             if (element != null) {
                 JsonUtil.addValueTypeInfo(responseObject, element);
                 return HttpResponseStatus.OK;

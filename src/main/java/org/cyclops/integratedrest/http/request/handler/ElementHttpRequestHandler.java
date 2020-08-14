@@ -31,7 +31,7 @@ public class ElementHttpRequestHandler extends ElementTypeRequestHandler {
                                                HttpRequest request, JsonObject responseObject) {
         if (networkElement instanceof IPositionedNetworkElement) {
             IPositionedNetworkElement positionedNetworkElement = (IPositionedNetworkElement) networkElement;
-            TileHttp tile = TileHelpers.getSafeTile(positionedNetworkElement.getPosition(), TileHttp.class);
+            TileHttp tile = TileHelpers.getSafeTile(positionedNetworkElement.getPosition(), TileHttp.class).orElse(null);
             if (tile != null) {
                 if (tile.getProxyId() == id) {
                     if (request.method().equals(HttpMethod.GET)) {

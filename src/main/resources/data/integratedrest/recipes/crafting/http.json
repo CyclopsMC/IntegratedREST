@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " D ",
+    "CPC"
+  ],
+  "key": {
+    "D": {
+      "item": "integrateddynamics:logic_director"
+    },
+    "C": {
+      "item": "integrateddynamics:crystalized_menril_chunk"
+    },
+    "P": {
+      "item": "integrateddynamics:proxy"
+    }
+  },
+  "result": {
+    "item": "integratedrest:http"
+  }
+}

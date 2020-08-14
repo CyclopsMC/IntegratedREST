@@ -2,8 +2,8 @@ package org.cyclops.integratedrest.network;
 
 import net.minecraft.util.ResourceLocation;
 import org.cyclops.cyclopscore.datastructure.DimPos;
-import org.cyclops.integrateddynamics.Reference;
 import org.cyclops.integrateddynamics.network.ProxyNetworkElement;
+import org.cyclops.integratedrest.Reference;
 
 /**
  * Network element for http proxies.

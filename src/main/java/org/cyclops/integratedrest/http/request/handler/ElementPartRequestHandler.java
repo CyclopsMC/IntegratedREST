@@ -24,7 +24,7 @@ public class ElementPartRequestHandler extends ElementTypeRequestHandler {
                                                HttpRequest request, JsonObject responseObject) {
         if (networkElement instanceof IPartNetworkElement) {
             IPartNetworkElement partNetworkElement = (IPartNetworkElement) networkElement;
-            IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network);
+            IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network).orElse(null);
             if (partNetwork != null) {
                 if (partNetworkElement.getPartState().getId() == id) {
                     if (request.method().equals(HttpMethod.GET)) {

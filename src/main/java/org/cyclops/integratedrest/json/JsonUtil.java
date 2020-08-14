@@ -4,15 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.item.Items;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.forgespi.language.IModInfo;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.cyclopscore.helper.TileHelpers;
@@ -62,7 +62,7 @@ public class JsonUtil {
 
     public static void addNetworkInfo(JsonObject jsonObject, INetwork network) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("network/" + Integer.toString(network.hashCode())));
-        IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network);
+        IPartNetwork partNetwork = NetworkHelpers.getPartNetworkChecked(network);
         JsonArray types = new JsonArray();
         types.add("Network");
         if (partNetwork != null) {
@@ -76,7 +76,7 @@ public class JsonUtil {
     }
 
     public static void addNetworkElementInfo(JsonObject jsonObject, INetworkElement networkElement, INetwork network) {
-        IPartNetwork partNetwork = NetworkHelpers.getPartNetwork(network);
+        IPartNetwork partNetwork = NetworkHelpers.getPartNetworkChecked(network);
         JsonArray types = new JsonArray();
         types.add("NetworkElement");
 
@@ -86,7 +86,7 @@ public class JsonUtil {
         }
 
         if (networkElement instanceof IPositionedNetworkElement) {
-            EnumFacing side = null;
+            Direction side = null;
             if (networkElement instanceof ISidedNetworkElement) {
                 side = ((ISidedNetworkElement) networkElement).getSide();
             }
@@ -95,7 +95,7 @@ public class JsonUtil {
 
         DimPos pos = getNetworkElementPosition(networkElement);
         if (pos != null) {
-            Block block = pos.getWorld().getBlockState(pos.getBlockPos()).getBlock();
+            Block block = pos.getWorld(true).getBlockState(pos.getBlockPos()).getBlock();
             jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(block.getRegistryName())));
         }
 
@@ -105,10 +105,8 @@ public class JsonUtil {
         jsonObject.addProperty("updateInterval", networkElement.getUpdateInterval());
         jsonObject.addProperty("network", JsonUtil.absolutizePath("network/" + network.hashCode()));
 
-        IValueInterface valueInterface = getNetworkElementCapability(networkElement, Capabilities.VALUE_INTERFACE);
-        if (valueInterface != null) {
-            JsonUtil.addValueInterfaceInfo(jsonObject, valueInterface);
-        }
+        getNetworkElementCapability(networkElement, Capabilities.VALUE_INTERFACE)
+                .ifPresent(valueInterface -> JsonUtil.addValueInterfaceInfo(jsonObject, valueInterface));
 
         if (partNetwork != null && networkElement instanceof IPartNetworkElement) {
             JsonUtil.addPartNetworkElementInfo(jsonObject, (IPartNetworkElement<?, ?>) networkElement, partNetwork);
@@ -127,14 +125,13 @@ public class JsonUtil {
     public static PartPos getNetworkElementPositionSided(INetworkElement networkElement) {
         if (networkElement instanceof ISidedNetworkElement) {
             DimPos pos = getNetworkElementPosition(networkElement);
-            EnumFacing side = ((ISidedNetworkElement) networkElement).getSide();
+            Direction side = ((ISidedNetworkElement) networkElement).getSide();
             return PartPos.of(pos, side);
         }
         return null;
     }
 
-    @Nullable
-    public static <T> T getNetworkElementCapability(INetworkElement networkElement, Capability<T> capability) {
+    public static <T> LazyOptional<T> getNetworkElementCapability(INetworkElement networkElement, Capability<T> capability) {
         PartPos partPos = getNetworkElementPositionSided(networkElement);
         if (partPos != null) {
             return TileHelpers.getCapability(partPos.getPos(), partPos.getSide(), capability);
@@ -143,13 +140,13 @@ public class JsonUtil {
         if (pos != null) {
             return TileHelpers.getCapability(pos, capability);
         }
-        return null;
+        return LazyOptional.empty();
     }
 
     public static void addPartNetworkElementInfo(JsonObject jsonObject, IPartNetworkElement<?, ?> networkElement, IPartNetwork partNetwork) {
         jsonObject.add("target", partPosToJson(networkElement.getTarget().getTarget()));
         jsonObject.addProperty("loaded", networkElement.isLoaded());
-        ((JsonArray) jsonObject.get("@type")).add(JsonUtil.absolutizePath("registry/part/" + networkElement.getPart().getName()));
+        ((JsonArray) jsonObject.get("@type")).add(JsonUtil.absolutizePath("registry/part/" + JsonUtil.resourceLocationToPath(networkElement.getPart().getUniqueName())));
 
         IPartState partState = networkElement.getPartState();
         if (partState instanceof IPartStateWriter) {
@@ -174,9 +171,9 @@ public class JsonUtil {
         return posToJson(partPos.getPos(), partPos.getSide());
     }
 
-    public static JsonObject posToJson(DimPos pos, @Nullable EnumFacing side) {
+    public static JsonObject posToJson(DimPos pos, @Nullable Direction side) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("world", pos.getDimensionId());
+        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getDimension().getRegistryName()));
         jsonObject.addProperty("x", pos.getBlockPos().getX());
         jsonObject.addProperty("y", pos.getBlockPos().getY());
         jsonObject.addProperty("z", pos.getBlockPos().getZ());
@@ -195,7 +192,7 @@ public class JsonUtil {
     }
 
     public static void addValueInfo(JsonObject jsonObject, IValue value) {
-        jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + value.getType().getTranslationKey().replace('.', '/')));
+        jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + JsonUtil.resourceLocationToPath(value.getType().getUniqueName())));
         jsonObject.add("value", valueToJson(value));
     }
 
@@ -223,7 +220,8 @@ public class JsonUtil {
     }
 
     public static void addPartTypeInfo(JsonObject jsonObject, IPartType partType) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/part/" + partType.getName()));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/part/" + JsonUtil.resourceLocationToPath(partType.getUniqueName())));
+        jsonObject.addProperty("resourceLocation", partType.getUniqueName().toString());
         JsonArray types = new JsonArray();
         if (partType instanceof IPartTypeReader) {
             types.add("ReadPart");
@@ -255,6 +253,7 @@ public class JsonUtil {
 
     public static void addAspectTypeInfo(JsonObject jsonObject, IAspect aspect) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/aspect/" + aspect.getTranslationKey().replace('.', '/')));
+        jsonObject.addProperty("resourceLocation", aspect.getUniqueName().toString());
         JsonArray types = new JsonArray();
         if (aspect instanceof IAspectRead) {
             types.add("ReadAspect");
@@ -271,6 +270,7 @@ public class JsonUtil {
 
     public static void addValueTypeInfo(JsonObject jsonObject, IValueType valueType) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/value/" + valueType.getTranslationKey().replace('.', '/')));
+        jsonObject.addProperty("resourceLocation", valueType.getUniqueName().toString());
         jsonObject.addProperty("label", valueType.getTypeName());
         jsonObject.addProperty("unlocalizedName", valueType.getTranslationKey());
         jsonObject.add("value", JsonUtil.valueToJson(valueType.getDefault()));
@@ -300,30 +300,30 @@ public class JsonUtil {
     }
 
     public static void addFluidInfo(JsonObject jsonObject, Fluid fluid) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/fluid/" + fluid.getName()));
-        jsonObject.addProperty("unlocalizedName", fluid.getUnlocalizedName());
-        if (fluid.getBlock() != null) {
-            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(fluid.getBlock().getRegistryName())));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/fluid/" + JsonUtil.resourceLocationToPath(fluid.getRegistryName())));
+        jsonObject.addProperty("resourceLocation", fluid.getRegistryName().toString());
+        if (fluid.getDefaultState().getBlockState() != null) {
+            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(fluid.getDefaultState().getBlockState().getBlock().getRegistryName())));
         }
     }
 
-    public static void addModInfo(JsonObject jsonObject, ModContainer modContainer) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/mod/" + modContainer.getModId()));
-        jsonObject.addProperty("label", modContainer.getName());
-        jsonObject.addProperty("version", modContainer.getVersion());
+    public static void addModInfo(JsonObject jsonObject, IModInfo modInfo) {
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/mod/" + modInfo.getModId()));
+        jsonObject.addProperty("label", modInfo.getDisplayName());
+        jsonObject.addProperty("version", modInfo.getVersion().toString());
 
         JsonArray dependencies = new JsonArray();
-        for (ArtifactVersion artifactVersion : modContainer.getRequirements()) {
+        for (IModInfo.ModVersion modVersion : modInfo.getDependencies()) {
             JsonObject jsonVersion = new JsonObject();
-            addDependencyInfo(jsonVersion, artifactVersion);
+            addDependencyInfo(jsonVersion, modVersion);
             dependencies.add(jsonVersion);
         }
         jsonObject.add("dependencies", dependencies);
     }
 
-    public static void addDependencyInfo(JsonObject jsonObject, ArtifactVersion artifactVersion) {
-        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + artifactVersion.getLabel()));
-        jsonObject.addProperty("versionRange", artifactVersion.getRangeString());
+    public static void addDependencyInfo(JsonObject jsonObject, IModInfo.ModVersion modVersion) {
+        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + modVersion.getModId()));
+        jsonObject.addProperty("versionRange", modVersion.getVersionRange().toString());
     }
 
 }

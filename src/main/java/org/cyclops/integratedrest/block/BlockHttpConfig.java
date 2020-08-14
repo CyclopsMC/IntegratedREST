@@ -1,36 +1,29 @@
 package org.cyclops.integratedrest.block;
 
-import net.minecraft.item.ItemBlock;
-import org.cyclops.cyclopscore.config.extendedconfig.BlockContainerConfig;
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
+import org.cyclops.cyclopscore.config.extendedconfig.BlockConfig;
+import org.cyclops.integrateddynamics.item.ItemBlockProxy;
 import org.cyclops.integratedrest.IntegratedRest;
-import org.cyclops.integratedrest.item.ItemBlockHttp;
 
 /**
  * Config for {@link BlockHttp}.
  * @author rubensworks
  */
-public class BlockHttpConfig extends BlockContainerConfig {
+public class BlockHttpConfig extends BlockConfig {
 
-    /**
-     * The unique instance.
-     */
-    public static BlockHttpConfig _instance;
-
-    /**
-     * Make a new instance.
-     */
     public BlockHttpConfig() {
         super(
             IntegratedRest._instance,
-            true,
-            "http",
-            null,
-            BlockHttp.class
+                "http",
+                eConfig -> new BlockHttp(Block.Properties.create(Material.ANVIL)
+                        .hardnessAndResistance(5.0F)
+                        .sound(SoundType.METAL)),
+                (eConfig, block) -> new ItemBlockProxy(block, new Item.Properties()
+                        .group(IntegratedRest._instance.getDefaultItemGroup()))
         );
     }
 
-    @Override
-    public Class<? extends ItemBlock> getItemBlockClass() {
-        return ItemBlockHttp.class;
-    }
 }

@@ -2,8 +2,8 @@ package org.cyclops.integratedrest.http.request.handler;
 
 import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.RegistryNamespaced;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.cyclops.integratedrest.json.JsonUtil;
 
 /**
@@ -13,8 +13,8 @@ import org.cyclops.integratedrest.json.JsonUtil;
 public class RegistryBlockRequestHandler extends RegistryNamespacedRequestHandler<Block> {
 
     @Override
-    protected RegistryNamespaced<ResourceLocation, Block> getRegistry() {
-        return Block.REGISTRY;
+    protected IForgeRegistry<Block> getRegistry() {
+        return ForgeRegistries.BLOCKS;
     }
 
     @Override

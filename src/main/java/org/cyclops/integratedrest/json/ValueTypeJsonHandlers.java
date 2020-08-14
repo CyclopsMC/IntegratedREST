@@ -6,18 +6,20 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.state.IProperty;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.cyclops.cyclopscore.helper.BlockHelpers;
+import org.cyclops.cyclopscore.helper.FluidHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueTypeListProxy;
@@ -133,7 +135,7 @@ public class ValueTypeJsonHandlers {
         REGISTRY.registerHandler(ValueTypes.OPERATOR, value -> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("@type", "ValueOperator");
-            jsonObject.addProperty("@value", value.getRawValue().getUniqueName());
+            jsonObject.addProperty("@value", value.getRawValue().getUniqueName().toString());
             return jsonObject;
         });
         // No reverse handler
@@ -150,7 +152,7 @@ public class ValueTypeJsonHandlers {
                 if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueNbt")) {
                     try {
                         return ValueTypeNbt.ValueNbt.of(JsonToNBT.getTagFromJson(((JsonObject) jsonElement).get("nbt").toString()));
-                    } catch (NBTException e) {
+                    } catch (CommandSyntaxException e) {
                         throw new IllegalStateException(e);
                     }
                 }
@@ -162,15 +164,15 @@ public class ValueTypeJsonHandlers {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("@type", "ValueBlock");
             if (value.getRawValue().isPresent()) {
-                IBlockState blockState = value.getRawValue().get();
+                BlockState blockState = value.getRawValue().get();
                 jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(blockState.getBlock().getRegistryName())));
                 jsonObject.addProperty("resourceLocation", blockState.getBlock().getRegistryName().toString());
-                jsonObject.addProperty("meta", blockState.getBlock().getMetaFromState(blockState));
+                jsonObject.addProperty("state", BlockHelpers.serializeBlockState(blockState).toString());
                 JsonArray jsonProperties = new JsonArray();
-                for (IProperty<?> property : blockState.getPropertyKeys()) {
+                for (IProperty<?> property : blockState.getProperties()) {
                     JsonObject jsonProperty = new JsonObject();
                     jsonProperty.addProperty("key", property.getName());
-                    jsonProperty.addProperty("value", blockState.getValue(property).toString());
+                    jsonProperty.addProperty("value", blockState.get(property).toString());
                     jsonProperties.add(jsonProperty);
                 }
             }
@@ -185,9 +187,13 @@ public class ValueTypeJsonHandlers {
                         return ValueObjectTypeBlock.ValueBlock.of(null);
                     } else {
                         ResourceLocation resourceLocation = new ResourceLocation(jsonObject.get("resourceLocation").getAsString());
-                        Block block = Block.REGISTRY.getObject(resourceLocation);
+                        Block block = ForgeRegistries.BLOCKS.getValue(resourceLocation);
                         if (block != null) {
-                            return ValueObjectTypeBlock.ValueBlock.of(block.getStateFromMeta(jsonObject.get("meta").getAsInt()));
+                            try {
+                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(JsonToNBT.getTagFromJson(jsonObject.get("state").getAsString())));
+                            } catch (CommandSyntaxException e) {
+                                throw new IllegalStateException(e);
+                            }
                         }
                     }
                 }
@@ -203,9 +209,8 @@ public class ValueTypeJsonHandlers {
                 jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(itemStack.getItem().getRegistryName())));
                 jsonObject.addProperty("resourceLocation", itemStack.getItem().getRegistryName().toString());
                 jsonObject.addProperty("count", itemStack.getCount());
-                jsonObject.addProperty("meta", itemStack.getMetadata());
-                if (itemStack.hasTagCompound()) {
-                    jsonObject.add("nbt", new JsonParser().parse(itemStack.getTagCompound().toString()));
+                if (itemStack.hasTag()) {
+                    jsonObject.add("nbt", new JsonParser().parse(itemStack.getTag().toString()));
                 }
             }
             return jsonObject;
@@ -219,7 +224,7 @@ public class ValueTypeJsonHandlers {
                         return ValueObjectTypeItemStack.ValueItemStack.of(ItemStack.EMPTY);
                     } else {
                         ResourceLocation resourceLocation = new ResourceLocation(jsonObject.get("resourceLocation").getAsString());
-                        Item item = Item.REGISTRY.getObject(resourceLocation);
+                        Item item = ForgeRegistries.ITEMS.getValue(resourceLocation);
                         if (item != null) {
                             int count = 1;
                             if (jsonObject.has("count")) {
@@ -231,15 +236,15 @@ public class ValueTypeJsonHandlers {
                                 meta = jsonObject.get("meta").getAsInt();
                             }
 
-                            ItemStack itemStack = new ItemStack(item, count, meta);
+                            ItemStack itemStack = new ItemStack(item, count);
                             if (jsonObject.has("nbt")) {
-                                NBTTagCompound tag;
+                                CompoundNBT tag;
                                 try {
                                     tag = JsonToNBT.getTagFromJson(jsonObject.get("nbt").toString());
-                                } catch (NBTException e) {
+                                } catch (CommandSyntaxException e) {
                                     throw new IllegalStateException(e);
                                 }
-                                itemStack.setTagCompound(tag);
+                                itemStack.setTag(tag);
                             }
                             return ValueObjectTypeItemStack.ValueItemStack.of(itemStack);
                         }
@@ -279,13 +284,13 @@ public class ValueTypeJsonHandlers {
         REGISTRY.registerHandler(ValueTypes.OBJECT_FLUIDSTACK, value -> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("@type", "ValueFluid");
-            if (value.getRawValue().isPresent()) {
-                FluidStack fluidStack = value.getRawValue().get();
-                jsonObject.addProperty("fluid", JsonUtil.absolutizePath("registry/fluid/" + fluidStack.getFluid().getName()));
-                jsonObject.addProperty("fluidName", fluidStack.getFluid().getName());
-                jsonObject.addProperty("count", fluidStack.amount);
-                if (fluidStack.tag != null) {
-                    jsonObject.add("nbt", new JsonParser().parse(fluidStack.tag.toString()));
+            if (!value.getRawValue().isEmpty()) {
+                FluidStack fluidStack = value.getRawValue();
+                jsonObject.addProperty("fluid", JsonUtil.absolutizePath("registry/fluid/" + fluidStack.getFluid().getRegistryName()));
+                jsonObject.addProperty("fluidName", fluidStack.getFluid().getRegistryName().toString());
+                jsonObject.addProperty("count", fluidStack.getAmount());
+                if (fluidStack.hasTag()) {
+                    jsonObject.add("nbt", new JsonParser().parse(fluidStack.getTag().toString()));
                 }
             }
             return jsonObject;
@@ -296,24 +301,24 @@ public class ValueTypeJsonHandlers {
                 if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueFluid")) {
                     JsonObject jsonObject = (JsonObject) jsonElement;
                     if (!jsonObject.has("fluidName")) {
-                        return ValueObjectTypeFluidStack.ValueFluidStack.of(null);
+                        return ValueObjectTypeFluidStack.ValueFluidStack.of(FluidStack.EMPTY);
                     } else {
-                        Fluid fluid = FluidRegistry.getFluid(jsonObject.get("fluidName").getAsString());
+                        Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(jsonObject.get("fluidName").getAsString()));
                         if (fluid != null) {
-                            int count = Fluid.BUCKET_VOLUME;
+                            int count = FluidHelpers.BUCKET_VOLUME;
                             if (jsonObject.has("count")) {
                                 count = jsonObject.get("count").getAsInt();
                             }
 
                             FluidStack fluidStack = new FluidStack(fluid, count);
                             if (jsonObject.has("nbt")) {
-                                NBTTagCompound tag;
+                                CompoundNBT tag;
                                 try {
                                     tag = JsonToNBT.getTagFromJson(jsonObject.get("nbt").toString());
-                                } catch (NBTException e) {
+                                } catch (CommandSyntaxException e) {
                                     throw new IllegalStateException(e);
                                 }
-                                fluidStack.tag = tag;
+                                fluidStack.setTag(tag);
                             }
                             return ValueObjectTypeFluidStack.ValueFluidStack.of(fluidStack);
                         }

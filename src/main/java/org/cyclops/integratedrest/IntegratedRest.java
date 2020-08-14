@@ -1,24 +1,21 @@
 package org.cyclops.integratedrest;
 
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
-import org.cyclops.cyclopscore.config.extendedconfig.BlockItemConfigReference;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
 import org.cyclops.cyclopscore.infobook.IInfoBookRegistry;
-import org.cyclops.cyclopscore.init.ItemCreativeTab;
+import org.cyclops.cyclopscore.init.ItemGroupMod;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
-import org.cyclops.cyclopscore.init.RecipeHandler;
+import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
@@ -31,57 +28,37 @@ import org.cyclops.integratedrest.evaluate.HttpVariableFacadeHandler;
 import org.cyclops.integratedrest.http.HttpServer;
 import org.cyclops.integratedrest.http.request.RequestHandlerRegistry;
 import org.cyclops.integratedrest.http.request.RequestHandlers;
+import org.cyclops.integratedrest.inventory.container.ContainerHttpConfig;
 import org.cyclops.integratedrest.json.ValueTypeJsonHandlerRegistry;
 import org.cyclops.integratedrest.json.ValueTypeJsonHandlers;
+import org.cyclops.integratedrest.proxy.ClientProxy;
+import org.cyclops.integratedrest.proxy.CommonProxy;
+import org.cyclops.integratedrest.tileentity.TileHttpConfig;
 
 /**
  * The main mod class of this mod.
  * @author rubensworks (aka kroeserr)
  *
  */
-@Mod(
-        modid = Reference.MOD_ID,
-        name = Reference.MOD_NAME,
-        useMetadata = true,
-        version = Reference.MOD_VERSION,
-        dependencies = Reference.MOD_DEPENDENCIES,
-        guiFactory = "org.cyclops.integratedrest.GuiConfigOverview$ExtendedConfigGuiFactory",
-        certificateFingerprint = Reference.MOD_FINGERPRINT
-)
-public class IntegratedRest extends ModBaseVersionable {
-    
-    /**
-     * The proxy of this mod, depending on 'side' a different proxy will be inside this field.
-     * @see SidedProxy
-     */
-    @SidedProxy(clientSide = "org.cyclops.integratedrest.proxy.ClientProxy", serverSide = "org.cyclops.integratedrest.proxy.CommonProxy")
-    public static ICommonProxy proxy;
-    
-    /**
-     * The unique instance of this mod.
-     */
-    @Instance(value = Reference.MOD_ID)
+@Mod(Reference.MOD_ID)
+public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
+
     public static IntegratedRest _instance;
 
     protected final HttpServer server;
 
     public IntegratedRest() {
-        super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION);
+        super(Reference.MOD_ID, (instance) -> _instance = instance);
         server = new HttpServer();
+
+        MinecraftForge.EVENT_BUS.addListener(this::onApiServerStarted);
+        MinecraftForge.EVENT_BUS.addListener(this::onApiServerStopping);
     }
 
     @Override
-    protected RecipeHandler constructRecipeHandler() {
-        return new RecipeHandler(this, "shaped.xml");
-    }
+    protected void setup(FMLCommonSetupEvent event) {
+        super.setup(event);
 
-    /**
-     * The pre-initialization, will register required configs.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void preInit(FMLPreInitializationEvent event) {
         // Registries
         getRegistryManager().addRegistry(IRequestHandlerRegistry.class, RequestHandlerRegistry.getInstance());
         getRegistryManager().addRegistry(IValueTypeJsonHandlerRegistry.class, ValueTypeJsonHandlerRegistry.getInstance());
@@ -95,53 +72,18 @@ public class IntegratedRest extends ModBaseVersionable {
         RequestHandlers.load();
         ValueTypeJsonHandlers.load();
 
-        super.preInit(event);
-    }
-    
-    /**
-     * Register the config dependent things like world generation and proxy handlers.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void init(FMLInitializationEvent event) {
-        super.init(event);
-    }
-    
-    /**
-     * Register the event hooks.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void postInit(FMLPostInitializationEvent event) {
-        super.postInit(event);
-
         // Initialize info book
         IntegratedDynamics._instance.getRegistryManager().getRegistry(IInfoBookRegistry.class)
                 .registerSection(
                         OnTheDynamicsOfIntegrationBook.getInstance(), "info_book.integrateddynamics.manual",
-                        "/assets/" + Reference.MOD_ID + "/info/rest_info.xml");
-    }
-    
-    /**
-     * Register the things that are related to server starting, like commands.
-     * @param event The Forge event required for this.
-     */
-    @EventHandler
-    @Override
-    public void onServerStarting(FMLServerStartingEvent event) {
-        super.onServerStarting(event);
+                        "/data/" + Reference.MOD_ID + "/info/rest_info.xml");
     }
 
     /**
      * Register the things that are related to server starting.
      * @param event The Forge event required for this.
      */
-    @EventHandler
-    @Override
-    public void onServerStarted(FMLServerStartedEvent event) {
-        super.onServerStarted(event);
+    public void onApiServerStarted(FMLServerStartedEvent event) {
         if (GeneralConfig.startApi) {
             server.initialize();
         }
@@ -151,34 +93,39 @@ public class IntegratedRest extends ModBaseVersionable {
      * Register the things that are related to server stopping, like persistent storage.
      * @param event The Forge event required for this.
      */
-    @EventHandler
-    @Override
-    public void onServerStopping(FMLServerStoppingEvent event) {
+    public void onApiServerStopping(FMLServerStoppingEvent event) {
         if (GeneralConfig.startApi) {
             server.deinitialize();
         }
-        super.onServerStopping(event);
     }
 
     @Override
-    public CreativeTabs constructDefaultCreativeTab() {
-        return new ItemCreativeTab(this, new BlockItemConfigReference(BlockHttpConfig.class));
+    public ItemGroup constructDefaultItemGroup() {
+        return new ItemGroupMod(this, () -> RegistryEntries.ITEM_BLOCK_HTTP);
     }
 
     @Override
-    public void onGeneralConfigsRegister(ConfigHandler configHandler) {
-        configHandler.add(new GeneralConfig());
+    protected void onConfigsRegister(ConfigHandler configHandler) {
+        super.onConfigsRegister(configHandler);
+
+        configHandler.addConfigurable(new GeneralConfig());
+
+        configHandler.addConfigurable(new BlockHttpConfig());
+
+        configHandler.addConfigurable(new TileHttpConfig());
+
+        configHandler.addConfigurable(new ContainerHttpConfig());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    protected IClientProxy constructClientProxy() {
+        return new ClientProxy();
     }
 
     @Override
-    public void onMainConfigsRegister(ConfigHandler configHandler) {
-        super.onMainConfigsRegister(configHandler);
-        configHandler.add(new BlockHttpConfig());
-    }
-
-    @Override
-    public ICommonProxy getProxy() {
-        return proxy;
+    protected ICommonProxy constructCommonProxy() {
+        return new CommonProxy();
     }
 
     /**

@@ -1,53 +1,59 @@
 package org.cyclops.integratedrest.block;
 
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.inventory.Container;
-import net.minecraft.util.EnumFacing;
-import org.cyclops.cyclopscore.block.property.BlockProperty;
-import org.cyclops.cyclopscore.config.extendedconfig.BlockConfig;
-import org.cyclops.cyclopscore.config.extendedconfig.ExtendedConfig;
-import org.cyclops.integrateddynamics.core.block.BlockContainerGuiCabled;
-import org.cyclops.integratedrest.client.gui.GuiHttp;
-import org.cyclops.integratedrest.inventory.container.ContainerHttp;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
+import org.cyclops.cyclopscore.helper.TileHelpers;
+import org.cyclops.integrateddynamics.block.BlockProxy;
+import org.cyclops.integrateddynamics.core.block.BlockTileGuiCabled;
 import org.cyclops.integratedrest.tileentity.TileHttp;
 
 /**
  * A block that can listen to HTTP PUTs.
  * @author rubensworks
  */
-public class BlockHttp extends BlockContainerGuiCabled {
+public class BlockHttp extends BlockTileGuiCabled {
 
-    @BlockProperty
-    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private static BlockHttp _instance = null;
-
-    /**
-     * Get the unique instance.
-     *
-     * @return The instance.
-     */
-    public static BlockHttp getInstance() {
-        return _instance;
-    }
-
-    /**
-     * Make a new block instance.
-     *
-     * @param eConfig Config for this block.
-     */
-    public BlockHttp(ExtendedConfig<BlockConfig> eConfig) {
-        super(eConfig, TileHttp.class);
+    public BlockHttp(Properties properties) {
+        super(properties, TileHttp::new);
+        this.setDefaultState(this.stateContainer.getBaseState()
+                .with(FACING, Direction.NORTH));
     }
 
     @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerHttp.class;
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     @Override
-    public Class<? extends GuiScreen> getGui() {
-        return GuiHttp.class;
+    public void onBlockPlacedBy(World world, BlockPos blockPos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+        if (!world.isRemote()) {
+            TileHelpers.getSafeTile(world, blockPos, TileHttp.class)
+                    .ifPresent(tile -> {
+                        if (itemStack.hasTag() && itemStack.getTag().contains(BlockProxy.NBT_ID, Constants.NBT.TAG_INT)) {
+                            tile.setProxyId(itemStack.getTag().getInt(BlockProxy.NBT_ID));
+                        } else {
+                            tile.generateNewProxyId();
+                        }
+                        tile.markDirty();
+                    });
+        }
+        super.onBlockPlacedBy(world, blockPos, state, placer, itemStack);
     }
+
 }

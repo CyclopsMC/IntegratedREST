@@ -4,10 +4,9 @@
     "transform": "forge:default-block"
   },
   "variants": {
-    "facing=south": { "model": "integratedrest:http" },
-    "facing=west" : { "model": "integratedrest:http", "y": 90 },
-    "facing=north": { "model": "integratedrest:http", "y": 180 },
-    "facing=east" : { "model": "integratedrest:http", "y": 270 },
-    "inventory"   : { "model": "integratedrest:http" }
+    "facing=south": { "model": "integratedrest:block/http" },
+    "facing=west" : { "model": "integratedrest:block/http", "y": 90 },
+    "facing=north": { "model": "integratedrest:block/http", "y": 180 },
+    "facing=east" : { "model": "integratedrest:block/http", "y": 270 }
   }
 }

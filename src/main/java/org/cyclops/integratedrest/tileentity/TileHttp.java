@@ -1,14 +1,21 @@
 package org.cyclops.integratedrest.tileentity;
 
-import com.google.common.collect.Sets;
 import lombok.Setter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import org.cyclops.cyclopscore.capability.item.ItemHandlerSlotMasked;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
@@ -25,10 +32,15 @@ import org.cyclops.integrateddynamics.core.evaluate.variable.ValueHelpers;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypeBoolean;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypes;
 import org.cyclops.integrateddynamics.tileentity.TileProxy;
+import org.cyclops.integratedrest.RegistryEntries;
 import org.cyclops.integratedrest.api.item.IHttpVariableFacade;
 import org.cyclops.integratedrest.evaluate.HttpVariableFacadeHandler;
+import org.cyclops.integratedrest.inventory.container.ContainerHttp;
 import org.cyclops.integratedrest.item.HttpVariableFacade;
 import org.cyclops.integratedrest.network.HttpNetworkElement;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * A tile entity for the http block.
@@ -37,6 +49,7 @@ import org.cyclops.integratedrest.network.HttpNetworkElement;
  */
 public class TileHttp extends TileProxy {
 
+    public static final int INVENTORY_SIZE = 2;
     public static final int SLOT_WRITE_IN = 0;
     public static final int SLOT_WRITE_OUT = 1;
 
@@ -45,17 +58,23 @@ public class TileHttp extends TileProxy {
     private final IVariable variable;
 
     @Setter
-    private EntityPlayer lastPlayer = null;
+    private PlayerEntity lastPlayer = null;
 
     public TileHttp() {
-        super(2);
+        super(RegistryEntries.TILE_ENTITY_HTTP, TileHttp.INVENTORY_SIZE);
 
-        addSlotsToSide(EnumFacing.UP, Sets.newHashSet(SLOT_WRITE_IN));
-        addSlotsToSide(EnumFacing.DOWN, Sets.newHashSet(SLOT_WRITE_OUT));
-        addSlotsToSide(EnumFacing.NORTH, Sets.newHashSet(SLOT_WRITE_IN));
-        addSlotsToSide(EnumFacing.SOUTH, Sets.newHashSet(SLOT_WRITE_OUT));
-        addSlotsToSide(EnumFacing.WEST, Sets.newHashSet(SLOT_WRITE_OUT));
-        addSlotsToSide(EnumFacing.EAST, Sets.newHashSet(SLOT_WRITE_IN));
+        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.NORTH,
+                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
+        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.SOUTH,
+                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
+        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.EAST,
+                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
+        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.WEST,
+                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
+        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP,
+                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
+        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN,
+                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_OUT)));
 
         this.variable = new VariableAdapter() {
             @Override
@@ -66,18 +85,18 @@ public class TileHttp extends TileProxy {
             @Override
             public IValue getValue() throws EvaluationException {
                 if (TileHttp.this.value == null) {
-                    throw new EvaluationException("HTTP Proxy is not exposing a value");
+                    throw new EvaluationException(new TranslationTextComponent("http.integratedrest.error.http_invalid", getProxyId()));
                 }
                 return TileHttp.this.value;
             }
         };
 
-        addCapabilityInternal(NetworkElementProviderConfig.CAPABILITY, new NetworkElementProviderSingleton() {
+        addCapabilityInternal(NetworkElementProviderConfig.CAPABILITY, LazyOptional.of(() -> new NetworkElementProviderSingleton() {
             @Override
             public INetworkElement createNetworkElement(World world, BlockPos blockPos) {
                 return new HttpNetworkElement(DimPos.of(world, blockPos));
             }
-        });
+        }));
     }
 
     @Override
@@ -93,7 +112,7 @@ public class TileHttp extends TileProxy {
             public IHttpVariableFacade create(int id) {
                 return new HttpVariableFacade(id, proxyId);
             }
-        }, lastPlayer, getBlock());
+        }, lastPlayer, getBlockState());
     }
 
     @Override
@@ -117,19 +136,19 @@ public class TileHttp extends TileProxy {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        tag = super.writeToNBT(tag);
-        tag.setString("valueType", valueType.getTranslationKey());
-        tag.setTag("value", ValueHelpers.serialize(value));
+    public CompoundNBT write(CompoundNBT tag) {
+        tag = super.write(tag);
+        tag.putString("valueType", valueType.getUniqueName().toString());
+        tag.put("value", ValueHelpers.serialize(value));
         return tag;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
-        this.valueType = ValueTypes.REGISTRY.getValueType(tag.getString("valueType"));
-        if (tag.hasKey("value", Constants.NBT.TAG_COMPOUND)) {
-            NBTTagCompound valueTag = (NBTTagCompound) tag.getTag("value");
+    public void read(CompoundNBT tag) {
+        super.read(tag);
+        this.valueType = ValueTypes.REGISTRY.getValueType(new ResourceLocation(tag.getString("valueType")));
+        if (tag.contains("value", Constants.NBT.TAG_COMPOUND)) {
+            CompoundNBT valueTag = tag.getCompound("value");
             this.value = ValueHelpers.deserialize(valueTag);
 
         }
@@ -162,5 +181,16 @@ public class TileHttp extends TileProxy {
     @Override
     protected void updateReadVariable(boolean sendVariablesUpdateEvent) {
         // Do nothing
+    }
+
+    @Nullable
+    @Override
+    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        return new ContainerHttp(id, playerInventory, this.getInventory(), Optional.of(this));
+    }
+
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TranslationTextComponent("block.integratedrest.http");
     }
 }

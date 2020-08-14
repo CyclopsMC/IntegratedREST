@@ -1,8 +1,10 @@
 package org.cyclops.integratedrest.evaluate;
 
-import net.minecraft.nbt.NBTTagCompound;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandler;
+import org.cyclops.integratedrest.Reference;
 import org.cyclops.integratedrest.api.item.IHttpVariableFacade;
 import org.cyclops.integratedrest.item.HttpVariableFacade;
 
@@ -25,20 +27,20 @@ public class HttpVariableFacadeHandler implements IVariableFacadeHandler<IHttpVa
     }
 
     @Override
-    public String getTypeId() {
-        return "http";
+    public ResourceLocation getUniqueName() {
+        return new ResourceLocation(Reference.MOD_ID, "http");
     }
 
     @Override
-    public IHttpVariableFacade getVariableFacade(int id, NBTTagCompound tag) {
-        if(!tag.hasKey("partId", MinecraftHelpers.NBTTag_Types.NBTTagInt.ordinal())) {
+    public IHttpVariableFacade getVariableFacade(int id, CompoundNBT tag) {
+        if(!tag.contains("partId", Constants.NBT.TAG_INT)) {
             return INVALID_FACADE;
         }
-        return new HttpVariableFacade(id, tag.getInteger("partId"));
+        return new HttpVariableFacade(id, tag.getInt("partId"));
     }
 
     @Override
-    public void setVariableFacade(NBTTagCompound tag, IHttpVariableFacade variableFacade) {
-        tag.setInteger("partId", variableFacade.getProxyId());
+    public void setVariableFacade(CompoundNBT tag, IHttpVariableFacade variableFacade) {
+        tag.putInt("partId", variableFacade.getProxyId());
     }
 }
