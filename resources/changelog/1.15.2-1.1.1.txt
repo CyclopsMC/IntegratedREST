@@ -1,0 +1,4 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.8.3 or higher.
+
+Initial MC 1.15 release
