@@ -149,7 +149,7 @@ public class JsonUtil {
         ((JsonArray) jsonObject.get("@type")).add(JsonUtil.absolutizePath("registry/part/" + JsonUtil.resourceLocationToPath(networkElement.getPart().getUniqueName())));
 
         IPartState partState = networkElement.getPartState();
-        if (partState instanceof IPartStateWriter) {
+        if (partState instanceof IPartStateWriter && ((IPartStateWriter) partState).getActiveAspect() != null) {
             JsonObject object = new JsonObject();
             addAspectTypeInfo(object, ((IPartStateWriter) partState).getActiveAspect());
             jsonObject.add("activeAspect", object);
@@ -252,7 +252,7 @@ public class JsonUtil {
     }
 
     public static void addAspectTypeInfo(JsonObject jsonObject, IAspect aspect) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/aspect/" + aspect.getTranslationKey().replace('.', '/')));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/aspect/" + JsonUtil.resourceLocationToPath(aspect.getUniqueName())));
         jsonObject.addProperty("resourceLocation", aspect.getUniqueName().toString());
         JsonArray types = new JsonArray();
         if (aspect instanceof IAspectRead) {
@@ -263,13 +263,13 @@ public class JsonUtil {
         }
         jsonObject.add("@type", types);
         jsonObject.addProperty("label", L10NHelpers.localize(aspect.getTranslationKey()));
-        jsonObject.addProperty("comment", L10NHelpers.localize(aspect.getTranslationKey().replace(".name", ".info")));
+        jsonObject.addProperty("comment", L10NHelpers.localize(aspect.getTranslationKey() + ".info"));
         jsonObject.addProperty("unlocalizedName", aspect.getTranslationKey());
         jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + aspect.getValueType().getTranslationKey().replace('.', '/')));
     }
 
     public static void addValueTypeInfo(JsonObject jsonObject, IValueType valueType) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/value/" + valueType.getTranslationKey().replace('.', '/')));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/value/" + JsonUtil.resourceLocationToPath(valueType.getUniqueName())));
         jsonObject.addProperty("resourceLocation", valueType.getUniqueName().toString());
         jsonObject.addProperty("label", valueType.getTypeName());
         jsonObject.addProperty("unlocalizedName", valueType.getTranslationKey());
