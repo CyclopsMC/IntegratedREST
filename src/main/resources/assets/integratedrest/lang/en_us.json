@@ -1,6 +1,6 @@
 {
   "_comment": "General",
-  "itemGroup.integratedrest": "Integrated Rest",
+  "itemGroup.integratedrest": "Integrated REST",
 
   "_comment": "Blocks",
   "block.integratedrest.http": "HTTP Proxy",

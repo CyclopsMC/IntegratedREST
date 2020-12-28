@@ -3,6 +3,7 @@ package org.cyclops.integratedrest.item;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,15 +36,18 @@ public class HttpVariableFacade extends ProxyVariableFacade implements IHttpVari
         super(id, proxyId);
     }
 
-    protected ITextComponent getProxyNotInNetworkError() {
+    @Override
+    protected IFormattableTextComponent getProxyNotInNetworkError() {
         return new TranslationTextComponent("http.integratedrest.error.http_not_in_network", Integer.toString(getProxyId()));
     }
 
-    protected ITextComponent getProxyInvalidError() {
+    @Override
+    protected IFormattableTextComponent getProxyInvalidError() {
         return new TranslationTextComponent("http.integratedrest.error.http_invalid", Integer.toString(getProxyId()));
     }
 
-    protected ITextComponent getProxyInvalidTypeError(IPartNetwork network,
+    @Override
+    protected IFormattableTextComponent getProxyInvalidTypeError(IPartNetwork network,
                                                       IValueType containingValueType,
                                                       IValueType actualType) {
         return new TranslationTextComponent("http.integratedrest.error.http_invalid_type",

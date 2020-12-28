@@ -14,7 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -169,7 +169,7 @@ public class ValueTypeJsonHandlers {
                 jsonObject.addProperty("resourceLocation", blockState.getBlock().getRegistryName().toString());
                 jsonObject.addProperty("state", BlockHelpers.serializeBlockState(blockState).toString());
                 JsonArray jsonProperties = new JsonArray();
-                for (IProperty<?> property : blockState.getProperties()) {
+                for (Property<?> property : blockState.getProperties()) {
                     JsonObject jsonProperty = new JsonObject();
                     jsonProperty.addProperty("key", property.getName());
                     jsonProperty.addProperty("value", blockState.get(property).toString());

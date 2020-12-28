@@ -173,7 +173,7 @@ public class JsonUtil {
 
     public static JsonObject posToJson(DimPos pos, @Nullable Direction side) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getDimension().getRegistryName()));
+        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getWorldKey().getLocation()));
         jsonObject.addProperty("x", pos.getBlockPos().getX());
         jsonObject.addProperty("y", pos.getBlockPos().getY());
         jsonObject.addProperty("z", pos.getBlockPos().getZ());

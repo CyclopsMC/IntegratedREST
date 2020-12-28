@@ -1,20 +1,21 @@
 modLoader="javafml"
-loaderVersion="[31.2,)"
+loaderVersion="[34,)"
 issueTrackerURL="https://github.com/CyclopsMC/IntegratedREST/issues"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/integrated-rest"
+license="MIT"
+logoFile="logo.png"
+authors="rubensworks (aka kroeser)"
 [[mods]]
 modId="integratedrest"
 version="${file.jarVersion}"
 displayName="IntegratedREST"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/integrated-rest"
-logoFile="logo.png"
-authors="rubensworks (aka kroeser)"
 description='''
 Expose Integrated Dynamics networks as a REST API.
 '''
 [[dependencies.integratedrest]]
     modId="cyclopscore"
     mandatory=true
-    versionRange="[1.8.3,)"
+    versionRange="[1.9.0,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.integratedrest]]
@@ -32,12 +33,12 @@ Expose Integrated Dynamics networks as a REST API.
 [[dependencies.integratedrest]]
     modId="forge"
     mandatory=true
-    versionRange="[31.2,)"
+    versionRange="[34,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.integratedrest]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.2,]"
     ordering="NONE"
     side="BOTH"

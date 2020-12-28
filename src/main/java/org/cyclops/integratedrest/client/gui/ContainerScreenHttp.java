@@ -1,10 +1,12 @@
 package org.cyclops.integratedrest.client.gui;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import org.cyclops.cyclopscore.client.gui.component.input.WidgetArrowedListField;
 import org.cyclops.cyclopscore.helper.ValueNotifierHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
@@ -63,16 +65,16 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
         List<IValueType> valueTypes = Lists.newArrayList(LogicProgrammerElementTypes.VALUETYPE.getValueTypes());
         valueTypes.add(ValueTypes.CATEGORY_ANY);
         valueTypeSelector = new WidgetArrowedListField<>(font,
-                guiLeft + 38, guiTop + 18, 105, 14, true, "", true, valueTypes);
+                guiLeft + 38, guiTop + 18, 105, 14, true, new StringTextComponent(""), true, valueTypes);
         valueTypeSelector.setListener(() -> ValueNotifierHelpers.setValue(getContainer(), getContainer().getValueTypeId(), valueTypeSelector.getActiveElement().getUniqueName().toString()));
         getContainer().getValueType().ifPresent(vt -> valueTypeSelector.setActiveElement(vt));
         children.add(valueTypeSelector);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        valueTypeSelector.render(mouseX, mouseY, partialTicks);
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
+        valueTypeSelector.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
