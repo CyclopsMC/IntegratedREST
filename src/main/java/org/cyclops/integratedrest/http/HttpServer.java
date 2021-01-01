@@ -15,6 +15,8 @@ import org.cyclops.integratedrest.IntegratedRest;
  */
 public class HttpServer {
 
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
     private Channel channel;
 
     public Channel getChannel() {
@@ -23,8 +25,8 @@ public class HttpServer {
 
     public void initialize() {
         IntegratedRest.clog(Level.INFO, "Starting Integrated REST server...");
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        this.bossGroup = new NioEventLoopGroup(1);
+        this.workerGroup = new NioEventLoopGroup();
 
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
@@ -42,9 +44,10 @@ public class HttpServer {
 
     public void deinitialize() {
         IntegratedRest.clog(Level.INFO, "Stopping Integrated REST server...");
-        if (this.channel != null) {
+        if (this.bossGroup != null && workerGroup != null) {
             try {
-                channel.close().sync();
+                bossGroup.shutdownGracefully().sync();
+                workerGroup.shutdownGracefully().sync();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
