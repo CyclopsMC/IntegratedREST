@@ -9,6 +9,7 @@ authors="rubensworks (aka kroeser)"
 modId="integratedrest"
 version="${file.jarVersion}"
 displayName="IntegratedREST"
+updateJSONURL="https://raw.githubusercontent.com/CyclopsMC/Versions/master/forge_update/integrated-rest.json"
 description='''
 Expose Integrated Dynamics networks as a REST API.
 '''
