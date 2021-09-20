@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTypes;
 import net.minecraft.state.Property;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -143,7 +144,7 @@ public class ValueTypeJsonHandlers {
         REGISTRY.registerHandler(ValueTypes.NBT, value -> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("@type", "ValueNbt");
-            jsonObject.add("nbt", new JsonParser().parse(value.getRawValue().toString()));
+            jsonObject.add("nbt", new JsonParser().parse(value.getRawValue().orElse(new CompoundNBT()).toString()));
             return jsonObject;
         });
         REGISTRY.registerReverseHandler(new CheckedValueTypeJsonHandlerBase<ValueTypeNbt.ValueNbt>() {
