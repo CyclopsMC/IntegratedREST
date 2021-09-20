@@ -6,14 +6,14 @@
 @prefix vann: <http://purl.org/vocab/vann/>.
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix ir: <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+@prefix ir: <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 # ---------------------------------------- Metadata ----------------------------------------------
 
-<https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>
+<https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>
     a owl:Ontology;
     vann:preferredNamespacePrefix "ir";
-    vann:preferredNamespaceUri "https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#";
+    vann:preferredNamespaceUri "https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#";
     rdfs:label "Object Mapping."@en;
     rdfs:comment "RDF vocabulary for describing Integrated Dynamics values."@en;
     dct:title "Object Mapping"@en;
@@ -27,39 +27,39 @@
 ir:World a rdfs:Class;
     rdfs:label "World"@en;
     rdfs:comment "A Minecraft world exposed through an Integrated REST endpoint."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:NetworkElement a rdfs:Class;
     rdfs:label "Network Element"@en;
     rdfs:comment "An Integrated Dynamics network element."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:Part a rdfs:Class;
     rdfs:label "Part"@en;
     rdfs:comment "An Integrated Dynamics part."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:WritePart a rdfs:Class;
     rdfs:label "Write Part"@en;
     rdfs:comment "An Integrated Dynamics writer part."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Part.
 
 ir:ReadPart a rdfs:Class;
     rdfs:label "Read Part"@en;
     rdfs:comment "An Integrated Dynamics reader part."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Part.
 
 ir:Position a rdfs:Class;
     rdfs:label "Position"@en;
     rdfs:comment "A position in a Minecraft world."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:Side a rdfs:Class;
     rdfs:label "Side"@en;
     rdfs:comment "A Minecraft side."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 ir:north a ir:Side.
 ir:east a ir:Side.
 ir:south a ir:Side.
@@ -70,96 +70,96 @@ ir:down a ir:Side.
 ir:Block a rdfs:Class;
     rdfs:label "Block"@en;
     rdfs:comment "A Minecraft block."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:Item a rdfs:Class;
     rdfs:label "Item"@en;
     rdfs:comment "A Minecraft item."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:Mod a rdfs:Class;
     rdfs:label "Mod"@en;
     rdfs:comment "A Minecraft mod."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:Network a rdfs:Class;
     rdfs:label "Network"@en;
     rdfs:comment "An Integrated Dynamics network."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:PartNetwork a rdfs:Class;
     rdfs:label "Part Network"@en;
     rdfs:comment "An Integrated Dynamics network with parts."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Network.
 
 ir:Value a rdfs:Class;
     rdfs:label "Value"@en;
     rdfs:comment "An Integrated Dynamics value."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:ValueType a rdfs:Class;
     rdfs:label "Value Type"@en;
     rdfs:comment "An Integrated Dynamics value type."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:ValueInfiniteList a rdfs:Class;
     rdfs:label "Infinite List"@en;
     rdfs:comment "A list that is infinite."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Value, rdf:List.
 
 ir:ValueOperator a rdfs:Class;
     rdfs:label "Operator value"@en;
     rdfs:comment "An operator value."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Value.
 
 ir:ValueNbt a rdfs:Class;
     rdfs:label "NBT tag value"@en;
     rdfs:comment "An NBT tag value."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Value.
 
 ir:ValueBlock a rdfs:Class;
     rdfs:label "Block value"@en;
     rdfs:comment "A block (state) value."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Value.
 
 ir:ValueItem a rdfs:Class;
     rdfs:label "Item value"@en;
     rdfs:comment "An item(stack) value."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Value.
 
 ir:ValueEntity a rdfs:Class;
     rdfs:label "Entity value"@en;
     rdfs:comment "An entity value."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Value.
 
 ir:ValueFluid a rdfs:Class;
     rdfs:label "Fluid value"@en;
     rdfs:comment "A fluid value."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Value.
 
 ir:Aspect a rdfs:Class;
     rdfs:label "Aspect"@en;
     rdfs:comment "An Integrated Dynamics aspect."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:WriteAspect a rdfs:Class;
     rdfs:label "Write Aspect"@en;
     rdfs:comment "An Integrated Dynamics write aspect."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Aspect.
 
 ir:ReadAspect a rdfs:Class;
     rdfs:label "Read Aspect"@en;
     rdfs:comment "An Integrated Dynamics read aspect."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subClassOf ir:Aspect.
 
 # ---------------------------------------- Properties --------------------------------------------
@@ -167,309 +167,309 @@ ir:ReadAspect a rdfs:Class;
 ir:networkElementsPage a rdf:Property;
     rdfs:label "has network elements page"@en;
     rdfs:comment "Links an world to a page of contained network elements."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:networksPage a rdf:Property;
     rdfs:label "has networks page"@en;
     rdfs:comment "Links an world to a page of contained networks."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:partsPage a rdf:Property;
     rdfs:label "has parts page"@en;
     rdfs:comment "Links an world to a page of parts."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:aspectsPage a rdf:Property;
     rdfs:label "has aspects page"@en;
     rdfs:comment "Links an world to a page of aspects."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:valueTypesPage a rdf:Property;
     rdfs:label "has value types page"@en;
     rdfs:comment "Links an world to a page of value types."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:itemsPage a rdf:Property;
     rdfs:label "has items page"@en;
     rdfs:comment "Links an world to a page of items."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:blocksPage a rdf:Property;
     rdfs:label "has blocks page"@en;
     rdfs:comment "Links an world to a page of blocks."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:fluidsPage a rdf:Property;
     rdfs:label "has fluids page"@en;
     rdfs:comment "Links an world to a page of fluids."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:modsPage a rdf:Property;
     rdfs:label "has mods page"@en;
     rdfs:comment "Links an world to a page of mods."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World.
 
 ir:networkElement a rdf:Property;
     rdfs:label "has network element"@en;
     rdfs:comment "The world contains the given network element."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World;
     rdfs:range ir:NetworkElement.
 
 ir:position a rdf:Property;
     rdfs:label "has position"@en;
     rdfs:comment "Identifies a position in a world."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Position.
 
 ir:target a rdf:Property;
     rdfs:label "has target position"@en;
     rdfs:comment "Identifies the target position of something in a world."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Position.
 
 ir:world a rdf:Property;
     rdfs:label "world ID"@en;
     rdfs:comment "The Minecraft world/dimension ID of a position."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Position;
     rdfs:range xsd:integer.
 
 ir:x a rdf:Property;
     rdfs:label "X"@en;
     rdfs:comment "The Minecraft X coordinate of a position."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Position;
     rdfs:range xsd:integer.
 
 ir:y a rdf:Property;
     rdfs:label "Y"@en;
     rdfs:comment "The Minecraft Y coordinate of a position."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Position;
     rdfs:range xsd:integer.
 
 ir:z a rdf:Property;
     rdfs:label "Z"@en;
     rdfs:comment "The Minecraft Z coordinate of a position."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Position;
     rdfs:range xsd:integer.
 
 ir:side a rdf:Property;
     rdfs:label "side"@en;
     rdfs:comment "The Minecraft side of a position."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Position;
     rdfs:range ir:Side.
 
 ir:block a rdf:Property;
     rdfs:label "block"@en;
     rdfs:comment "The block of something."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Block.
 
 ir:item a rdf:Property;
     rdfs:label "item"@en;
     rdfs:comment "The item of something."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Item.
 
 ir:mod a rdf:Property;
     rdfs:label "mod"@en;
     rdfs:comment "The mod of something."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Mod.
 
 ir:fluid a rdf:Property;
     rdfs:label "fluid"@en;
     rdfs:comment "The fluid of something."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Fluid.
 
 ir:channel a rdf:Property;
     rdfs:label "channel"@en;
     rdfs:comment "The channel a network element is on."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:NetworkElement;
     rdfs:range xsd:integer.
 
 ir:priority a rdf:Property;
     rdfs:label "priority"@en;
     rdfs:comment "The priority of a network element, a higher value is a higher priority."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:NetworkElement;
     rdfs:range xsd:integer.
 
 ir:updateInterval a rdf:Property;
     rdfs:label "update interval"@en;
     rdfs:comment "After how many ticks the network element should tick again."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:NetworkElement;
     rdfs:range xsd:integer.
 
 ir:loaded a rdf:Property;
     rdfs:label "is loaded"@en;
     rdfs:comment "If a network element is currently loaded in the world."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:NetworkElement;
     rdfs:range xsd:boolean.
 
 ir:network a rdf:Property;
     rdfs:label "has network"@en;
     rdfs:comment "The network of a network element."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:NetworkElement;
     rdfs:range ir:Network.
 
 ir:activeAspect a rdf:Property;
     rdfs:label "active aspect"@en;
     rdfs:comment "The active aspect of a network element."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:NetworkElement;
     rdfs:range ir:Aspect.
 
 ir:valueType a rdf:Property;
     rdfs:label "has value type"@en;
     rdfs:comment "The Integrated Dynamics value type of something."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:ValueType.
 
 ir:value a rdf:Property;
     rdfs:label "has value"@en;
     rdfs:comment "The Integrated Dynamics value of something."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Value.
 
 ir:nbt a rdf:Property;
     rdfs:label "nbt tag"@en;
     rdfs:comment "The NBT tag of something."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:resourceLocation a rdf:Property;
     rdfs:label "resource location"@en;
     rdfs:comment "The Minecraft ResourceLocation of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:string.
 
 ir:meta a rdf:Property;
     rdfs:label "meta value"@en;
     rdfs:comment "The metadata of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:integer.
 
 ir:count a rdf:Property;
     rdfs:label "count"@en;
     rdfs:comment "The amount something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:integer.
 
 ir:uuid a rdf:Property;
     rdfs:label "UUID"@en;
     rdfs:comment "The UUID of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:string.
 
 ir:fluidName a rdf:Property;
     rdfs:label "fluid name"@en;
     rdfs:comment "The fluid name of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:string.
 
 ir:network a rdf:Property;
     rdfs:label "has network"@en;
     rdfs:comment "The world contains the given network."@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:World;
     rdfs:range ir:Network.
 
 ir:cablesCount a rdf:Property;
     rdfs:label "cables count"@en;
     rdfs:comment "The number of items in this network"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Network;
     rdfs:range xsd:integer.
 
 ir:elementCount a rdf:Property;
     rdfs:label "element count"@en;
     rdfs:comment "The number of elements in this network"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Network;
     rdfs:range xsd:integer.
 
 ir:crashed a rdf:Property;
     rdfs:label "crashed"@en;
     rdfs:comment "If this network has crashed"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Network;
     rdfs:range xsd:boolean.
 
 ir:initialized a rdf:Property;
     rdfs:label "initialized"@en;
     rdfs:comment "If this network has been initialized"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:domain ir:Network;
     rdfs:range xsd:boolean.
 
 ir:unlocalizedName a rdf:Property;
     rdfs:label "unlocalized name"@en;
     rdfs:comment "The unlocalized name of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:string.
 
 ir:part a rdf:Property;
     rdfs:label "part"@en;
     rdfs:comment "A part of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Part.
 
 ir:aspect a rdf:Property;
     rdfs:label "aspect"@en;
     rdfs:comment "An aspect of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range ir:Aspect.
 
 ir:writeAspect a rdf:Property;
     rdfs:label "write aspect"@en;
     rdfs:comment "A write aspect of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subPropertyOf ir:aspect;
     rdfs:range ir:WriteAspect.
 
 ir:readAspect a rdf:Property;
     rdfs:label "read aspect"@en;
     rdfs:comment "A write aspect of something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:subPropertyOf ir:aspect;
     rdfs:range ir:ReadAspect.
 
 ir:color a rdf:Property;
     rdfs:label "color"@en;
     rdfs:comment "The Minecraft color code"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:integer.
 
 ir:version a rdf:Property;
     rdfs:label "version"@en;
     rdfs:comment "The version something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
 
 ir:versionRange a rdf:Property;
     rdfs:label "version range"@en;
     rdfs:comment "The Maven version range something"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:string.
 
 ir:dependency a rdf:Property;
     rdfs:label "dependency"@en;
     rdfs:comment "A dependency"@en;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.12/src/main/resources/vocabulary.ttl#>.
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>.
