@@ -53,9 +53,7 @@ public class TileHttp extends TileProxy {
     public static final int SLOT_WRITE_IN = 0;
     public static final int SLOT_WRITE_OUT = 1;
 
-    private IValueType valueType = ValueTypes.CATEGORY_ANY;
-    private IValue value = ValueTypeBoolean.ValueBoolean.of(false);
-    private final IVariable variable;
+    private final HttpVariableAdapter variable;
 
     @Setter
     private PlayerEntity lastPlayer = null;
@@ -76,27 +74,14 @@ public class TileHttp extends TileProxy {
         addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN,
                 LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_OUT)));
 
-        this.variable = new VariableAdapter() {
-            @Override
-            public IValueType getType() {
-                return TileHttp.this.valueType;
-            }
-
-            @Override
-            public IValue getValue() throws EvaluationException {
-                if (TileHttp.this.value == null) {
-                    throw new EvaluationException(new TranslationTextComponent("http.integratedrest.error.http_invalid", getProxyId()));
-                }
-                return TileHttp.this.value;
-            }
-        };
-
         addCapabilityInternal(NetworkElementProviderConfig.CAPABILITY, LazyOptional.of(() -> new NetworkElementProviderSingleton() {
             @Override
             public INetworkElement createNetworkElement(World world, BlockPos blockPos) {
                 return new HttpNetworkElement(DimPos.of(world, blockPos));
             }
         }));
+
+        this.variable = new HttpVariableAdapter(this, ValueTypes.CATEGORY_ANY, ValueTypeBoolean.ValueBoolean.of(false));
     }
 
     @Override
@@ -138,44 +123,46 @@ public class TileHttp extends TileProxy {
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         tag = super.write(tag);
-        tag.putString("valueType", valueType.getUniqueName().toString());
-        tag.put("value", ValueHelpers.serialize(value));
+        tag.putString("valueType", this.variable.getValueTypeRaw().getUniqueName().toString());
+        if (this.variable.getValueRaw() != null) {
+            tag.put("value", ValueHelpers.serialize(this.variable.getValueRaw()));
+        }
         return tag;
     }
 
     @Override
     public void read(CompoundNBT tag) {
         super.read(tag);
-        this.valueType = ValueTypes.REGISTRY.getValueType(new ResourceLocation(tag.getString("valueType")));
+        this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(new ResourceLocation(tag.getString("valueType"))));
         if (tag.contains("value", Constants.NBT.TAG_COMPOUND)) {
             CompoundNBT valueTag = tag.getCompound("value");
-            this.value = ValueHelpers.deserialize(valueTag);
-
+            setValue(ValueHelpers.deserialize(valueTag));
         }
     }
 
-    public IValueType getValueType() {
-        return valueType;
+    public IValueType<IValue> getValueType() {
+        return this.variable.getValueTypeRaw();
     }
 
     public void setValueType(IValueType valueType) {
-        this.valueType = valueType;
-        if (!this.valueType.isCategory()) {
-            this.value = this.valueType.getDefault();
+        this.variable.setValueTypeRaw(valueType);
+        if (!valueType.isCategory()) {
+            setValue(valueType.getDefault());
         } else {
-            this.value = ValueTypeBoolean.ValueBoolean.of(false);
+            setValue(ValueTypeBoolean.ValueBoolean.of(false));
         }
-        this.variable.invalidate();
         sendUpdate();
     }
 
     public void setValue(IValue value) {
-        this.value = value;
+        this.variable.invalidate();
+        this.variable.setValueRaw(value);
+        sendUpdate();
     }
 
     @Override
     public boolean hasVariable() {
-        return this.value != null;
+        return this.variable.getValueRaw() != null;
     }
 
     @Override
@@ -192,5 +179,47 @@ public class TileHttp extends TileProxy {
     @Override
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent("block.integratedrest.http");
+    }
+
+    public static class HttpVariableAdapter extends VariableAdapter {
+        private final TileHttp tile;
+        private IValueType valueType;
+        private IValue value;
+
+        public HttpVariableAdapter(TileHttp tile, IValueType valueType, IValue value) {
+            this.tile = tile;
+            this.valueType = valueType;
+            this.value = value;
+        }
+
+        @Nullable
+        public IValue getValueRaw() {
+            return this.value;
+        }
+
+        public IValueType getValueTypeRaw() {
+            return valueType;
+        }
+
+        public void setValueRaw(IValue value) {
+            this.value = value;
+        }
+
+        public void setValueTypeRaw(IValueType valueType) {
+            this.valueType = valueType;
+        }
+
+        @Override
+        public IValueType getType() {
+            return this.valueType;
+        }
+
+        @Override
+        public IValue getValue() throws EvaluationException {
+            if (value == null) {
+                throw new EvaluationException(new TranslationTextComponent("http.integratedrest.error.http_invalid", tile.getProxyId()));
+            }
+            return value;
+        }
     }
 }
