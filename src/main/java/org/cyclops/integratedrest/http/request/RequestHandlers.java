@@ -17,7 +17,8 @@ public class RequestHandlers {
         REGISTRY.registerHandler("network", new NetworkRequestHandler());
         REGISTRY.registerHandler("networkElement", new ElementRequestHandler());
         REGISTRY.registerHandler("networkElement/integrateddynamics/part", new ElementPartRequestHandler());
-        REGISTRY.registerHandler("networkElement/integrateddynamics/http", new ElementHttpRequestHandler());
+        REGISTRY.registerHandler("networkElement/integratedrest/http", new ElementHttpRequestHandler());
+        REGISTRY.registerHandler("networkElement/integrateddynamics/http", new ElementHttpRequestHandler()); // TODO: remove in next major update
         REGISTRY.registerHandler("registry/part", new RegistryPartRequestHandler());
         REGISTRY.registerHandler("registry/aspect", new RegistryAspectRequestHandler());
         REGISTRY.registerHandler("registry/value", new RegistryValueRequestHandler());
