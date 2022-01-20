@@ -134,7 +134,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
     public static void clog(String message) {
         clog(Level.INFO, message);
     }
-    
+
     /**
      * Log a new message of the given level for this mod.
      * @param level The level in which the message must be shown.
@@ -143,5 +143,5 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
     public static void clog(Level level, String message) {
         IntegratedRest._instance.getLoggerHelper().log(level, message);
     }
-    
+
 }

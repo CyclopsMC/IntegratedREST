@@ -10,12 +10,12 @@ import org.cyclops.cyclopscore.helper.MinecraftHelpers;
  */
 @SuppressWarnings("javadoc")
 public class Reference {
-	
+
     // Mod info
     public static final String MOD_ID = "integratedrest";
     public static final String GA_TRACKING_ID = "UA-65307010-14";
     public static final String VERSION_URL = "https://raw.githubusercontent.com/CyclopsMC/Versions/master/" + MinecraftHelpers.getMinecraftVersionMajorMinor() + "/IntegratedREST.txt";
-    
+
     // MOD ID's
     public static final String MOD_FORGE = "forge";
     public static final String MOD_CYCLOPSCORE = "cyclopscore";
