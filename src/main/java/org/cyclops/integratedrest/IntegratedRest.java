@@ -1,14 +1,13 @@
 package org.cyclops.integratedrest;
 
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
-import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
@@ -23,6 +22,7 @@ import org.cyclops.integrateddynamics.infobook.OnTheDynamicsOfIntegrationBook;
 import org.cyclops.integratedrest.api.http.request.IRequestHandlerRegistry;
 import org.cyclops.integratedrest.api.json.IValueTypeJsonHandlerRegistry;
 import org.cyclops.integratedrest.block.BlockHttpConfig;
+import org.cyclops.integratedrest.blockentity.BlockEntityHttpConfig;
 import org.cyclops.integratedrest.client.model.HttpVariableModelProviders;
 import org.cyclops.integratedrest.evaluate.HttpVariableFacadeHandler;
 import org.cyclops.integratedrest.http.HttpServer;
@@ -33,7 +33,6 @@ import org.cyclops.integratedrest.json.ValueTypeJsonHandlerRegistry;
 import org.cyclops.integratedrest.json.ValueTypeJsonHandlers;
 import org.cyclops.integratedrest.proxy.ClientProxy;
 import org.cyclops.integratedrest.proxy.CommonProxy;
-import org.cyclops.integratedrest.tileentity.TileHttpConfig;
 
 /**
  * The main mod class of this mod.
@@ -74,7 +73,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
 
         // Initialize info book
         IntegratedDynamics._instance.getRegistryManager().getRegistry(IInfoBookRegistry.class)
-                .registerSection(
+                .registerSection(this,
                         OnTheDynamicsOfIntegrationBook.getInstance(), "info_book.integrateddynamics.manual",
                         "/data/" + Reference.MOD_ID + "/info/rest_info.xml");
     }
@@ -83,7 +82,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
      * Register the things that are related to server starting.
      * @param event The Forge event required for this.
      */
-    public void onApiServerStarted(FMLServerStartedEvent event) {
+    public void onApiServerStarted(ServerStartedEvent event) {
         if (GeneralConfig.startApi) {
             server.initialize();
         }
@@ -93,14 +92,14 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
      * Register the things that are related to server stopping, like persistent storage.
      * @param event The Forge event required for this.
      */
-    public void onApiServerStopping(FMLServerStoppingEvent event) {
+    public void onApiServerStopping(ServerStoppingEvent event) {
         if (GeneralConfig.startApi) {
             server.deinitialize();
         }
     }
 
     @Override
-    public ItemGroup constructDefaultItemGroup() {
+    public CreativeModeTab constructDefaultCreativeModeTab() {
         return new ItemGroupMod(this, () -> RegistryEntries.ITEM_BLOCK_HTTP);
     }
 
@@ -112,7 +111,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
 
         configHandler.addConfigurable(new BlockHttpConfig());
 
-        configHandler.addConfigurable(new TileHttpConfig());
+        configHandler.addConfigurable(new BlockEntityHttpConfig());
 
         configHandler.addConfigurable(new ContainerHttpConfig());
     }

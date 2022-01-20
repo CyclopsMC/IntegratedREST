@@ -1,12 +1,12 @@
 package org.cyclops.integratedrest;
 
-import net.minecraft.block.Block;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 import org.cyclops.integratedrest.inventory.container.ContainerHttp;
-import org.cyclops.integratedrest.tileentity.TileHttp;
+import org.cyclops.integratedrest.blockentity.BlockEntityHttp;
 
 /**
  * Referenced registry entries.
@@ -21,9 +21,9 @@ public class RegistryEntries {
     public static final Block BLOCK_HTTP = null;
 
     @ObjectHolder("integratedrest:http")
-    public static final TileEntityType<TileHttp> TILE_ENTITY_HTTP = null;
+    public static final BlockEntityType<BlockEntityHttp> BLOCK_ENTITY_HTTP = null;
 
     @ObjectHolder("integratedrest:http")
-    public static final ContainerType<ContainerHttp> CONTAINER_HTTP = null;
+    public static final MenuType<ContainerHttp> CONTAINER_HTTP = null;
 
 }

@@ -1,6 +1,6 @@
 package org.cyclops.integratedrest.client.model;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.client.model.IVariableModelProviderRegistry;
 import org.cyclops.integrateddynamics.core.client.model.SingleVariableModelProvider;

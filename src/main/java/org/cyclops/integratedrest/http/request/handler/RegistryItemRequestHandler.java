@@ -1,9 +1,7 @@
 package org.cyclops.integratedrest.http.request.handler;
 
 import com.google.gson.JsonObject;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.cyclops.integratedrest.json.JsonUtil;

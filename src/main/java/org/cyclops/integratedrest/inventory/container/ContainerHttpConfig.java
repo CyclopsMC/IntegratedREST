@@ -1,9 +1,9 @@
 package org.cyclops.integratedrest.inventory.container;
 
-import net.minecraft.client.gui.IHasContainer;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.cyclops.cyclopscore.client.gui.ScreenFactorySafe;
@@ -20,12 +20,12 @@ public class ContainerHttpConfig extends GuiConfig<ContainerHttp> {
     public ContainerHttpConfig() {
         super(IntegratedRest._instance,
                 "http",
-                eConfig -> new ContainerType<>(ContainerHttp::new));
+                eConfig -> new MenuType<>(ContainerHttp::new));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public <U extends Screen & IHasContainer<ContainerHttp>> ScreenManager.IScreenFactory<ContainerHttp, U> getScreenFactory() {
+    public <U extends Screen & MenuAccess<ContainerHttp>> MenuScreens.ScreenConstructor<ContainerHttp, U> getScreenFactory() {
         return new ScreenFactorySafe<>(ContainerScreenHttp::new);
     }
 

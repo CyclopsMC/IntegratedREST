@@ -1,10 +1,10 @@
 package org.cyclops.integratedrest.inventory.container;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import org.cyclops.cyclopscore.helper.ValueNotifierHelpers;
 import org.cyclops.cyclopscore.inventory.slot.SlotRemoveOnly;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
@@ -12,7 +12,7 @@ import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypes;
 import org.cyclops.integrateddynamics.core.inventory.container.ContainerActiveVariableBase;
 import org.cyclops.integrateddynamics.core.inventory.container.slot.SlotVariable;
 import org.cyclops.integratedrest.RegistryEntries;
-import org.cyclops.integratedrest.tileentity.TileHttp;
+import org.cyclops.integratedrest.blockentity.BlockEntityHttp;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -21,19 +21,19 @@ import java.util.Optional;
  * Container for the http block.
  * @author rubensworks
  */
-public class ContainerHttp extends ContainerActiveVariableBase<TileHttp> {
+public class ContainerHttp extends ContainerActiveVariableBase<BlockEntityHttp> {
 
     private final int valueTypeId;
 
-    public ContainerHttp(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(TileHttp.INVENTORY_SIZE), Optional.empty());
+    public ContainerHttp(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(BlockEntityHttp.INVENTORY_SIZE), Optional.empty());
     }
 
-    public ContainerHttp(int id, PlayerInventory playerInventory, IInventory inventory,
-                         Optional<TileHttp> tileSupplier) {
+    public ContainerHttp(int id, Inventory playerInventory, Container inventory,
+                         Optional<BlockEntityHttp> tileSupplier) {
         super(RegistryEntries.CONTAINER_HTTP, id, playerInventory, inventory, tileSupplier);
-        addSlot(new SlotVariable(inventory, TileHttp.SLOT_WRITE_IN, 56, 63));
-        addSlot(new SlotRemoveOnly(inventory, TileHttp.SLOT_WRITE_OUT, 104, 63));
+        addSlot(new SlotVariable(inventory, BlockEntityHttp.SLOT_WRITE_IN, 56, 63));
+        addSlot(new SlotRemoveOnly(inventory, BlockEntityHttp.SLOT_WRITE_OUT, 104, 63));
         addPlayerInventory(playerInventory, offsetX + 9, offsetY + 92);
 
         valueTypeId = getNextValueId();
@@ -55,7 +55,7 @@ public class ContainerHttp extends ContainerActiveVariableBase<TileHttp> {
     }
 
     @Override
-    public void onUpdate(int valueId, CompoundNBT value) {
+    public void onUpdate(int valueId, CompoundTag value) {
         super.onUpdate(valueId, value);
         if(getTileSupplier().isPresent()) {
             if (valueId == getValueTypeId()) {

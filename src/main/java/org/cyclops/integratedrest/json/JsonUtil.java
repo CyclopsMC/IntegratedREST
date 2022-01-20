@@ -3,19 +3,19 @@ package org.cyclops.integratedrest.json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.forgespi.language.IModInfo;
 import org.cyclops.cyclopscore.datastructure.DimPos;
+import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
-import org.cyclops.cyclopscore.helper.TileHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
 import org.cyclops.integrateddynamics.api.evaluate.IValueInterface;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
@@ -95,7 +95,7 @@ public class JsonUtil {
 
         DimPos pos = getNetworkElementPosition(networkElement);
         if (pos != null) {
-            Block block = pos.getWorld(true).getBlockState(pos.getBlockPos()).getBlock();
+            Block block = pos.getLevel(true).getBlockState(pos.getBlockPos()).getBlock();
             jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(block.getRegistryName())));
         }
 
@@ -134,11 +134,11 @@ public class JsonUtil {
     public static <T> LazyOptional<T> getNetworkElementCapability(INetworkElement networkElement, Capability<T> capability) {
         PartPos partPos = getNetworkElementPositionSided(networkElement);
         if (partPos != null) {
-            return TileHelpers.getCapability(partPos.getPos(), partPos.getSide(), capability);
+            return BlockEntityHelpers.getCapability(partPos.getPos(), partPos.getSide(), capability);
         }
         DimPos pos = getNetworkElementPosition(networkElement);
         if (pos != null) {
-            return TileHelpers.getCapability(pos, capability);
+            return BlockEntityHelpers.getCapability(pos, capability);
         }
         return LazyOptional.empty();
     }
@@ -173,7 +173,7 @@ public class JsonUtil {
 
     public static JsonObject posToJson(DimPos pos, @Nullable Direction side) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getWorldKey().location()));
+        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getLevelKey().location()));
         jsonObject.addProperty("x", pos.getBlockPos().getX());
         jsonObject.addProperty("y", pos.getBlockPos().getY());
         jsonObject.addProperty("z", pos.getBlockPos().getZ());

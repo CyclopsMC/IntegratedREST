@@ -9,13 +9,13 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.util.CharsetUtil;
-import org.cyclops.cyclopscore.helper.TileHelpers;
+import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.network.INetwork;
 import org.cyclops.integrateddynamics.api.network.INetworkElement;
 import org.cyclops.integrateddynamics.api.network.IPositionedNetworkElement;
+import org.cyclops.integratedrest.blockentity.BlockEntityHttp;
 import org.cyclops.integratedrest.json.JsonUtil;
-import org.cyclops.integratedrest.tileentity.TileHttp;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class ElementHttpRequestHandler extends ElementTypeRequestHandler {
                                                HttpRequest request, JsonObject responseObject) {
         if (networkElement instanceof IPositionedNetworkElement) {
             IPositionedNetworkElement positionedNetworkElement = (IPositionedNetworkElement) networkElement;
-            TileHttp tile = TileHelpers.getSafeTile(positionedNetworkElement.getPosition(), TileHttp.class).orElse(null);
+            BlockEntityHttp tile = BlockEntityHelpers.get(positionedNetworkElement.getPosition(), BlockEntityHttp.class).orElse(null);
             if (tile != null) {
                 if (tile.getProxyId() == id) {
                     if (request.method().equals(HttpMethod.GET)) {

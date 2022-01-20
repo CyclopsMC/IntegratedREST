@@ -1,18 +1,19 @@
-package org.cyclops.integratedrest.tileentity;
+package org.cyclops.integratedrest.blockentity;
 
 import lombok.Setter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.cyclops.cyclopscore.capability.item.ItemHandlerSlotMasked;
@@ -26,12 +27,12 @@ import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
 import org.cyclops.integrateddynamics.api.network.INetworkElement;
 import org.cyclops.integrateddynamics.api.network.IPartNetwork;
+import org.cyclops.integrateddynamics.blockentity.BlockEntityProxy;
 import org.cyclops.integrateddynamics.capability.networkelementprovider.NetworkElementProviderConfig;
 import org.cyclops.integrateddynamics.capability.networkelementprovider.NetworkElementProviderSingleton;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueHelpers;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypeBoolean;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypes;
-import org.cyclops.integrateddynamics.tileentity.TileProxy;
 import org.cyclops.integratedrest.RegistryEntries;
 import org.cyclops.integratedrest.api.item.IHttpVariableFacade;
 import org.cyclops.integratedrest.evaluate.HttpVariableFacadeHandler;
@@ -47,7 +48,7 @@ import java.util.Optional;
  *
  * @author rubensworks
  */
-public class TileHttp extends TileProxy {
+public class BlockEntityHttp extends BlockEntityProxy {
 
     public static final int INVENTORY_SIZE = 2;
     public static final int SLOT_WRITE_IN = 0;
@@ -56,10 +57,10 @@ public class TileHttp extends TileProxy {
     private final HttpVariableAdapter variable;
 
     @Setter
-    private PlayerEntity lastPlayer = null;
+    private Player lastPlayer = null;
 
-    public TileHttp() {
-        super(RegistryEntries.TILE_ENTITY_HTTP, TileHttp.INVENTORY_SIZE);
+    public BlockEntityHttp(BlockPos blockPos, BlockState blockState) {
+        super(RegistryEntries.BLOCK_ENTITY_HTTP, blockPos, blockState, BlockEntityHttp.INVENTORY_SIZE);
 
         addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.NORTH,
                 LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
@@ -76,7 +77,7 @@ public class TileHttp extends TileProxy {
 
         addCapabilityInternal(NetworkElementProviderConfig.CAPABILITY, LazyOptional.of(() -> new NetworkElementProviderSingleton() {
             @Override
-            public INetworkElement createNetworkElement(World world, BlockPos blockPos) {
+            public INetworkElement createNetworkElement(Level world, BlockPos blockPos) {
                 return new HttpNetworkElement(DimPos.of(world, blockPos));
             }
         }));
@@ -121,21 +122,20 @@ public class TileHttp extends TileProxy {
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        tag = super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putString("valueType", this.variable.getValueTypeRaw().getUniqueName().toString());
         if (this.variable.getValueRaw() != null) {
             tag.put("value", ValueHelpers.serialize(this.variable.getValueRaw()));
         }
-        return tag;
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
         this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(new ResourceLocation(tag.getString("valueType"))));
-        if (tag.contains("value", Constants.NBT.TAG_COMPOUND)) {
-            CompoundNBT valueTag = tag.getCompound("value");
+        if (tag.contains("value", Tag.TAG_COMPOUND)) {
+            CompoundTag valueTag = tag.getCompound("value");
             setValue(ValueHelpers.deserialize(valueTag));
         }
     }
@@ -172,21 +172,21 @@ public class TileHttp extends TileProxy {
 
     @Nullable
     @Override
-    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity) {
         return new ContainerHttp(id, playerInventory, this.getInventory(), Optional.of(this));
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("block.integratedrest.http");
+    public Component getDisplayName() {
+        return new TranslatableComponent("block.integratedrest.http");
     }
 
     public static class HttpVariableAdapter extends VariableAdapter {
-        private final TileHttp tile;
+        private final BlockEntityHttp tile;
         private IValueType valueType;
         private IValue value;
 
-        public HttpVariableAdapter(TileHttp tile, IValueType valueType, IValue value) {
+        public HttpVariableAdapter(BlockEntityHttp tile, IValueType valueType, IValue value) {
             this.tile = tile;
             this.valueType = valueType;
             this.value = value;
@@ -217,7 +217,7 @@ public class TileHttp extends TileProxy {
         @Override
         public IValue getValue() throws EvaluationException {
             if (value == null) {
-                throw new EvaluationException(new TranslationTextComponent("http.integratedrest.error.http_invalid", tile.getProxyId()));
+                throw new EvaluationException(new TranslatableComponent("http.integratedrest.error.http_invalid", tile.getProxyId()));
             }
             return value;
         }

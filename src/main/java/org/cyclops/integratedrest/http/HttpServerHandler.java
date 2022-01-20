@@ -18,7 +18,7 @@ import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
 import org.apache.commons.lang3.ArrayUtils;
-import org.cyclops.cyclopscore.helper.TileHelpers;
+import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
 import org.cyclops.integratedrest.Uris;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.http.request.RequestHandlers;
@@ -73,9 +73,9 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             if (requestHandler == null) {
                 responseStatus = HttpResponseStatus.NOT_FOUND;
             } else {
-                TileHelpers.UNSAFE_TILE_ENTITY_GETTER = true;
+                BlockEntityHelpers.UNSAFE_BLOCK_ENTITY_GETTER = true;
                 responseStatus = requestHandler.handle(ArrayUtils.subarray(path, 1, path.length), request, responseObject);
-                TileHelpers.UNSAFE_TILE_ENTITY_GETTER = false;
+                BlockEntityHelpers.UNSAFE_BLOCK_ENTITY_GETTER = false;
             }
 
             if (responseStatus == HttpResponseStatus.NOT_FOUND) {

@@ -1,7 +1,7 @@
 package org.cyclops.integratedrest.http.request.handler;
 
 import com.google.gson.JsonObject;
-import net.minecraft.fluid.Fluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.cyclops.integratedrest.json.JsonUtil;

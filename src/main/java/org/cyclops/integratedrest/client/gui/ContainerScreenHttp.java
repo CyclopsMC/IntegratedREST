@@ -1,12 +1,12 @@
 package org.cyclops.integratedrest.client.gui;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.cyclops.cyclopscore.client.gui.component.input.WidgetArrowedListField;
 import org.cyclops.cyclopscore.helper.ValueNotifierHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
@@ -29,7 +29,7 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
 
     private WidgetArrowedListField<IValueType> valueTypeSelector = null;
 
-    public ContainerScreenHttp(ContainerHttp container, PlayerInventory inventory, ITextComponent title) {
+    public ContainerScreenHttp(ContainerHttp container, Inventory inventory, Component title) {
         super(container, inventory, title);
     }
 
@@ -65,20 +65,20 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
         List<IValueType> valueTypes = Lists.newArrayList(LogicProgrammerElementTypes.VALUETYPE.getValueTypes());
         valueTypes.add(ValueTypes.CATEGORY_ANY);
         valueTypeSelector = new WidgetArrowedListField<>(font,
-                leftPos + 38, topPos + 18, 105, 14, true, new StringTextComponent(""), true, valueTypes);
+                leftPos + 38, topPos + 18, 105, 14, true, new TextComponent(""), true, valueTypes);
         valueTypeSelector.setListener(() -> ValueNotifierHelpers.setValue(getMenu(), getMenu().getValueTypeId(), valueTypeSelector.getActiveElement().getUniqueName().toString()));
         getMenu().getValueType().ifPresent(vt -> valueTypeSelector.setActiveElement(vt));
-        children.add(valueTypeSelector);
+        addWidget(valueTypeSelector);
     }
 
     @Override
-    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        // super.renderBg(matrixStack, partialTicks, mouseX, mouseY); // TODO: restore
+    protected void renderBg(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        super.renderBg(matrixStack, partialTicks, mouseX, mouseY);
         valueTypeSelector.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void onUpdate(int valueId, CompoundNBT value) {
+    public void onUpdate(int valueId, CompoundTag value) {
         if (valueId == getMenu().getValueTypeId()) {
             getMenu().getValueType().ifPresent(vt -> valueTypeSelector.setActiveElement(vt));
         }

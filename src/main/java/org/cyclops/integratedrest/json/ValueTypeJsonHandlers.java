@@ -7,16 +7,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTypes;
-import net.minecraft.state.Property;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.cyclops.cyclopscore.helper.BlockHelpers;
@@ -144,7 +143,7 @@ public class ValueTypeJsonHandlers {
         REGISTRY.registerHandler(ValueTypes.NBT, value -> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("@type", "ValueNbt");
-            jsonObject.add("nbt", new JsonParser().parse(value.getRawValue().orElse(new CompoundNBT()).toString()));
+            jsonObject.add("nbt", new JsonParser().parse(value.getRawValue().orElse(new CompoundTag()).toString()));
             return jsonObject;
         });
         REGISTRY.registerReverseHandler(new CheckedValueTypeJsonHandlerBase<ValueTypeNbt.ValueNbt>() {
@@ -152,7 +151,7 @@ public class ValueTypeJsonHandlers {
             public ValueTypeNbt.ValueNbt handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
                 if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueNbt")) {
                     try {
-                        return ValueTypeNbt.ValueNbt.of(JsonToNBT.parseTag(((JsonObject) jsonElement).get("nbt").toString()));
+                        return ValueTypeNbt.ValueNbt.of(TagParser.parseTag(((JsonObject) jsonElement).get("nbt").toString()));
                     } catch (CommandSyntaxException e) {
                         throw new IllegalStateException(e);
                     }
@@ -191,7 +190,7 @@ public class ValueTypeJsonHandlers {
                         Block block = ForgeRegistries.BLOCKS.getValue(resourceLocation);
                         if (block != null) {
                             try {
-                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(JsonToNBT.parseTag(jsonObject.get("state").getAsString())));
+                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(TagParser.parseTag(jsonObject.get("state").getAsString())));
                             } catch (CommandSyntaxException e) {
                                 throw new IllegalStateException(e);
                             }
@@ -239,9 +238,9 @@ public class ValueTypeJsonHandlers {
 
                             ItemStack itemStack = new ItemStack(item, count);
                             if (jsonObject.has("nbt")) {
-                                CompoundNBT tag;
+                                CompoundTag tag;
                                 try {
-                                    tag = JsonToNBT.parseTag(jsonObject.get("nbt").toString());
+                                    tag = TagParser.parseTag(jsonObject.get("nbt").toString());
                                 } catch (CommandSyntaxException e) {
                                     throw new IllegalStateException(e);
                                 }
@@ -313,9 +312,9 @@ public class ValueTypeJsonHandlers {
 
                             FluidStack fluidStack = new FluidStack(fluid, count);
                             if (jsonObject.has("nbt")) {
-                                CompoundNBT tag;
+                                CompoundTag tag;
                                 try {
-                                    tag = JsonToNBT.parseTag(jsonObject.get("nbt").toString());
+                                    tag = TagParser.parseTag(jsonObject.get("nbt").toString());
                                 } catch (CommandSyntaxException e) {
                                     throw new IllegalStateException(e);
                                 }

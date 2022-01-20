@@ -1,7 +1,8 @@
 package org.cyclops.integratedrest;
 
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import org.cyclops.integrateddynamics.api.evaluate.IValueInterface;
 
 /**
@@ -9,6 +10,5 @@ import org.cyclops.integrateddynamics.api.evaluate.IValueInterface;
  * @author rubensworks
  */
 public class Capabilities {
-    @CapabilityInject(IValueInterface.class)
-    public static Capability<IValueInterface> VALUE_INTERFACE = null;
+    public static Capability<IValueInterface> VALUE_INTERFACE = CapabilityManager.get(new CapabilityToken<>(){});
 }

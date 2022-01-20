@@ -1,7 +1,7 @@
 package org.cyclops.integratedrest.http.request.handler;
 
 import com.google.gson.JsonObject;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.cyclops.integratedrest.json.JsonUtil;

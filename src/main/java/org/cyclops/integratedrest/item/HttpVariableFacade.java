@@ -2,10 +2,10 @@ package org.cyclops.integratedrest.item;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
@@ -37,26 +37,26 @@ public class HttpVariableFacade extends ProxyVariableFacade implements IHttpVari
     }
 
     @Override
-    protected IFormattableTextComponent getProxyNotInNetworkError() {
-        return new TranslationTextComponent("http.integratedrest.error.http_not_in_network", Integer.toString(getProxyId()));
+    protected MutableComponent getProxyNotInNetworkError() {
+        return new TranslatableComponent("http.integratedrest.error.http_not_in_network", Integer.toString(getProxyId()));
     }
 
     @Override
-    protected IFormattableTextComponent getProxyInvalidError() {
-        return new TranslationTextComponent("http.integratedrest.error.http_invalid", Integer.toString(getProxyId()));
+    protected MutableComponent getProxyInvalidError() {
+        return new TranslatableComponent("http.integratedrest.error.http_invalid", Integer.toString(getProxyId()));
     }
 
     @Override
-    protected IFormattableTextComponent getProxyInvalidTypeError(IPartNetwork network,
+    protected MutableComponent getProxyInvalidTypeError(IPartNetwork network,
                                                       IValueType containingValueType,
                                                       IValueType actualType) {
-        return new TranslationTextComponent("http.integratedrest.error.http_invalid_type",
-                new TranslationTextComponent(containingValueType.getTranslationKey()),
-                new TranslationTextComponent(actualType.getTranslationKey()));
+        return new TranslatableComponent("http.integratedrest.error.http_invalid_type",
+                new TranslatableComponent(containingValueType.getTranslationKey()),
+                new TranslatableComponent(actualType.getTranslationKey()));
     }
 
-    protected ITextComponent getProxyTooltip() {
-        return new TranslationTextComponent("http.integratedrest.tooltip.delay_id", getProxyId());
+    protected Component getProxyTooltip() {
+        return new TranslatableComponent("http.integratedrest.tooltip.delay_id", getProxyId());
     }
 
     @OnlyIn(Dist.CLIENT)
