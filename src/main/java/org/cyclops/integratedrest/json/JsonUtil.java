@@ -173,7 +173,7 @@ public class JsonUtil {
 
     public static JsonObject posToJson(DimPos pos, @Nullable Direction side) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getWorldKey().getLocation()));
+        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getWorldKey().location()));
         jsonObject.addProperty("x", pos.getBlockPos().getX());
         jsonObject.addProperty("y", pos.getBlockPos().getY());
         jsonObject.addProperty("z", pos.getBlockPos().getZ());
@@ -280,9 +280,9 @@ public class JsonUtil {
     public static void addItemInfo(JsonObject jsonObject, Item item) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(item.getRegistryName())));
         jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + item.getRegistryName().getNamespace()));
-        jsonObject.addProperty("unlocalizedName", item.getTranslationKey());
+        jsonObject.addProperty("unlocalizedName", item.getDescriptionId());
         jsonObject.addProperty("resourceLocation", item.getRegistryName().toString());
-        Block block = Block.getBlockFromItem(item);
+        Block block = Block.byItem(item);
         if (block != null && block != Blocks.AIR) {
             jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(block.getRegistryName())));
         }
@@ -291,9 +291,9 @@ public class JsonUtil {
     public static void addBlockInfo(JsonObject jsonObject, Block block) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(block.getRegistryName())));
         jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + block.getRegistryName().getNamespace()));
-        jsonObject.addProperty("unlocalizedName", block.getTranslationKey());
+        jsonObject.addProperty("unlocalizedName", block.getDescriptionId());
         jsonObject.addProperty("resourceLocation", block.getRegistryName().toString());
-        Item item = Item.getItemFromBlock(block);
+        Item item = Item.byBlock(block);
         if (item != null && item != Items.AIR) {
             jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(item.getRegistryName())));
         }
@@ -302,8 +302,8 @@ public class JsonUtil {
     public static void addFluidInfo(JsonObject jsonObject, Fluid fluid) {
         jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/fluid/" + JsonUtil.resourceLocationToPath(fluid.getRegistryName())));
         jsonObject.addProperty("resourceLocation", fluid.getRegistryName().toString());
-        if (fluid.getDefaultState().getBlockState() != null) {
-            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(fluid.getDefaultState().getBlockState().getBlock().getRegistryName())));
+        if (fluid.defaultFluidState().createLegacyBlock() != null) {
+            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(fluid.defaultFluidState().createLegacyBlock().getBlock().getRegistryName())));
         }
     }
 

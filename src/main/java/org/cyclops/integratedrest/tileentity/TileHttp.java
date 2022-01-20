@@ -121,8 +121,8 @@ public class TileHttp extends TileProxy {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        tag = super.write(tag);
+    public CompoundNBT save(CompoundNBT tag) {
+        tag = super.save(tag);
         tag.putString("valueType", this.variable.getValueTypeRaw().getUniqueName().toString());
         if (this.variable.getValueRaw() != null) {
             tag.put("value", ValueHelpers.serialize(this.variable.getValueRaw()));

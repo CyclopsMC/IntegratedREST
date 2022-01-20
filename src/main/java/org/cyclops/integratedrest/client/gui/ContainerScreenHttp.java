@@ -65,22 +65,22 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
         List<IValueType> valueTypes = Lists.newArrayList(LogicProgrammerElementTypes.VALUETYPE.getValueTypes());
         valueTypes.add(ValueTypes.CATEGORY_ANY);
         valueTypeSelector = new WidgetArrowedListField<>(font,
-                guiLeft + 38, guiTop + 18, 105, 14, true, new StringTextComponent(""), true, valueTypes);
-        valueTypeSelector.setListener(() -> ValueNotifierHelpers.setValue(getContainer(), getContainer().getValueTypeId(), valueTypeSelector.getActiveElement().getUniqueName().toString()));
-        getContainer().getValueType().ifPresent(vt -> valueTypeSelector.setActiveElement(vt));
+                leftPos + 38, topPos + 18, 105, 14, true, new StringTextComponent(""), true, valueTypes);
+        valueTypeSelector.setListener(() -> ValueNotifierHelpers.setValue(getMenu(), getMenu().getValueTypeId(), valueTypeSelector.getActiveElement().getUniqueName().toString()));
+        getMenu().getValueType().ifPresent(vt -> valueTypeSelector.setActiveElement(vt));
         children.add(valueTypeSelector);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        // super.renderBg(matrixStack, partialTicks, mouseX, mouseY); // TODO: restore
         valueTypeSelector.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
     public void onUpdate(int valueId, CompoundNBT value) {
-        if (valueId == getContainer().getValueTypeId()) {
-            getContainer().getValueType().ifPresent(vt -> valueTypeSelector.setActiveElement(vt));
+        if (valueId == getMenu().getValueTypeId()) {
+            getMenu().getValueType().ifPresent(vt -> valueTypeSelector.setActiveElement(vt));
         }
     }
 }

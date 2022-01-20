@@ -152,7 +152,7 @@ public class ValueTypeJsonHandlers {
             public ValueTypeNbt.ValueNbt handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
                 if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueNbt")) {
                     try {
-                        return ValueTypeNbt.ValueNbt.of(JsonToNBT.getTagFromJson(((JsonObject) jsonElement).get("nbt").toString()));
+                        return ValueTypeNbt.ValueNbt.of(JsonToNBT.parseTag(((JsonObject) jsonElement).get("nbt").toString()));
                     } catch (CommandSyntaxException e) {
                         throw new IllegalStateException(e);
                     }
@@ -173,7 +173,7 @@ public class ValueTypeJsonHandlers {
                 for (Property<?> property : blockState.getProperties()) {
                     JsonObject jsonProperty = new JsonObject();
                     jsonProperty.addProperty("key", property.getName());
-                    jsonProperty.addProperty("value", blockState.get(property).toString());
+                    jsonProperty.addProperty("value", blockState.getValue(property).toString());
                     jsonProperties.add(jsonProperty);
                 }
             }
@@ -191,7 +191,7 @@ public class ValueTypeJsonHandlers {
                         Block block = ForgeRegistries.BLOCKS.getValue(resourceLocation);
                         if (block != null) {
                             try {
-                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(JsonToNBT.getTagFromJson(jsonObject.get("state").getAsString())));
+                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(JsonToNBT.parseTag(jsonObject.get("state").getAsString())));
                             } catch (CommandSyntaxException e) {
                                 throw new IllegalStateException(e);
                             }
@@ -241,7 +241,7 @@ public class ValueTypeJsonHandlers {
                             if (jsonObject.has("nbt")) {
                                 CompoundNBT tag;
                                 try {
-                                    tag = JsonToNBT.getTagFromJson(jsonObject.get("nbt").toString());
+                                    tag = JsonToNBT.parseTag(jsonObject.get("nbt").toString());
                                 } catch (CommandSyntaxException e) {
                                     throw new IllegalStateException(e);
                                 }
@@ -315,7 +315,7 @@ public class ValueTypeJsonHandlers {
                             if (jsonObject.has("nbt")) {
                                 CompoundNBT tag;
                                 try {
-                                    tag = JsonToNBT.getTagFromJson(jsonObject.get("nbt").toString());
+                                    tag = JsonToNBT.parseTag(jsonObject.get("nbt").toString());
                                 } catch (CommandSyntaxException e) {
                                     throw new IllegalStateException(e);
                                 }

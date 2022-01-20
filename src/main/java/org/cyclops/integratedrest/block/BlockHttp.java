@@ -17,6 +17,8 @@ import org.cyclops.integrateddynamics.block.BlockProxy;
 import org.cyclops.integrateddynamics.core.block.BlockTileGuiCabled;
 import org.cyclops.integratedrest.tileentity.TileHttp;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 /**
  * A block that can listen to HTTP PUTs.
  * @author rubensworks
@@ -27,22 +29,22 @@ public class BlockHttp extends BlockTileGuiCabled {
 
     public BlockHttp(Properties properties) {
         super(properties, TileHttp::new);
-        this.setDefaultState(this.stateContainer.getBaseState()
-                .with(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos blockPos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if (!world.isRemote()) {
+    public void setPlacedBy(World world, BlockPos blockPos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+        if (!world.isClientSide()) {
             TileHelpers.getSafeTile(world, blockPos, TileHttp.class)
                     .ifPresent(tile -> {
                         if (itemStack.hasTag() && itemStack.getTag().contains(BlockProxy.NBT_ID, Constants.NBT.TAG_INT)) {
@@ -50,10 +52,10 @@ public class BlockHttp extends BlockTileGuiCabled {
                         } else {
                             tile.generateNewProxyId();
                         }
-                        tile.markDirty();
+                        tile.setChanged();
                     });
         }
-        super.onBlockPlacedBy(world, blockPos, state, placer, itemStack);
+        super.setPlacedBy(world, blockPos, state, placer, itemStack);
     }
 
 }

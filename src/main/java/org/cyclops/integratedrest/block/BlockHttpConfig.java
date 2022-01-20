@@ -18,11 +18,11 @@ public class BlockHttpConfig extends BlockConfig {
         super(
             IntegratedRest._instance,
                 "http",
-                eConfig -> new BlockHttp(Block.Properties.create(Material.ANVIL)
-                        .hardnessAndResistance(5.0F)
+                eConfig -> new BlockHttp(Block.Properties.of(Material.HEAVY_METAL)
+                        .strength(5.0F)
                         .sound(SoundType.METAL)),
                 (eConfig, block) -> new ItemBlockProxy(block, new Item.Properties()
-                        .group(IntegratedRest._instance.getDefaultItemGroup()))
+                        .tab(IntegratedRest._instance.getDefaultItemGroup()))
         );
     }
 
