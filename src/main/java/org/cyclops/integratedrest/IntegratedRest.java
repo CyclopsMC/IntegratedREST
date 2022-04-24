@@ -8,6 +8,8 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
@@ -52,6 +54,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
 
         MinecraftForge.EVENT_BUS.addListener(this::onApiServerStarted);
         MinecraftForge.EVENT_BUS.addListener(this::onApiServerStopping);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::afterSetup);
     }
 
     @Override
@@ -61,7 +64,9 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
         // Registries
         getRegistryManager().addRegistry(IRequestHandlerRegistry.class, RequestHandlerRegistry.getInstance());
         getRegistryManager().addRegistry(IValueTypeJsonHandlerRegistry.class, ValueTypeJsonHandlerRegistry.getInstance());
+    }
 
+    protected void afterSetup(FMLLoadCompleteEvent event) {
         IntegratedDynamics._instance.getRegistryManager().getRegistry(IVariableFacadeHandlerRegistry.class).registerHandler(HttpVariableFacadeHandler.getInstance());
 
         if (MinecraftHelpers.isClientSide()) {
