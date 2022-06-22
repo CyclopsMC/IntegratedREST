@@ -3,9 +3,9 @@ package org.cyclops.integratedrest.item;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
@@ -17,7 +17,6 @@ import org.cyclops.integratedrest.api.item.IHttpVariableFacade;
 import org.cyclops.integratedrest.client.model.HttpVariableModelProviders;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Variable facade for variables determined by http blocks.
@@ -37,30 +36,30 @@ public class HttpVariableFacade extends ProxyVariableFacade implements IHttpVari
 
     @Override
     protected MutableComponent getProxyNotInNetworkError() {
-        return new TranslatableComponent("http.integratedrest.error.http_not_in_network", Integer.toString(getProxyId()));
+        return Component.translatable("http.integratedrest.error.http_not_in_network", Integer.toString(getProxyId()));
     }
 
     @Override
     protected MutableComponent getProxyInvalidError() {
-        return new TranslatableComponent("http.integratedrest.error.http_invalid", Integer.toString(getProxyId()));
+        return Component.translatable("http.integratedrest.error.http_invalid", Integer.toString(getProxyId()));
     }
 
     @Override
     protected MutableComponent getProxyInvalidTypeError(IPartNetwork network,
                                                       IValueType containingValueType,
                                                       IValueType actualType) {
-        return new TranslatableComponent("http.integratedrest.error.http_invalid_type",
-                new TranslatableComponent(containingValueType.getTranslationKey()),
-                new TranslatableComponent(actualType.getTranslationKey()));
+        return Component.translatable("http.integratedrest.error.http_invalid_type",
+                Component.translatable(containingValueType.getTranslationKey()),
+                Component.translatable(actualType.getTranslationKey()));
     }
 
     protected Component getProxyTooltip() {
-        return new TranslatableComponent("http.integratedrest.tooltip.delay_id", getProxyId());
+        return Component.translatable("http.integratedrest.tooltip.delay_id", getProxyId());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addModelOverlay(IVariableModelBaked variableModelBaked, List<BakedQuad> quads, Random rand, IModelData modelData) {
+    public void addModelOverlay(IVariableModelBaked variableModelBaked, List<BakedQuad> quads, RandomSource rand, IModelData modelData) {
         if(isValid()) {
             quads.addAll(variableModelBaked.getSubModels(HttpVariableModelProviders.HTTP).getBakedModel().getQuads(null, null, rand));
         }

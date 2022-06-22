@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.cyclops.cyclopscore.client.gui.component.input.WidgetArrowedListField;
@@ -65,7 +64,7 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
         List<IValueType> valueTypes = Lists.newArrayList(LogicProgrammerElementTypes.VALUETYPE.getValueTypes());
         valueTypes.add(ValueTypes.CATEGORY_ANY);
         valueTypeSelector = new WidgetArrowedListField<>(font,
-                leftPos + 38, topPos + 18, 105, 14, true, new TextComponent(""), true, valueTypes);
+                leftPos + 38, topPos + 18, 105, 14, true, Component.literal(""), true, valueTypes);
         valueTypeSelector.setListener(() -> ValueNotifierHelpers.setValue(getMenu(), getMenu().getValueTypeId(), valueTypeSelector.getActiveElement().getUniqueName().toString()));
         getMenu().getValueType().ifPresent(vt -> valueTypeSelector.setActiveElement(vt));
         addWidget(valueTypeSelector);

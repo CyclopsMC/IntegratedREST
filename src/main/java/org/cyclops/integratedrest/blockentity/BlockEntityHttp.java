@@ -6,7 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -178,7 +177,7 @@ public class BlockEntityHttp extends BlockEntityProxy {
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent("block.integratedrest.http");
+        return Component.translatable("block.integratedrest.http");
     }
 
     public static class HttpVariableAdapter extends VariableAdapter {
@@ -217,7 +216,7 @@ public class BlockEntityHttp extends BlockEntityProxy {
         @Override
         public IValue getValue() throws EvaluationException {
             if (value == null) {
-                throw new EvaluationException(new TranslatableComponent("http.integratedrest.error.http_invalid", tile.getProxyId()));
+                throw new EvaluationException(Component.translatable("http.integratedrest.error.http_invalid", tile.getProxyId()));
             }
             return value;
         }

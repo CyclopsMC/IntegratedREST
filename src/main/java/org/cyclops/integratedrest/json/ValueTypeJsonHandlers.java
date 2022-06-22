@@ -165,8 +165,8 @@ public class ValueTypeJsonHandlers {
             jsonObject.addProperty("@type", "ValueBlock");
             if (value.getRawValue().isPresent()) {
                 BlockState blockState = value.getRawValue().get();
-                jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(blockState.getBlock().getRegistryName())));
-                jsonObject.addProperty("resourceLocation", blockState.getBlock().getRegistryName().toString());
+                jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(ForgeRegistries.BLOCKS.getKey(blockState.getBlock()))));
+                jsonObject.addProperty("resourceLocation", ForgeRegistries.BLOCKS.getKey(blockState.getBlock()).toString());
                 jsonObject.addProperty("state", BlockHelpers.serializeBlockState(blockState).toString());
                 JsonArray jsonProperties = new JsonArray();
                 for (Property<?> property : blockState.getProperties()) {
@@ -206,8 +206,8 @@ public class ValueTypeJsonHandlers {
             jsonObject.addProperty("@type", "ValueItem");
             if (!value.getRawValue().isEmpty()) {
                 ItemStack itemStack = value.getRawValue();
-                jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(itemStack.getItem().getRegistryName())));
-                jsonObject.addProperty("resourceLocation", itemStack.getItem().getRegistryName().toString());
+                jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(ForgeRegistries.ITEMS.getKey(itemStack.getItem()))));
+                jsonObject.addProperty("resourceLocation", ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
                 jsonObject.addProperty("count", itemStack.getCount());
                 if (itemStack.hasTag()) {
                     jsonObject.add("nbt", new JsonParser().parse(itemStack.getTag().toString()));
@@ -286,8 +286,8 @@ public class ValueTypeJsonHandlers {
             jsonObject.addProperty("@type", "ValueFluid");
             if (!value.getRawValue().isEmpty()) {
                 FluidStack fluidStack = value.getRawValue();
-                jsonObject.addProperty("fluid", JsonUtil.absolutizePath("registry/fluid/" + fluidStack.getFluid().getRegistryName()));
-                jsonObject.addProperty("fluidName", fluidStack.getFluid().getRegistryName().toString());
+                jsonObject.addProperty("fluid", JsonUtil.absolutizePath("registry/fluid/" + ForgeRegistries.FLUIDS.getKey(fluidStack.getFluid())));
+                jsonObject.addProperty("fluidName", ForgeRegistries.FLUIDS.getKey(fluidStack.getFluid()).toString());
                 jsonObject.addProperty("count", fluidStack.getAmount());
                 if (fluidStack.hasTag()) {
                     jsonObject.add("nbt", new JsonParser().parse(fluidStack.getTag().toString()));

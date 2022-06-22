@@ -33,3 +33,4 @@ This mod uses [Project Lombok](http://projectlombok.org/) -- an annotation proce
 
 ### License
 All code and images are licenced under the [MIT License](https://github.com/CyclopsMC/IntegratedREST/blob/master-1.8/LICENSE.txt)
+This mod packages [netty-io-http](https://netty.io/) in order to serve an HTTP server.

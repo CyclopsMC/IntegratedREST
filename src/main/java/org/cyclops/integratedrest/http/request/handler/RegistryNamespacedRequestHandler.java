@@ -6,7 +6,6 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.json.JsonUtil;
 
@@ -14,7 +13,7 @@ import org.cyclops.integratedrest.json.JsonUtil;
  * Abstract request handler for namespaced registry calls.
  * @author rubensworks
  */
-public abstract class RegistryNamespacedRequestHandler<T extends IForgeRegistryEntry<T>> implements IRequestHandler {
+public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHandler {
 
     protected abstract IForgeRegistry<T> getRegistry();
 

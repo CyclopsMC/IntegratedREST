@@ -14,16 +14,16 @@ import org.cyclops.integratedrest.blockentity.BlockEntityHttp;
  */
 public class RegistryEntries {
 
-    @ObjectHolder("integratedrest:http")
+    @ObjectHolder(registryName = "item", value = "integratedrest:http")
     public static final Item ITEM_BLOCK_HTTP = null;
 
-    @ObjectHolder("integratedrest:http")
+    @ObjectHolder(registryName = "block", value = "integratedrest:http")
     public static final Block BLOCK_HTTP = null;
 
-    @ObjectHolder("integratedrest:http")
+    @ObjectHolder(registryName = "block_entity_type", value = "integratedrest:http")
     public static final BlockEntityType<BlockEntityHttp> BLOCK_ENTITY_HTTP = null;
 
-    @ObjectHolder("integratedrest:http")
+    @ObjectHolder(registryName = "menu", value = "integratedrest:http")
     public static final MenuType<ContainerHttp> CONTAINER_HTTP = null;
 
 }
