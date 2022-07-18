@@ -28,7 +28,7 @@ Expose Integrated Dynamics networks as a REST API.
 [[dependencies.integratedrest]]
     modId="integrateddynamics"
     mandatory=true
-    versionRange="[1.11.3,)"
+    versionRange="[1.11.4,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.integratedrest]]
