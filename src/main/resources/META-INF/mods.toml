@@ -16,7 +16,7 @@ Expose Integrated Dynamics networks as a REST API.
 [[dependencies.integratedrest]]
     modId="cyclopscore"
     mandatory=true
-    versionRange="[1.16.0,)"
+    versionRange="[1.16.1,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.integratedrest]]
