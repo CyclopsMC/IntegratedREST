@@ -62,7 +62,7 @@ sourceSets {
 }
 
 configurations {
-    shadow.setTransitive(true);
+    shadow.setTransitive(false);
 
     modLib
     implementation.extendsFrom modLib
@@ -196,7 +196,7 @@ jar {
         ])
     }
 }
-jar.finalizedBy('reobfJar')
+jar.finalizedBy('reobfShadowJar')
 
 task signJar(type: SignJar, dependsOn: jar) {
     onlyIf {
@@ -243,8 +243,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 shadowJar {
     configurations = [project.configurations.shadow]
     classifier '' // Replace the default JAR
-    append 'META-INF/mods.toml'
-    relocate 'com.google.re2j', 'vendors.com.google.re2j' // Because Forge blocks all com.google.* class loading...
+    relocate 'io.netty.handler.codec.http', 'vendors.io.netty.handler.codec.http' // To avoid clashes with other mods
 }
 
 reobf {
