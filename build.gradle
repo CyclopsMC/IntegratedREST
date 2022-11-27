@@ -243,7 +243,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 shadowJar {
     configurations = [project.configurations.shadow]
     classifier '' // Replace the default JAR
-    relocate 'io.netty.handler.codec.http', 'vendors.io.netty.handler.codec.http' // To avoid clashes with other mods
+    // To avoid clashes with other mods
+    relocate 'io.netty.handler.codec.http', 'org.cyclops.integratedrest.vendors.io.netty.handler.codec.http'
+    relocate 'io.netty.handler.codec.rtsp', 'org.cyclops.integratedrest.vendors.io.netty.handler.codec.rtsp'
+    relocate 'io.netty.handler.codec.spdy', 'org.cyclops.integratedrest.vendors.io.netty.handler.codec.spdy'
 }
 
 reobf {
