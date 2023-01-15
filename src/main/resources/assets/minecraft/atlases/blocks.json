@@ -1,0 +1,5 @@
+{ "sources": [
+  { "type": "minecraft:single", "resource": "integratedrest:customoverlay/http" },
+  { "type": "minecraft:single", "resource": "integratedrest:block/http_side" },
+  { "type": "minecraft:single", "resource": "integratedrest:block/http_top" }
+]}

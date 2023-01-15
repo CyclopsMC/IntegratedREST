@@ -13,8 +13,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import org.cyclops.cyclopscore.capability.item.ItemHandlerSlotMasked;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
@@ -23,6 +23,7 @@ import org.cyclops.integrateddynamics.api.evaluate.expression.VariableAdapter;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
+import org.cyclops.integrateddynamics.api.evaluate.variable.ValueDeseralizationContext;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
 import org.cyclops.integrateddynamics.api.network.INetworkElement;
 import org.cyclops.integrateddynamics.api.network.IPartNetwork;
@@ -61,17 +62,17 @@ public class BlockEntityHttp extends BlockEntityProxy {
     public BlockEntityHttp(BlockPos blockPos, BlockState blockState) {
         super(RegistryEntries.BLOCK_ENTITY_HTTP, blockPos, blockState, BlockEntityHttp.INVENTORY_SIZE);
 
-        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.NORTH,
+        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.NORTH,
                 LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.SOUTH,
+        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.SOUTH,
                 LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.EAST,
+        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.EAST,
                 LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.WEST,
+        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.WEST,
                 LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP,
+        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.UP,
                 LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN,
+        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN,
                 LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_OUT)));
 
         addCapabilityInternal(NetworkElementProviderConfig.CAPABILITY, LazyOptional.of(() -> new NetworkElementProviderSingleton() {
@@ -87,7 +88,7 @@ public class BlockEntityHttp extends BlockEntityProxy {
     @Override
     public ItemStack writeProxyInfo(boolean generateId, ItemStack itemStack, final int proxyId) {
         IVariableFacadeHandlerRegistry registry = IntegratedDynamics._instance.getRegistryManager().getRegistry(IVariableFacadeHandlerRegistry.class);
-        return registry.writeVariableFacadeItem(generateId, itemStack, HttpVariableFacadeHandler.getInstance(), new IVariableFacadeHandlerRegistry.IVariableFacadeFactory<IHttpVariableFacade>() {
+        return registry.writeVariableFacadeItem(generateId, itemStack, HttpVariableFacadeHandler.getInstance(), new IVariableFacadeHandlerRegistry.IVariableFacadeFactory<>() {
             @Override
             public IHttpVariableFacade create(boolean generateId) {
                 return new HttpVariableFacade(generateId, proxyId);
@@ -97,7 +98,7 @@ public class BlockEntityHttp extends BlockEntityProxy {
             public IHttpVariableFacade create(int id) {
                 return new HttpVariableFacade(id, proxyId);
             }
-        }, lastPlayer, getBlockState());
+        }, getLevel(), lastPlayer, getBlockState());
     }
 
     @Override
@@ -135,7 +136,7 @@ public class BlockEntityHttp extends BlockEntityProxy {
         this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(new ResourceLocation(tag.getString("valueType"))));
         if (tag.contains("value", Tag.TAG_COMPOUND)) {
             CompoundTag valueTag = tag.getCompound("value");
-            setValue(ValueHelpers.deserialize(valueTag));
+            setValue(ValueHelpers.deserialize(ValueDeseralizationContext.of(getLevel()), valueTag));
         }
     }
 

@@ -1,7 +1,5 @@
 package org.cyclops.integratedrest.item;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -22,8 +20,6 @@ import java.util.List;
  * Variable facade for variables determined by http blocks.
  * @author rubensworks
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class HttpVariableFacade extends ProxyVariableFacade implements IHttpVariableFacade {
 
     public HttpVariableFacade(boolean generateId, int proxyId) {

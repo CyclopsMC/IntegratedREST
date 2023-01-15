@@ -190,7 +190,7 @@ public class ValueTypeJsonHandlers {
                         Block block = ForgeRegistries.BLOCKS.getValue(resourceLocation);
                         if (block != null) {
                             try {
-                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(TagParser.parseTag(jsonObject.get("state").getAsString())));
+                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(BlockHelpers.HOLDER_GETTER_FORGE, TagParser.parseTag(jsonObject.get("state").getAsString())));
                             } catch (CommandSyntaxException e) {
                                 throw new IllegalStateException(e);
                             }
