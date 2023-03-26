@@ -3,6 +3,7 @@ package org.cyclops.integratedrest.inventory.container;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,7 +21,7 @@ public class ContainerHttpConfig extends GuiConfig<ContainerHttp> {
     public ContainerHttpConfig() {
         super(IntegratedRest._instance,
                 "http",
-                eConfig -> new MenuType<>(ContainerHttp::new));
+                eConfig -> new MenuType<>(ContainerHttp::new, FeatureFlags.VANILLA_SET));
     }
 
     @OnlyIn(Dist.CLIENT)
