@@ -101,6 +101,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                 Unpooled.copiedBuffer(responseString, CharsetUtil.UTF_8));
 
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=UTF-8");
+        // allow CORS access from everywhere so that i.e. fetch() works
+        response.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 
         if (keepAlive) {
             // Add 'Content-Length' header only for a keep-alive connection.
