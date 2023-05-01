@@ -34,7 +34,7 @@ Expose Integrated Dynamics networks as a REST API.
 [[dependencies.integratedrest]]
     modId="forge"
     mandatory=true
-    versionRange="[45.0.20,)"
+    versionRange="[45.0.50,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.integratedrest]]
