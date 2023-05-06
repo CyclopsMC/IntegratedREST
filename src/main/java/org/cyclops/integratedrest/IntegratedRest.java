@@ -4,6 +4,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -55,6 +56,9 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
         MinecraftForge.EVENT_BUS.addListener(this::onApiServerStarted);
         MinecraftForge.EVENT_BUS.addListener(this::onApiServerStopping);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::afterSetup);
+        if (MinecraftHelpers.isClientSide()) {
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelLoading);
+        }
     }
 
     @Override
@@ -69,10 +73,6 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
     protected void afterSetup(FMLLoadCompleteEvent event) {
         IntegratedDynamics._instance.getRegistryManager().getRegistry(IVariableFacadeHandlerRegistry.class).registerHandler(HttpVariableFacadeHandler.getInstance());
 
-        if (MinecraftHelpers.isClientSide()) {
-            HttpVariableModelProviders.load();
-        }
-
         RequestHandlers.load();
         ValueTypeJsonHandlers.load();
 
@@ -81,6 +81,10 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
                 .registerSection(this,
                         OnTheDynamicsOfIntegrationBook.getInstance(), "info_book.integrateddynamics.manual",
                         "/data/" + Reference.MOD_ID + "/info/rest_info.xml");
+    }
+
+    protected void onModelLoading(ModelEvent.RegisterAdditional event) {
+        HttpVariableModelProviders.load();
     }
 
     /**

@@ -57,7 +57,7 @@ public class HttpVariableFacade extends ProxyVariableFacade implements IHttpVari
     @Override
     public void addModelOverlay(IVariableModelBaked variableModelBaked, List<BakedQuad> quads, RandomSource rand, ModelData modelData) {
         if(isValid()) {
-            quads.addAll(variableModelBaked.getSubModels(HttpVariableModelProviders.HTTP).getBakedModel().getQuads(null, null, rand));
+            quads.addAll(variableModelBaked.getSubModels(HttpVariableModelProviders.HTTP).getBakedModel().getQuads(null, null, rand, modelData, null));
         }
     }
 }
