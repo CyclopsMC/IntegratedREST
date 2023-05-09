@@ -10,7 +10,6 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
@@ -21,6 +20,7 @@ import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
+import org.cyclops.integrateddynamics.core.event.IntegratedDynamicsSetupEvent;
 import org.cyclops.integrateddynamics.infobook.OnTheDynamicsOfIntegrationBook;
 import org.cyclops.integratedrest.api.http.request.IRequestHandlerRegistry;
 import org.cyclops.integratedrest.api.json.IValueTypeJsonHandlerRegistry;
@@ -55,7 +55,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
 
         MinecraftForge.EVENT_BUS.addListener(this::onApiServerStarted);
         MinecraftForge.EVENT_BUS.addListener(this::onApiServerStopping);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::afterSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onSetup);
         if (MinecraftHelpers.isClientSide()) {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelLoading);
         }
@@ -70,7 +70,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
         getRegistryManager().addRegistry(IValueTypeJsonHandlerRegistry.class, ValueTypeJsonHandlerRegistry.getInstance());
     }
 
-    protected void afterSetup(FMLLoadCompleteEvent event) {
+    protected void onSetup(IntegratedDynamicsSetupEvent event) {
         IntegratedDynamics._instance.getRegistryManager().getRegistry(IVariableFacadeHandlerRegistry.class).registerHandler(HttpVariableFacadeHandler.getInstance());
 
         RequestHandlers.load();
