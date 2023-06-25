@@ -1,7 +1,7 @@
 package org.cyclops.integratedrest.client.gui;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -71,9 +71,9 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        super.renderBg(matrixStack, partialTicks, mouseX, mouseY);
-        valueTypeSelector.render(matrixStack, mouseX, mouseY, partialTicks);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
+        super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
+        valueTypeSelector.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

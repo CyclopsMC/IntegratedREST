@@ -1,19 +1,9 @@
-// For those who want the bleeding edge
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url = 'https://maven.minecraftforge.net' }
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
-}
-
 plugins {
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'com.github.kt3k.coveralls' version '2.12.0'
     id 'com.diffplug.spotless' version '5.14.3'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 	id 'com.modrinth.minotaur' version '2.+'
 }
 
@@ -184,6 +174,7 @@ else
     version = "${project.minecraft_version}-${project.mod_version}-${build_number}"
 
 jar {
+    archiveClassifier.set('slim')
     manifest {
         attributes([
                 "Specification-Title": "${project.name}",
@@ -196,7 +187,6 @@ jar {
         ])
     }
 }
-jar.finalizedBy('reobfShadowJar')
 
 task signJar(type: SignJar, dependsOn: jar) {
     onlyIf {
@@ -214,7 +204,7 @@ build.dependsOn signJar
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'deobf'
+    archiveClassifier.set('deobf')
     manifest {
         attributes([
                 "Specification-Title": "${project.name}",
@@ -242,18 +232,21 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 shadowJar {
     configurations = [project.configurations.shadow]
-    classifier '' // Replace the default JAR
+    archiveClassifier.set(''); // Replace the default JAR
     // To avoid clashes with other mods
     relocate 'io.netty.handler.codec.http', 'org.cyclops.integratedrest.vendors.io.netty.handler.codec.http'
     relocate 'io.netty.handler.codec.rtsp', 'org.cyclops.integratedrest.vendors.io.netty.handler.codec.rtsp'
     relocate 'io.netty.handler.codec.spdy', 'org.cyclops.integratedrest.vendors.io.netty.handler.codec.spdy'
+	finalizedBy 'reobfShadowJar'
 }
 
+assemble.dependsOn shadowJar
 reobf {
     shadowJar {} // Reobfuscate the shadowed JAR
 }
 
 artifacts {
+	archives shadowJar
     archives deobfJar
     archives sourcesJar
     archives javadocJar
@@ -270,7 +263,7 @@ curseforge {
         id = "284332" // my project url is http://minecraft.curseforge.com/mc-mods/284332/
         releaseType = project.project.release_type
 		addGameVersion project.minecraft_version
-        mainArtifact(jar) {
+        mainArtifact(shadowJar) {
             relations {
                 requiredDependency 'cyclops-core'
                 requiredDependency 'integrated-dynamics'
@@ -299,7 +292,7 @@ modrinth {
     projectId = "ovubcV3F"
     versionNumber = project.minecraft_version + '-' + project.mod_version
     versionType = project.release_type
-    uploadFile = jar
+    uploadFile = shadowJar
     gameVersions = [ project.minecraft_version ]
     changelog = ""
     if (new File("resources/changelog/${project.version}.txt").exists()) {
@@ -338,7 +331,7 @@ publishing {
 
     publications { PublicationContainer publicationContainer ->
         publicationContainer.register("maven", MavenPublication) { MavenPublication publication ->
-            publication.artifacts = [jar, javadocJar, deobfJar, sourcesJar]
+            publication.artifacts = [shadowJar, javadocJar, deobfJar, sourcesJar]
             publication.artifactId = project.archivesBaseName.toLowerCase() // GH can't handle uppercase...
         }
     }
@@ -355,8 +348,8 @@ idea {
 
 jacocoTestReport {
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
 
