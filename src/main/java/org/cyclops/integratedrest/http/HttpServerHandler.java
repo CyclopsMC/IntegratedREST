@@ -100,7 +100,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                 HttpVersion.HTTP_1_1, responseStatus,
                 Unpooled.copiedBuffer(responseString, CharsetUtil.UTF_8));
 
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/ld+json; charset=UTF-8");
+        response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/ld+json");
         // allow CORS access from everywhere so that i.e. fetch() works
         response.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 
