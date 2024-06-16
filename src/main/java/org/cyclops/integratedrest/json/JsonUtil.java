@@ -4,19 +4,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.forgespi.language.IModInfo;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforgespi.language.IModInfo;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
+import org.cyclops.integrateddynamics.Capabilities;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
 import org.cyclops.integrateddynamics.api.evaluate.IValueInterface;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
@@ -39,7 +39,6 @@ import org.cyclops.integrateddynamics.api.part.read.IPartTypeReader;
 import org.cyclops.integrateddynamics.api.part.write.IPartStateWriter;
 import org.cyclops.integrateddynamics.api.part.write.IPartTypeWriter;
 import org.cyclops.integrateddynamics.core.helper.NetworkHelpers;
-import org.cyclops.integratedrest.Capabilities;
 import org.cyclops.integratedrest.GeneralConfig;
 import org.cyclops.integratedrest.api.json.IReverseValueTypeJsonHandler;
 import org.cyclops.integratedrest.api.json.IValueTypeJsonHandler;
@@ -97,7 +96,7 @@ public class JsonUtil {
         DimPos pos = getNetworkElementPosition(networkElement);
         if (pos != null) {
             Block block = pos.getLevel(true).getBlockState(pos.getBlockPos()).getBlock();
-            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(ForgeRegistries.BLOCKS.getKey(block))));
+            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.BLOCK.getKey(block))));
         }
 
         jsonObject.add("@type", types);
@@ -106,7 +105,7 @@ public class JsonUtil {
         jsonObject.addProperty("updateInterval", networkElement.getUpdateInterval());
         jsonObject.addProperty("network", JsonUtil.absolutizePath("network/" + network.hashCode()));
 
-        getNetworkElementCapability(networkElement, Capabilities.VALUE_INTERFACE)
+        getNetworkElementCapability(networkElement, Capabilities.ValueInterface.BLOCK)
                 .ifPresent(valueInterface -> JsonUtil.addValueInterfaceInfo(jsonObject, valueInterface));
 
         if (partNetwork != null && networkElement instanceof IPartNetworkElement) {
@@ -132,7 +131,7 @@ public class JsonUtil {
         return null;
     }
 
-    public static <T> LazyOptional<T> getNetworkElementCapability(INetworkElement networkElement, Capability<T> capability) {
+    public static <T> Optional<T> getNetworkElementCapability(INetworkElement networkElement, BlockCapability<T, Direction> capability) {
         PartPos partPos = getNetworkElementPositionSided(networkElement);
         if (partPos != null) {
             return BlockEntityHelpers.getCapability(partPos.getPos(), partPos.getSide(), capability);
@@ -141,7 +140,7 @@ public class JsonUtil {
         if (pos != null) {
             return BlockEntityHelpers.getCapability(pos, capability);
         }
-        return LazyOptional.empty();
+        return Optional.empty();
     }
 
     public static void addPartNetworkElementInfo(JsonObject jsonObject, IPartNetworkElement<?, ?> networkElement, IPartNetwork partNetwork) {
@@ -231,7 +230,7 @@ public class JsonUtil {
             types.add("WritePart");
         }
         jsonObject.add("@type", types);
-        jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(ForgeRegistries.ITEMS.getKey(partType.getItem()))));
+        jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.ITEM.getKey(partType.getItem()))));
         if (partType instanceof IPartTypeReader) {
             JsonArray array = new JsonArray();
             for (IAspect aspect : ((IPartTypeReader<?, ?>) partType).getReadAspects()) {
@@ -279,32 +278,32 @@ public class JsonUtil {
     }
 
     public static void addItemInfo(JsonObject jsonObject, Item item) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(ForgeRegistries.ITEMS.getKey(item))));
-        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + ForgeRegistries.ITEMS.getKey(item).getNamespace()));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.ITEM.getKey(item))));
+        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + BuiltInRegistries.ITEM.getKey(item).getNamespace()));
         jsonObject.addProperty("unlocalizedName", item.getDescriptionId());
-        jsonObject.addProperty("resourceLocation", ForgeRegistries.ITEMS.getKey(item).toString());
+        jsonObject.addProperty("resourceLocation", BuiltInRegistries.ITEM.getKey(item).toString());
         Block block = Block.byItem(item);
         if (block != null && block != Blocks.AIR) {
-            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(ForgeRegistries.BLOCKS.getKey(block))));
+            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.BLOCK.getKey(block))));
         }
     }
 
     public static void addBlockInfo(JsonObject jsonObject, Block block) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(ForgeRegistries.BLOCKS.getKey(block))));
-        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + ForgeRegistries.BLOCKS.getKey(block).getNamespace()));
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.BLOCK.getKey(block))));
+        jsonObject.addProperty("mod", JsonUtil.absolutizePath("registry/mod/" + BuiltInRegistries.BLOCK.getKey(block).getNamespace()));
         jsonObject.addProperty("unlocalizedName", block.getDescriptionId());
-        jsonObject.addProperty("resourceLocation", ForgeRegistries.BLOCKS.getKey(block).toString());
+        jsonObject.addProperty("resourceLocation", BuiltInRegistries.BLOCK.getKey(block).toString());
         Item item = Item.byBlock(block);
         if (item != null && item != Items.AIR) {
-            jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(ForgeRegistries.ITEMS.getKey(item))));
+            jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.ITEM.getKey(item))));
         }
     }
 
     public static void addFluidInfo(JsonObject jsonObject, Fluid fluid) {
-        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/fluid/" + JsonUtil.resourceLocationToPath(ForgeRegistries.FLUIDS.getKey(fluid))));
-        jsonObject.addProperty("resourceLocation", ForgeRegistries.FLUIDS.getKey(fluid).toString());
+        jsonObject.addProperty("@id", JsonUtil.absolutizePath("registry/fluid/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.FLUID.getKey(fluid))));
+        jsonObject.addProperty("resourceLocation", BuiltInRegistries.FLUID.getKey(fluid).toString());
         if (fluid.defaultFluidState().createLegacyBlock() != null) {
-            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(ForgeRegistries.BLOCKS.getKey(fluid.defaultFluidState().createLegacyBlock().getBlock()))));
+            jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.BLOCK.getKey(fluid.defaultFluidState().createLegacyBlock().getBlock()))));
         }
     }
 

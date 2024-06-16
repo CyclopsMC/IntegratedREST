@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.IForgeRegistry;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.json.JsonUtil;
 
@@ -15,7 +15,7 @@ import org.cyclops.integratedrest.json.JsonUtil;
  */
 public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHandler {
 
-    protected abstract IForgeRegistry<T> getRegistry();
+    protected abstract Registry<T> getRegistry();
 
     protected abstract void handleElement(T element, JsonObject jsonObject);
 
@@ -23,7 +23,7 @@ public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHan
 
     @Override
     public HttpResponseStatus handle(String[] path, HttpRequest request, JsonObject responseObject) {
-        IForgeRegistry<T> registry = getRegistry();
+        Registry<T> registry = getRegistry();
         if (path.length == 0) {
             JsonArray array = new JsonArray();
             for (T element : registry) {
@@ -36,7 +36,7 @@ public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHan
             return HttpResponseStatus.OK;
         } else {
             ResourceLocation resourceLocation = pathToResourceLocation(path);
-            T element = registry.getValue(resourceLocation);
+            T element = registry.get(resourceLocation);
             if (element != null) {
                 handleElement(element, responseObject);
                 return HttpResponseStatus.OK;

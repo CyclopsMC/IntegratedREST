@@ -2,15 +2,14 @@ package org.cyclops.integratedrest;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.helper.MinecraftHelpers;
@@ -49,16 +48,13 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
 
     protected final HttpServer server;
 
-    public IntegratedRest() {
-        super(Reference.MOD_ID, (instance) -> _instance = instance);
+    public IntegratedRest(IEventBus modEventBus) {
+        super(Reference.MOD_ID, (instance) -> _instance = instance, modEventBus);
         server = new HttpServer();
 
-        MinecraftForge.EVENT_BUS.addListener(this::onApiServerStarted);
-        MinecraftForge.EVENT_BUS.addListener(this::onApiServerStopping);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onSetup);
-        if (MinecraftHelpers.isClientSide()) {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelLoading);
-        }
+        NeoForge.EVENT_BUS.addListener(this::onApiServerStarted);
+        NeoForge.EVENT_BUS.addListener(this::onApiServerStopping);
+        modEventBus.addListener(this::onSetup);
     }
 
     @Override
@@ -68,6 +64,10 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
         // Registries
         getRegistryManager().addRegistry(IRequestHandlerRegistry.class, RequestHandlerRegistry.getInstance());
         getRegistryManager().addRegistry(IValueTypeJsonHandlerRegistry.class, ValueTypeJsonHandlerRegistry.getInstance());
+
+        if (MinecraftHelpers.isClientSide()) {
+            HttpVariableModelProviders.load();
+        }
     }
 
     protected void onSetup(IntegratedDynamicsSetupEvent event) {
@@ -81,10 +81,6 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
                 .registerSection(this,
                         OnTheDynamicsOfIntegrationBook.getInstance(), "info_book.integrateddynamics.manual",
                         "/data/" + Reference.MOD_ID + "/info/rest_info.xml");
-    }
-
-    protected void onModelLoading(ModelEvent.RegisterAdditional event) {
-        HttpVariableModelProviders.load();
     }
 
     /**

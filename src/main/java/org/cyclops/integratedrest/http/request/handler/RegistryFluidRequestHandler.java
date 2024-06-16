@@ -1,9 +1,9 @@
 package org.cyclops.integratedrest.http.request.handler;
 
 import com.google.gson.JsonObject;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import org.cyclops.integratedrest.json.JsonUtil;
 
 /**
@@ -13,8 +13,8 @@ import org.cyclops.integratedrest.json.JsonUtil;
 public class RegistryFluidRequestHandler extends RegistryNamespacedRequestHandler<Fluid> {
 
     @Override
-    protected IForgeRegistry<Fluid> getRegistry() {
-        return ForgeRegistries.FLUIDS;
+    protected Registry<Fluid> getRegistry() {
+        return BuiltInRegistries.FLUID;
     }
 
     @Override

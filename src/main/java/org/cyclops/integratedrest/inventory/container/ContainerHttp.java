@@ -31,7 +31,7 @@ public class ContainerHttp extends ContainerActiveVariableBase<BlockEntityHttp> 
 
     public ContainerHttp(int id, Inventory playerInventory, Container inventory,
                          Optional<BlockEntityHttp> tileSupplier) {
-        super(RegistryEntries.CONTAINER_HTTP, id, playerInventory, inventory, tileSupplier);
+        super(RegistryEntries.CONTAINER_HTTP.get(), id, playerInventory, inventory, tileSupplier);
         addSlot(new SlotVariable(inventory, BlockEntityHttp.SLOT_WRITE_IN, 56, 63));
         addSlot(new SlotRemoveOnly(inventory, BlockEntityHttp.SLOT_WRITE_OUT, 104, 63));
         addPlayerInventory(playerInventory, offsetX + 9, offsetY + 92);

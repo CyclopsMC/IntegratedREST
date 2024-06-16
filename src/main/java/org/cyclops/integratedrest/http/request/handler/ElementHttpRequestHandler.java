@@ -41,7 +41,7 @@ public class ElementHttpRequestHandler extends ElementTypeRequestHandler {
                     } else if (request.method().equals(HttpMethod.POST) && request instanceof HttpContent) {
                         String content = ((HttpContent) request).content().toString(CharsetUtil.UTF_8);
                         try {
-                            JsonObject jsonObject = new JsonParser().parse(content).getAsJsonObject();
+                            JsonObject jsonObject = JsonParser.parseString(content).getAsJsonObject();
                             JsonElement jsonElement = jsonObject.get("value");
                             if (jsonElement == null) {
                                 responseObject.addProperty("error", "No value property was found in the root object.");

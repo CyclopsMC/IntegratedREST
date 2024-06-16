@@ -2,7 +2,6 @@ package org.cyclops.integratedrest.blockentity;
 
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -12,11 +11,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.cyclops.cyclopscore.capability.item.ItemHandlerSlotMasked;
 import org.cyclops.cyclopscore.datastructure.DimPos;
+import org.cyclops.integrateddynamics.Capabilities;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
 import org.cyclops.integrateddynamics.api.evaluate.expression.VariableAdapter;
@@ -26,10 +26,11 @@ import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
 import org.cyclops.integrateddynamics.api.evaluate.variable.ValueDeseralizationContext;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
 import org.cyclops.integrateddynamics.api.network.INetworkElement;
+import org.cyclops.integrateddynamics.api.network.INetworkElementProvider;
 import org.cyclops.integrateddynamics.api.network.IPartNetwork;
 import org.cyclops.integrateddynamics.blockentity.BlockEntityProxy;
-import org.cyclops.integrateddynamics.capability.networkelementprovider.NetworkElementProviderConfig;
 import org.cyclops.integrateddynamics.capability.networkelementprovider.NetworkElementProviderSingleton;
+import org.cyclops.integrateddynamics.core.blockentity.BlockEntityActiveVariableBase;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueHelpers;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypeBoolean;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypes;
@@ -60,29 +61,44 @@ public class BlockEntityHttp extends BlockEntityProxy {
     private Player lastPlayer = null;
 
     public BlockEntityHttp(BlockPos blockPos, BlockState blockState) {
-        super(RegistryEntries.BLOCK_ENTITY_HTTP, blockPos, blockState, BlockEntityHttp.INVENTORY_SIZE);
+        super(RegistryEntries.BLOCK_ENTITY_HTTP.get(), blockPos, blockState, BlockEntityHttp.INVENTORY_SIZE);
+        this.variable = new HttpVariableAdapter(this, ValueTypes.CATEGORY_ANY, ValueTypeBoolean.ValueBoolean.of(false));
+    }
 
-        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.NORTH,
-                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.SOUTH,
-                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.EAST,
-                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.WEST,
-                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.UP,
-                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_IN)));
-        addCapabilitySided(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN,
-                LazyOptional.of(() -> new ItemHandlerSlotMasked(getInventory(), SLOT_WRITE_OUT)));
+    public static <E> void registerHttpCapabilities(RegisterCapabilitiesEvent event, BlockEntityType<? extends BlockEntityHttp> blockEntityType) {
+        BlockEntityActiveVariableBase.registerActiveVariableBaseCapabilities(event, blockEntityType);
 
-        addCapabilityInternal(NetworkElementProviderConfig.CAPABILITY, LazyOptional.of(() -> new NetworkElementProviderSingleton() {
+        event.registerBlockEntity(
+                net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
+                blockEntityType,
+                (blockEntity, direction) -> {
+                    int slot = -1;
+                    switch (direction) {
+                        case DOWN ->  slot = SLOT_WRITE_OUT;
+                        case UP ->    slot = SLOT_WRITE_IN;
+                        case NORTH -> slot = SLOT_WRITE_IN;
+                        case SOUTH -> slot = SLOT_WRITE_IN;
+                        case WEST ->  slot = SLOT_WRITE_IN;
+                        case EAST ->  slot = SLOT_WRITE_IN;
+                    }
+                    return new ItemHandlerSlotMasked(blockEntity.getInventory(), slot);
+                }
+        );
+        event.registerBlockEntity(
+                Capabilities.NetworkElementProvider.BLOCK,
+                blockEntityType,
+                (blockEntity, direction) -> blockEntity.getNetworkElementProvider()
+        );
+    }
+
+    @Override
+    public INetworkElementProvider getNetworkElementProvider() {
+        return new NetworkElementProviderSingleton() {
             @Override
             public INetworkElement createNetworkElement(Level world, BlockPos blockPos) {
                 return new HttpNetworkElement(DimPos.of(world, blockPos));
             }
-        }));
-
-        this.variable = new HttpVariableAdapter(this, ValueTypes.CATEGORY_ANY, ValueTypeBoolean.ValueBoolean.of(false));
+        };
     }
 
     @Override
