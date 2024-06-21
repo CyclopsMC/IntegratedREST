@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.cyclops.cyclopscore.capability.item.ItemHandlerSlotMasked;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.integrateddynamics.Capabilities;
@@ -30,7 +29,7 @@ import org.cyclops.integrateddynamics.api.network.INetworkElementProvider;
 import org.cyclops.integrateddynamics.api.network.IPartNetwork;
 import org.cyclops.integrateddynamics.blockentity.BlockEntityProxy;
 import org.cyclops.integrateddynamics.capability.networkelementprovider.NetworkElementProviderSingleton;
-import org.cyclops.integrateddynamics.core.blockentity.BlockEntityActiveVariableBase;
+import org.cyclops.integrateddynamics.core.blockentity.BlockEntityCableConnectableInventory;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueHelpers;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypeBoolean;
 import org.cyclops.integrateddynamics.core.evaluate.variable.ValueTypes;
@@ -43,6 +42,7 @@ import org.cyclops.integratedrest.network.HttpNetworkElement;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * A tile entity for the http block.
@@ -65,30 +65,35 @@ public class BlockEntityHttp extends BlockEntityProxy {
         this.variable = new HttpVariableAdapter(this, ValueTypes.CATEGORY_ANY, ValueTypeBoolean.ValueBoolean.of(false));
     }
 
-    public static <E> void registerHttpCapabilities(RegisterCapabilitiesEvent event, BlockEntityType<? extends BlockEntityHttp> blockEntityType) {
-        BlockEntityActiveVariableBase.registerActiveVariableBaseCapabilities(event, blockEntityType);
+    public static class CapabilityRegistrar extends BlockEntityCableConnectableInventory.CapabilityRegistrar<BlockEntityHttp> {
+        public CapabilityRegistrar(Supplier<BlockEntityType<? extends BlockEntityHttp>> blockEntityType) {
+            super(blockEntityType);
+        }
 
-        event.registerBlockEntity(
-                net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
-                blockEntityType,
-                (blockEntity, direction) -> {
-                    int slot = -1;
-                    switch (direction) {
-                        case DOWN ->  slot = SLOT_WRITE_OUT;
-                        case UP ->    slot = SLOT_WRITE_IN;
-                        case NORTH -> slot = SLOT_WRITE_IN;
-                        case SOUTH -> slot = SLOT_WRITE_IN;
-                        case WEST ->  slot = SLOT_WRITE_IN;
-                        case EAST ->  slot = SLOT_WRITE_IN;
+        @Override
+        public void populate() {
+            super.populate();
+
+            add(
+                    net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK,
+                    (blockEntity, direction) -> {
+                        int slot = -1;
+                        switch (direction) {
+                            case DOWN ->  slot = SLOT_WRITE_OUT;
+                            case UP ->    slot = SLOT_WRITE_IN;
+                            case NORTH -> slot = SLOT_WRITE_IN;
+                            case SOUTH -> slot = SLOT_WRITE_IN;
+                            case WEST ->  slot = SLOT_WRITE_IN;
+                            case EAST ->  slot = SLOT_WRITE_IN;
+                        }
+                        return new ItemHandlerSlotMasked(blockEntity.getInventory(), slot);
                     }
-                    return new ItemHandlerSlotMasked(blockEntity.getInventory(), slot);
-                }
-        );
-        event.registerBlockEntity(
-                Capabilities.NetworkElementProvider.BLOCK,
-                blockEntityType,
-                (blockEntity, direction) -> blockEntity.getNetworkElementProvider()
-        );
+            );
+            add(
+                    Capabilities.NetworkElementProvider.BLOCK,
+                    (blockEntity, direction) -> blockEntity.getNetworkElementProvider()
+            );
+        }
     }
 
     @Override
