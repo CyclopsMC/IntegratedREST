@@ -52,6 +52,10 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
         super(Reference.MOD_ID, (instance) -> _instance = instance, modEventBus);
         server = new HttpServer();
 
+        // Registries
+        getRegistryManager().addRegistry(IRequestHandlerRegistry.class, RequestHandlerRegistry.getInstance());
+        getRegistryManager().addRegistry(IValueTypeJsonHandlerRegistry.class, ValueTypeJsonHandlerRegistry.getInstance());
+
         NeoForge.EVENT_BUS.addListener(this::onApiServerStarted);
         NeoForge.EVENT_BUS.addListener(this::onApiServerStopping);
         modEventBus.addListener(this::onSetup);
@@ -60,10 +64,6 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
     @Override
     protected void setup(FMLCommonSetupEvent event) {
         super.setup(event);
-
-        // Registries
-        getRegistryManager().addRegistry(IRequestHandlerRegistry.class, RequestHandlerRegistry.getInstance());
-        getRegistryManager().addRegistry(IValueTypeJsonHandlerRegistry.class, ValueTypeJsonHandlerRegistry.getInstance());
 
         if (MinecraftHelpers.isClientSide()) {
             HttpVariableModelProviders.load();
