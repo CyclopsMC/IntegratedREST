@@ -51,7 +51,7 @@ public class ContainerHttp extends ContainerActiveVariableBase<BlockEntityHttp> 
 
     public Optional<IValueType> getValueType() {
         String id = ValueNotifierHelpers.getValueString(this, getValueTypeId());
-        return id == null ? Optional.empty() : Optional.of(Objects.requireNonNull(ValueTypes.REGISTRY.getValueType(new ResourceLocation(id)), id));
+        return id == null ? Optional.empty() : Optional.of(Objects.requireNonNull(ValueTypes.REGISTRY.getValueType(ResourceLocation.parse(id)), id));
     }
 
     @Override

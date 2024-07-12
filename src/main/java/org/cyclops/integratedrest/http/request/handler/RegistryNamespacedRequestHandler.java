@@ -46,6 +46,6 @@ public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHan
     }
 
     public static ResourceLocation pathToResourceLocation(String[] path) {
-        return new ResourceLocation(String.join("/", path).replaceFirst("\\/", ":"));
+        return ResourceLocation.parse(String.join("/", path).replaceFirst("\\/", ":"));
     }
 }

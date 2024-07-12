@@ -3,7 +3,6 @@ package org.cyclops.integratedrest.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
-import org.cyclops.integrateddynamics.block.BlockProxy;
 import org.cyclops.integrateddynamics.blockentity.BlockEntityProxy;
 import org.cyclops.integrateddynamics.core.block.BlockWithEntityGuiCabled;
 import org.cyclops.integratedrest.RegistryEntries;
@@ -66,8 +64,8 @@ public class BlockHttp extends BlockWithEntityGuiCabled {
         if (!world.isClientSide()) {
             BlockEntityHelpers.get(world, blockPos, BlockEntityHttp.class)
                     .ifPresent(tile -> {
-                        if (itemStack.hasTag() && itemStack.getTag().contains(BlockProxy.NBT_ID, Tag.TAG_INT)) {
-                            tile.setProxyId(itemStack.getTag().getInt(BlockProxy.NBT_ID));
+                        if (itemStack.has(org.cyclops.integrateddynamics.RegistryEntries.DATACOMPONENT_PROXY_ID)) {
+                            tile.setProxyId(itemStack.get(org.cyclops.integrateddynamics.RegistryEntries.DATACOMPONENT_PROXY_ID));
                         } else {
                             tile.generateNewProxyId();
                         }

@@ -31,7 +31,7 @@ public class HttpVariableFacadeHandler implements IVariableFacadeHandler<IHttpVa
 
     @Override
     public ResourceLocation getUniqueName() {
-        return new ResourceLocation(Reference.MOD_ID, "http");
+        return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "http");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class HttpVariableFacadeHandler implements IVariableFacadeHandler<IHttpVa
     }
 
     @Override
-    public void setVariableFacade(CompoundTag tag, IHttpVariableFacade variableFacade) {
+    public void setVariableFacade(ValueDeseralizationContext valueDeseralizationContext, CompoundTag tag, IHttpVariableFacade variableFacade) {
         tag.putInt("partId", variableFacade.getProxyId());
     }
 

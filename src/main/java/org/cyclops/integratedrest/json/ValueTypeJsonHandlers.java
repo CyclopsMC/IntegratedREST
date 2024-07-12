@@ -7,8 +7,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -18,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.cyclops.cyclopscore.helper.BlockHelpers;
 import org.cyclops.cyclopscore.helper.FluidHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
@@ -186,7 +190,7 @@ public class ValueTypeJsonHandlers {
                     if (!jsonObject.has("resourceLocation")) {
                         return ValueObjectTypeBlock.ValueBlock.of(null);
                     } else {
-                        ResourceLocation resourceLocation = new ResourceLocation(jsonObject.get("resourceLocation").getAsString());
+                        ResourceLocation resourceLocation = ResourceLocation.parse(jsonObject.get("resourceLocation").getAsString());
                         Block block = BuiltInRegistries.BLOCK.get(resourceLocation);
                         if (block != null) {
                             try {
@@ -209,8 +213,9 @@ public class ValueTypeJsonHandlers {
                 jsonObject.addProperty("item", JsonUtil.absolutizePath("registry/item/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.ITEM.getKey(itemStack.getItem()))));
                 jsonObject.addProperty("resourceLocation", BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString());
                 jsonObject.addProperty("count", itemStack.getCount());
-                if (itemStack.hasTag()) {
-                    jsonObject.add("nbt", new JsonParser().parse(itemStack.getTag().toString()));
+                CompoundTag data = getComponentsAsNbt(itemStack.getComponentsPatch());
+                if (!data.isEmpty()) {
+                    jsonObject.add("nbt", new JsonParser().parse(data.toString()));
                 }
             }
             return jsonObject;
@@ -223,7 +228,7 @@ public class ValueTypeJsonHandlers {
                     if (!jsonObject.has("resourceLocation")) {
                         return ValueObjectTypeItemStack.ValueItemStack.of(ItemStack.EMPTY);
                     } else {
-                        ResourceLocation resourceLocation = new ResourceLocation(jsonObject.get("resourceLocation").getAsString());
+                        ResourceLocation resourceLocation = ResourceLocation.parse(jsonObject.get("resourceLocation").getAsString());
                         Item item = BuiltInRegistries.ITEM.get(resourceLocation);
                         if (item != null) {
                             int count = 1;
@@ -236,7 +241,7 @@ public class ValueTypeJsonHandlers {
                                 meta = jsonObject.get("meta").getAsInt();
                             }
 
-                            ItemStack itemStack = new ItemStack(item, count);
+                            DataComponentPatch data = DataComponentPatch.EMPTY;
                             if (jsonObject.has("nbt")) {
                                 CompoundTag tag;
                                 try {
@@ -244,8 +249,9 @@ public class ValueTypeJsonHandlers {
                                 } catch (CommandSyntaxException e) {
                                     throw new IllegalStateException(e);
                                 }
-                                itemStack.setTag(tag);
+                                data = getNbtAsComponents(tag);
                             }
+                            ItemStack itemStack = new ItemStack(Holder.direct(item), count, data);
                             return ValueObjectTypeItemStack.ValueItemStack.of(itemStack);
                         }
                     }
@@ -289,8 +295,9 @@ public class ValueTypeJsonHandlers {
                 jsonObject.addProperty("fluid", JsonUtil.absolutizePath("registry/fluid/" + BuiltInRegistries.FLUID.getKey(fluidStack.getFluid())));
                 jsonObject.addProperty("fluidName", BuiltInRegistries.FLUID.getKey(fluidStack.getFluid()).toString());
                 jsonObject.addProperty("count", fluidStack.getAmount());
-                if (fluidStack.hasTag()) {
-                    jsonObject.add("nbt", new JsonParser().parse(fluidStack.getTag().toString()));
+                CompoundTag data = getComponentsAsNbt(fluidStack.getComponentsPatch());
+                if (!data.isEmpty()) {
+                    jsonObject.add("nbt", new JsonParser().parse(data.toString()));
                 }
             }
             return jsonObject;
@@ -303,14 +310,14 @@ public class ValueTypeJsonHandlers {
                     if (!jsonObject.has("fluidName")) {
                         return ValueObjectTypeFluidStack.ValueFluidStack.of(FluidStack.EMPTY);
                     } else {
-                        Fluid fluid = BuiltInRegistries.FLUID.get(new ResourceLocation(jsonObject.get("fluidName").getAsString()));
+                        Fluid fluid = BuiltInRegistries.FLUID.get(ResourceLocation.parse(jsonObject.get("fluidName").getAsString()));
                         if (fluid != null) {
                             int count = FluidHelpers.BUCKET_VOLUME;
                             if (jsonObject.has("count")) {
                                 count = jsonObject.get("count").getAsInt();
                             }
 
-                            FluidStack fluidStack = new FluidStack(fluid, count);
+                            DataComponentPatch data = DataComponentPatch.EMPTY;
                             if (jsonObject.has("nbt")) {
                                 CompoundTag tag;
                                 try {
@@ -318,8 +325,9 @@ public class ValueTypeJsonHandlers {
                                 } catch (CommandSyntaxException e) {
                                     throw new IllegalStateException(e);
                                 }
-                                fluidStack.setTag(tag);
+                                data = getNbtAsComponents(tag);
                             }
+                            FluidStack fluidStack = new FluidStack(Holder.direct(fluid), count, data);
                             return ValueObjectTypeFluidStack.ValueFluidStack.of(fluidStack);
                         }
                     }
@@ -327,6 +335,14 @@ public class ValueTypeJsonHandlers {
                 return null;
             }
         });
+    }
+
+    public static CompoundTag getComponentsAsNbt(DataComponentPatch dataComponentPatch) {
+        return (CompoundTag) DataComponentPatch.CODEC.encodeStart(ServerLifecycleHooks.getCurrentServer().registryAccess().createSerializationContext(NbtOps.INSTANCE), dataComponentPatch).getOrThrow();
+    }
+
+    public static DataComponentPatch getNbtAsComponents(CompoundTag compoundTag) {
+        return DataComponentPatch.CODEC.decode(ServerLifecycleHooks.getCurrentServer().registryAccess().createSerializationContext(NbtOps.INSTANCE), compoundTag).getOrThrow().getFirst();
     }
 
 }

@@ -2,6 +2,7 @@ package org.cyclops.integratedrest.blockentity;
 
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -143,18 +144,18 @@ public class BlockEntityHttp extends BlockEntityProxy {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         tag.putString("valueType", this.variable.getValueTypeRaw().getUniqueName().toString());
         if (this.variable.getValueRaw() != null) {
-            tag.put("value", ValueHelpers.serialize(this.variable.getValueRaw()));
+            tag.put("value", ValueHelpers.serialize(ValueDeseralizationContext.of(provider), this.variable.getValueRaw()));
         }
     }
 
     @Override
-    public void read(CompoundTag tag) {
-        super.read(tag);
-        this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(new ResourceLocation(tag.getString("valueType"))));
+    public void read(CompoundTag tag, HolderLookup.Provider provider) {
+        super.read(tag, provider);
+        this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(ResourceLocation.parse(tag.getString("valueType"))));
         if (tag.contains("value", Tag.TAG_COMPOUND)) {
             CompoundTag valueTag = tag.getCompound("value");
             setValue(ValueHelpers.deserialize(ValueDeseralizationContext.of(getLevel()), valueTag));

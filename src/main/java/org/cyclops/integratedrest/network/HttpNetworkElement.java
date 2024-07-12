@@ -11,7 +11,7 @@ import org.cyclops.integratedrest.Reference;
  */
 public class HttpNetworkElement extends ProxyNetworkElement {
 
-    public static final ResourceLocation GROUP = new ResourceLocation(Reference.MOD_ID, "http");
+    public static final ResourceLocation GROUP = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "http");
 
     public HttpNetworkElement(DimPos pos) {
         super(pos);

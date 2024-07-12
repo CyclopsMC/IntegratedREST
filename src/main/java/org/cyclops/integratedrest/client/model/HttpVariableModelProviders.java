@@ -13,7 +13,7 @@ import org.cyclops.integratedrest.Reference;
 public class HttpVariableModelProviders {
 
     public static final IVariableModelProviderRegistry REGISTRY = IntegratedDynamics._instance.getRegistryManager().getRegistry(IVariableModelProviderRegistry.class);
-    public static final SingleVariableModelProvider HTTP = REGISTRY.addProvider(new SingleVariableModelProvider(new ResourceLocation(Reference.MOD_ID, "customoverlay/http")));
+    public static final SingleVariableModelProvider HTTP = REGISTRY.addProvider(new SingleVariableModelProvider(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "customoverlay/http")));
 
     public static void load() {}
 

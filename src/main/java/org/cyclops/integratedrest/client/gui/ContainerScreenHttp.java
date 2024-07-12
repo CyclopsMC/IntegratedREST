@@ -34,7 +34,7 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
 
     @Override
     protected ResourceLocation constructGuiTexture() {
-        return new ResourceLocation(Reference.MOD_ID, "textures/gui/http.png");
+        return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "textures/gui/http.png");
     }
 
     @Override
