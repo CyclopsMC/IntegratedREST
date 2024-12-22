@@ -1,1 +1,19 @@
-{}
+{
+  "_comment": "------ Over de Dynamiek van Integratie inhoud ------",
+  "itemGroup.integratedrest": "Integrated REST",
+  "block.integratedrest.http": "HTTP proxy",
+  "block.integratedrest.http.info": "Lees gegevens die zijn verstrekt door externe HTTP-POST oproepen.",
+  "http.integratedrest.tooltip.delay_id": "§e§oHTTP proxy id: §r§o%s",
+  "http.integratedrest.error.http_not_in_network": "HTTP Proxy met id %s kon niet gevonden worden binnen het huidige netwerk.",
+  "http.integratedrest.error.http_invalid": "HTTP proxy met id %s verstrekt geen geldige variabele.",
+  "http.integratedrest.error.http_invalid_type": "HTTP proxy met id %s wordt verwacht een variabele te verstrekken van het type %s terwijl %s werd gevonden.",
+  "info_book.integratedrest.section.main": "REST",
+  "info_book.integratedrest.introduction": "Introductie",
+  "info_book.integratedrest.introduction.text1": "&lIntegrated REST&r is een mod die je de mogelijkheid biedt om te lezen van en schrijven naar je &lIntegrated Dynamics&r netwerken via een REST API.",
+  "info_book.integratedrest.introduction.text2": "Dit maakt het mogelijk om de status van je netwerken en werelden te lezen via Webprotocollen, en met ze te communiceren door waarden te POST-en naar HTTP proxyblokken in je wereld.",
+  "info_book.integratedrest.introduction.text3": "Bekijk de serverconsole om te zien waar je server draait en wat voor informatie je kunt vinden. (Standaardwaarde is &lhttp://localhost:3000/&r)",
+  "info_book.integratedrest.http": "HTTP proxy",
+  "info_book.integratedrest.http.text1": "De HTTP proxy heeft een interne waardestatus die bijgewerkt kan worden met HTTP-POST verzoeken.",
+  "info_book.integratedrest.http.text2": "Een bepaalde waardetype moet geselecteerd worden in de HTTP proxy, en alleen verzoeken van dat type worden geaccepteerd.",
+  "info_book.integratedrest.http.text3": "Meer informatie is te vinden op de GitHub wiki"
+}
