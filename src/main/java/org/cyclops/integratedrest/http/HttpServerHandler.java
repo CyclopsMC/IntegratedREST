@@ -19,6 +19,7 @@ import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpersNeoForge;
 import org.cyclops.integratedrest.Uris;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.http.request.RequestHandlers;
@@ -74,8 +75,10 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                 responseStatus = HttpResponseStatus.NOT_FOUND;
             } else {
                 BlockEntityHelpers.UNSAFE_BLOCK_ENTITY_GETTER = true;
+                IModHelpersNeoForge.get().getBlockEntityHelpers().setUnsafeBlockEntityGetter(true);
                 responseStatus = requestHandler.handle(ArrayUtils.subarray(path, 1, path.length), request, responseObject);
                 BlockEntityHelpers.UNSAFE_BLOCK_ENTITY_GETTER = false;
+                IModHelpersNeoForge.get().getBlockEntityHelpers().setUnsafeBlockEntityGetter(false);
             }
 
             if (responseStatus == HttpResponseStatus.NOT_FOUND) {
