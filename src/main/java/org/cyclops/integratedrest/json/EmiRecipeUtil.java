@@ -12,20 +12,26 @@ import org.cyclops.integratedrest.IntegratedRest;
 import org.cyclops.integratedrest.http.request.handler.RegistryItemRequestHandler;
 
 public class EmiRecipeUtil {
-    static {
+    private static Class<?> _emiApiClz = null;
+    private static boolean _checkEmi = false;
+
+    private static boolean isEmiLoaded() {
+        if (!_checkEmi) {
+            return _emiApiClz != null;
+        }
+
         try {
-            emiApiClz = RegistryItemRequestHandler.class.getClassLoader().loadClass("dev.emi.emi.api.EmiApi");
+            _emiApiClz = RegistryItemRequestHandler.class.getClassLoader().loadClass("dev.emi.emi.api.EmiApi");
         } catch (ClassNotFoundException e) {
             IntegratedRest.clog(Level.ERROR, e.getMessage());
         }
+        _checkEmi = true;
+        return _emiApiClz != null;
     }
-
-    private static Class<?> emiApiClz = null;
-
 
     public static boolean writeRecipesByOutputItemToNode(Item item, JsonObject rootNode) {
         // skip air
-        if (item.toString().equals("minecraft:air") || emiApiClz == null) {
+        if (item.toString().equals("minecraft:air") || isEmiLoaded()) {
             return false;
         }
 
