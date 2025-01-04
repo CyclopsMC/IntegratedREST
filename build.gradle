@@ -111,6 +111,11 @@ repositories {
             password = project.findProperty("gpr.key") ?: System.getenv("MAVEN_KEY") ?: System.getenv("GITHUB_TOKEN")
         }
     }
+
+    maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com/"
+	}
 }
 
 dependencies {
@@ -152,6 +157,10 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 	
 	testImplementation "junit:junit:4.12"
+
+    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+	runtimeOnly "dev.emi:emi-neoforge:${emi_version}:api"
+
 }
 
 subsystems {

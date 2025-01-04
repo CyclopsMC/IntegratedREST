@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
+import org.cyclops.integratedrest.json.EmiRecipeUtil;
 import org.cyclops.integratedrest.json.JsonUtil;
 
 /**
@@ -19,6 +20,9 @@ public class RegistryItemRequestHandler extends RegistryNamespacedRequestHandler
 
     @Override
     protected void handleElement(Item element, JsonObject jsonObject) {
+
+        EmiRecipeUtil.writeRecipesByOutputItemToNode(element, jsonObject);
+
         JsonUtil.addItemInfo(jsonObject, element);
     }
 
