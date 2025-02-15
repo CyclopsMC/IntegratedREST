@@ -8,17 +8,10 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpUtil;
-import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 import org.apache.commons.lang3.ArrayUtils;
-import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.integratedrest.Uris;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.http.request.RequestHandlers;
@@ -73,9 +66,9 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             if (requestHandler == null) {
                 responseStatus = HttpResponseStatus.NOT_FOUND;
             } else {
-                BlockEntityHelpers.UNSAFE_BLOCK_ENTITY_GETTER = true;
+                IModHelpers.get().getBlockEntityHelpers().setUnsafeBlockEntityGetter(true);
                 responseStatus = requestHandler.handle(ArrayUtils.subarray(path, 1, path.length), request, responseObject);
-                BlockEntityHelpers.UNSAFE_BLOCK_ENTITY_GETTER = false;
+                IModHelpers.get().getBlockEntityHelpers().setUnsafeBlockEntityGetter(false);
             }
 
             if (responseStatus == HttpResponseStatus.NOT_FOUND) {

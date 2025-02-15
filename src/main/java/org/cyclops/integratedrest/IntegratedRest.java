@@ -11,10 +11,9 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import org.apache.logging.log4j.Level;
-import org.cyclops.cyclopscore.config.ConfigHandler;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+import org.cyclops.cyclopscore.config.ConfigHandlerCommon;
 import org.cyclops.cyclopscore.infobook.IInfoBookRegistry;
-import org.cyclops.cyclopscore.init.ModBaseVersionable;
+import org.cyclops.cyclopscore.init.ModBaseNeoForge;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 import org.cyclops.integrateddynamics.IntegratedDynamics;
@@ -42,7 +41,7 @@ import org.cyclops.integratedrest.proxy.CommonProxy;
  *
  */
 @Mod(Reference.MOD_ID)
-public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
+public class IntegratedRest extends ModBaseNeoForge<IntegratedRest> {
 
     public static IntegratedRest _instance;
 
@@ -65,7 +64,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
     protected void setup(FMLCommonSetupEvent event) {
         super.setup(event);
 
-        if (MinecraftHelpers.isClientSide()) {
+        if (getModHelpers().getMinecraftHelpers().isClientSide()) {
             HttpVariableModelProviders.load();
         }
     }
@@ -110,7 +109,7 @@ public class IntegratedRest extends ModBaseVersionable<IntegratedRest> {
     }
 
     @Override
-    protected void onConfigsRegister(ConfigHandler configHandler) {
+    protected void onConfigsRegister(ConfigHandlerCommon configHandler) {
         super.onConfigsRegister(configHandler);
 
         configHandler.addConfigurable(new GeneralConfig());

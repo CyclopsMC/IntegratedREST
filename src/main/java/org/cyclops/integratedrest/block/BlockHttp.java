@@ -15,8 +15,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.integrateddynamics.blockentity.BlockEntityProxy;
 import org.cyclops.integrateddynamics.core.block.BlockWithEntityGuiCabled;
 import org.cyclops.integratedrest.RegistryEntries;
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 public class BlockHttp extends BlockWithEntityGuiCabled {
 
     public static final MapCodec<BlockHttp> CODEC = simpleCodec(BlockHttp::new);
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public BlockHttp(Properties properties) {
         super(properties, BlockEntityHttp::new);
@@ -62,7 +62,7 @@ public class BlockHttp extends BlockWithEntityGuiCabled {
     @Override
     public void setPlacedBy(Level world, BlockPos blockPos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         if (!world.isClientSide()) {
-            BlockEntityHelpers.get(world, blockPos, BlockEntityHttp.class)
+            IModHelpers.get().getBlockEntityHelpers().get(world, blockPos, BlockEntityHttp.class)
                     .ifPresent(tile -> {
                         if (itemStack.has(org.cyclops.integrateddynamics.RegistryEntries.DATACOMPONENT_PROXY_ID)) {
                             tile.setProxyId(itemStack.get(org.cyclops.integrateddynamics.RegistryEntries.DATACOMPONENT_PROXY_ID));

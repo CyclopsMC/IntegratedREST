@@ -5,15 +5,9 @@
     "CPC"
   ],
   "key": {
-    "D": {
-      "item": "integrateddynamics:logic_director"
-    },
-    "C": {
-      "item": "integrateddynamics:crystalized_menril_chunk"
-    },
-    "P": {
-      "item": "integrateddynamics:proxy"
-    }
+    "D": "integrateddynamics:logic_director",
+    "C": "integrateddynamics:crystalized_menril_chunk",
+    "P": "integrateddynamics:proxy"
   },
   "result": {
     "id": "integratedrest:http"

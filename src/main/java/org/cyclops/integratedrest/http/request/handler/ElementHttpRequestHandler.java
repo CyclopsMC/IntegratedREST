@@ -9,7 +9,8 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.util.CharsetUtil;
-import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
+import org.cyclops.cyclopscore.datastructure.DimPos;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.network.INetwork;
 import org.cyclops.integrateddynamics.api.network.INetworkElement;
@@ -31,7 +32,8 @@ public class ElementHttpRequestHandler extends ElementTypeRequestHandler {
                                                HttpRequest request, JsonObject responseObject) {
         if (networkElement instanceof IPositionedNetworkElement) {
             IPositionedNetworkElement positionedNetworkElement = (IPositionedNetworkElement) networkElement;
-            BlockEntityHttp tile = BlockEntityHelpers.get(positionedNetworkElement.getPosition(), BlockEntityHttp.class).orElse(null);
+            DimPos pos = positionedNetworkElement.getPosition();
+            BlockEntityHttp tile = IModHelpers.get().getBlockEntityHelpers().get(pos.getLevel(true), pos.getBlockPos(), BlockEntityHttp.class).orElse(null);
             if (tile != null) {
                 if (tile.getProxyId() == id) {
                     if (request.method().equals(HttpMethod.GET)) {

@@ -1,6 +1,6 @@
 package org.cyclops.integratedrest.proxy;
 
-import org.cyclops.cyclopscore.init.ModBase;
+import org.cyclops.cyclopscore.init.ModBaseNeoForge;
 import org.cyclops.cyclopscore.proxy.CommonProxyComponent;
 import org.cyclops.integratedrest.IntegratedRest;
 
@@ -12,7 +12,7 @@ import org.cyclops.integratedrest.IntegratedRest;
 public class CommonProxy extends CommonProxyComponent {
 
     @Override
-    public ModBase getMod() {
+    public ModBaseNeoForge<IntegratedRest> getMod() {
         return IntegratedRest._instance;
     }
 

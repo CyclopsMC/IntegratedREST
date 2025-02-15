@@ -14,21 +14,15 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforgespi.language.IModInfo;
 import org.cyclops.cyclopscore.datastructure.DimPos;
-import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpersNeoForge;
 import org.cyclops.integrateddynamics.Capabilities;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
 import org.cyclops.integrateddynamics.api.evaluate.IValueInterface;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
-import org.cyclops.integrateddynamics.api.network.IIdentifiableNetworkElement;
-import org.cyclops.integrateddynamics.api.network.INetwork;
-import org.cyclops.integrateddynamics.api.network.INetworkElement;
-import org.cyclops.integrateddynamics.api.network.IPartNetwork;
-import org.cyclops.integrateddynamics.api.network.IPartNetworkElement;
-import org.cyclops.integrateddynamics.api.network.IPositionedNetworkElement;
-import org.cyclops.integrateddynamics.api.network.ISidedNetworkElement;
+import org.cyclops.integrateddynamics.api.network.*;
 import org.cyclops.integrateddynamics.api.part.IPartState;
 import org.cyclops.integrateddynamics.api.part.IPartType;
 import org.cyclops.integrateddynamics.api.part.PartPos;
@@ -134,11 +128,11 @@ public class JsonUtil {
     public static <T> Optional<T> getNetworkElementCapability(INetworkElement networkElement, BlockCapability<T, Direction> capability) {
         PartPos partPos = getNetworkElementPositionSided(networkElement);
         if (partPos != null) {
-            return BlockEntityHelpers.getCapability(partPos.getPos(), partPos.getSide(), capability);
+            return IModHelpersNeoForge.get().getCapabilityHelpers().getCapability(partPos.getPos(), partPos.getSide(), capability);
         }
         DimPos pos = getNetworkElementPosition(networkElement);
         if (pos != null) {
-            return BlockEntityHelpers.getCapability(pos, capability);
+            return IModHelpersNeoForge.get().getCapabilityHelpers().getCapability(pos, capability);
         }
         return Optional.empty();
     }
@@ -262,8 +256,8 @@ public class JsonUtil {
             types.add("WriteAspect");
         }
         jsonObject.add("@type", types);
-        jsonObject.addProperty("label", L10NHelpers.localize(aspect.getTranslationKey()));
-        jsonObject.addProperty("comment", L10NHelpers.localize(aspect.getTranslationKey() + ".info"));
+        jsonObject.addProperty("label", IModHelpers.get().getL10NHelpers().localize(aspect.getTranslationKey()));
+        jsonObject.addProperty("comment", IModHelpers.get().getL10NHelpers().localize(aspect.getTranslationKey() + ".info"));
         jsonObject.addProperty("unlocalizedName", aspect.getTranslationKey());
         jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + aspect.getValueType().getTranslationKey().replace('.', '/')));
     }

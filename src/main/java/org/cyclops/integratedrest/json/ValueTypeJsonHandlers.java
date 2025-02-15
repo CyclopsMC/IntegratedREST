@@ -1,11 +1,7 @@
 package org.cyclops.integratedrest.json;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
@@ -22,8 +18,8 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.cyclops.cyclopscore.helper.BlockHelpers;
-import org.cyclops.cyclopscore.helper.FluidHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpersNeoForge;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueTypeListProxy;
@@ -171,7 +167,7 @@ public class ValueTypeJsonHandlers {
                 BlockState blockState = value.getRawValue().get();
                 jsonObject.addProperty("block", JsonUtil.absolutizePath("registry/block/" + JsonUtil.resourceLocationToPath(BuiltInRegistries.BLOCK.getKey(blockState.getBlock()))));
                 jsonObject.addProperty("resourceLocation", BuiltInRegistries.BLOCK.getKey(blockState.getBlock()).toString());
-                jsonObject.addProperty("state", BlockHelpers.serializeBlockState(blockState).toString());
+                jsonObject.addProperty("state", IModHelpers.get().getBlockHelpers().serializeBlockState(blockState).toString());
                 JsonArray jsonProperties = new JsonArray();
                 for (Property<?> property : blockState.getProperties()) {
                     JsonObject jsonProperty = new JsonObject();
@@ -191,10 +187,10 @@ public class ValueTypeJsonHandlers {
                         return ValueObjectTypeBlock.ValueBlock.of(null);
                     } else {
                         ResourceLocation resourceLocation = ResourceLocation.parse(jsonObject.get("resourceLocation").getAsString());
-                        Block block = BuiltInRegistries.BLOCK.get(resourceLocation);
+                        Block block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
                         if (block != null) {
                             try {
-                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(BlockHelpers.HOLDER_GETTER_FORGE, TagParser.parseTag(jsonObject.get("state").getAsString())));
+                                return ValueObjectTypeBlock.ValueBlock.of(IModHelpers.get().getBlockHelpers().deserializeBlockState(IModHelpers.get().getBlockHelpers().getHolderGetter(), TagParser.parseTag(jsonObject.get("state").getAsString())));
                             } catch (CommandSyntaxException e) {
                                 throw new IllegalStateException(e);
                             }
@@ -229,7 +225,7 @@ public class ValueTypeJsonHandlers {
                         return ValueObjectTypeItemStack.ValueItemStack.of(ItemStack.EMPTY);
                     } else {
                         ResourceLocation resourceLocation = ResourceLocation.parse(jsonObject.get("resourceLocation").getAsString());
-                        Item item = BuiltInRegistries.ITEM.get(resourceLocation);
+                        Item item = BuiltInRegistries.ITEM.getValue(resourceLocation);
                         if (item != null) {
                             int count = 1;
                             if (jsonObject.has("count")) {
@@ -310,9 +306,9 @@ public class ValueTypeJsonHandlers {
                     if (!jsonObject.has("fluidName")) {
                         return ValueObjectTypeFluidStack.ValueFluidStack.of(FluidStack.EMPTY);
                     } else {
-                        Fluid fluid = BuiltInRegistries.FLUID.get(ResourceLocation.parse(jsonObject.get("fluidName").getAsString()));
+                        Fluid fluid = BuiltInRegistries.FLUID.getValue(ResourceLocation.parse(jsonObject.get("fluidName").getAsString()));
                         if (fluid != null) {
-                            int count = FluidHelpers.BUCKET_VOLUME;
+                            int count = IModHelpersNeoForge.get().getFluidHelpers().getBucketVolume();
                             if (jsonObject.has("count")) {
                                 count = jsonObject.get("count").getAsInt();
                             }

@@ -36,7 +36,7 @@ public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHan
             return HttpResponseStatus.OK;
         } else {
             ResourceLocation resourceLocation = pathToResourceLocation(path);
-            T element = registry.get(resourceLocation);
+            T element = registry.getValue(resourceLocation);
             if (element != null) {
                 handleElement(element, responseObject);
                 return HttpResponseStatus.OK;
