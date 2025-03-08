@@ -1,6 +1,5 @@
 package org.cyclops.integratedrest.blockentity;
 
-import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +57,6 @@ public class BlockEntityHttp extends BlockEntityProxy {
 
     private final HttpVariableAdapter variable;
 
-    @Setter
     private Player lastPlayer = null;
 
     public BlockEntityHttp(BlockPos blockPos, BlockState blockState) {
@@ -95,6 +93,11 @@ public class BlockEntityHttp extends BlockEntityProxy {
                     (blockEntity, direction) -> blockEntity.getNetworkElementProvider()
             );
         }
+    }
+
+    @Override
+    public void setLastPlayer(Player lastPlayer) {
+        this.lastPlayer = lastPlayer;
     }
 
     @Override
