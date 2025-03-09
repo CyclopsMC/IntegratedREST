@@ -1,1 +1,19 @@
-{}
+{
+  "_comment": "------ Entegrasyon İçeriklerinin Dinamikleri Üzerine ------",
+  "itemGroup.integratedrest": "Integrated REST",
+  "block.integratedrest.http": "HTTP Proxy",
+  "block.integratedrest.http.info": "Harici HTTP POST çağrıları tarafından sağlanan değerleri okuyun.",
+  "http.integratedrest.tooltip.delay_id": "§e§oHTTP Proxy ID: §r§o%s",
+  "http.integratedrest.error.http_not_in_network": "Geçerli ağ içinde %s kimliğine sahip HTTP Proxy bulunamadı.",
+  "http.integratedrest.error.http_invalid": "ID %s olan HTTP Proxy'si geçerli bir değişken göstermiyor.",
+  "http.integratedrest.error.http_invalid_type": "%s kimliğine sahip HTTP Proxy'sinin %s türünde bir değişken göstermesi %s bulunurken bekleniyor.",
+  "info_book.integratedrest.section.main": "REST",
+  "info_book.integratedrest.introduction": "Tanıtım",
+  "info_book.integratedrest.introduction.text1": "&lIntegrated REST&r, bir REST API aracılığıyla &lIntegrated Dynamics&r ağlarınızdan okuma ve bu ağlara yazma yapmanızı sağlayan bir moddur.",
+  "info_book.integratedrest.introduction.text2": "Bu, Web protokolleri aracılığıyla ağlarınızın ve dünyalarınızın durumunu okumayı ve dünyanızdaki HTTP Proxy bloklarına POST değerleri göndererek onlarla etkileşime girmeyi mümkün kılar.",
+  "info_book.integratedrest.introduction.text3": "Sunucunuzun nerede çalıştığını görmek için sunucu konsolunu kontrol edin ve ne tür bilgiler bulabileceğinize bakın. (Varsayılan değer &lhttp://localhost:3000/&r)",
+  "info_book.integratedrest.http": "HTTP Proxy",
+  "info_book.integratedrest.http.text1": "HTTP Proxy, HTTP POST istekleri aracılığıyla güncellenebilen dahili bir değer durumuna sahiptir.",
+  "info_book.integratedrest.http.text2": "HTTP Proxy'de belirli bir değer türü seçilmelidir ve yalnızca bu türdeki istekler kabul edilecektir.",
+  "info_book.integratedrest.http.text3": "Daha fazla bilgi GitHub wiki'de bulunabilir"
+}
