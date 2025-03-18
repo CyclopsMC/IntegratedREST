@@ -1,11 +1,7 @@
 package org.cyclops.integratedrest.json;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
@@ -187,18 +183,18 @@ public class ValueTypeJsonHandlers {
             public ValueObjectTypeBlock.ValueBlock handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
                 if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueBlock")) {
                     JsonObject jsonObject = (JsonObject) jsonElement;
-                    if (!jsonObject.has("resourceLocation")) {
-                        return ValueObjectTypeBlock.ValueBlock.of(null);
-                    } else {
+                    if (jsonObject.has("state")) {
+                        try {
+                            return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(BlockHelpers.HOLDER_GETTER_FORGE, TagParser.parseTag(jsonObject.get("state").getAsString())));
+                        } catch (CommandSyntaxException e) {
+                            throw new IllegalStateException(e);
+                        }
+                    } else if (jsonObject.has("resourceLocation")) {
                         ResourceLocation resourceLocation = ResourceLocation.parse(jsonObject.get("resourceLocation").getAsString());
                         Block block = BuiltInRegistries.BLOCK.get(resourceLocation);
-                        if (block != null) {
-                            try {
-                                return ValueObjectTypeBlock.ValueBlock.of(BlockHelpers.deserializeBlockState(BlockHelpers.HOLDER_GETTER_FORGE, TagParser.parseTag(jsonObject.get("state").getAsString())));
-                            } catch (CommandSyntaxException e) {
-                                throw new IllegalStateException(e);
-                            }
-                        }
+                        return ValueObjectTypeBlock.ValueBlock.of(block.defaultBlockState());
+                    } else {
+                        return ValueObjectTypeBlock.ValueBlock.of(null);
                     }
                 }
                 return null;
