@@ -183,18 +183,18 @@ public class ValueTypeJsonHandlers {
             public ValueObjectTypeBlock.ValueBlock handleUnchecked(JsonElement jsonElement) throws IllegalStateException, ClassCastException {
                 if (jsonElement instanceof JsonObject && ((JsonObject) jsonElement).has("@type") && ((JsonObject) jsonElement).get("@type").getAsString().equals("ValueBlock")) {
                     JsonObject jsonObject = (JsonObject) jsonElement;
-                    if (!jsonObject.has("resourceLocation")) {
-                        return ValueObjectTypeBlock.ValueBlock.of(null);
-                    } else {
+                    if (jsonObject.has("state")) {
+                        try {
+                            return ValueObjectTypeBlock.ValueBlock.of(IModHelpers.get().getBlockHelpers().deserializeBlockState(IModHelpers.get().getBlockHelpers().getHolderGetter(), TagParser.parseTag(jsonObject.get("state").getAsString())));
+                        } catch (CommandSyntaxException e) {
+                            throw new IllegalStateException(e);
+                        }
+                    } else if (jsonObject.has("resourceLocation")) {
                         ResourceLocation resourceLocation = ResourceLocation.parse(jsonObject.get("resourceLocation").getAsString());
                         Block block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
-                        if (block != null) {
-                            try {
-                                return ValueObjectTypeBlock.ValueBlock.of(IModHelpers.get().getBlockHelpers().deserializeBlockState(IModHelpers.get().getBlockHelpers().getHolderGetter(), TagParser.parseTag(jsonObject.get("state").getAsString())));
-                            } catch (CommandSyntaxException e) {
-                                throw new IllegalStateException(e);
-                            }
-                        }
+                        return ValueObjectTypeBlock.ValueBlock.of(block.defaultBlockState());
+                    } else {
+                        return ValueObjectTypeBlock.ValueBlock.of(null);
                     }
                 }
                 return null;
