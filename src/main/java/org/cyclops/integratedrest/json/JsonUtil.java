@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -15,7 +16,6 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforgespi.language.IModInfo;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.cyclopscore.helper.BlockEntityHelpers;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
 import org.cyclops.integrateddynamics.Capabilities;
 import org.cyclops.integrateddynamics.api.evaluate.EvaluationException;
 import org.cyclops.integrateddynamics.api.evaluate.IValueInterface;
@@ -262,8 +262,8 @@ public class JsonUtil {
             types.add("WriteAspect");
         }
         jsonObject.add("@type", types);
-        jsonObject.addProperty("label", L10NHelpers.localize(aspect.getTranslationKey()));
-        jsonObject.addProperty("comment", L10NHelpers.localize(aspect.getTranslationKey() + ".info"));
+        jsonObject.addProperty("label", Component.translatable(aspect.getTranslationKey()).getString());
+        jsonObject.addProperty("comment", Component.translatable(aspect.getTranslationKey() + ".info").getString());
         jsonObject.addProperty("unlocalizedName", aspect.getTranslationKey());
         jsonObject.addProperty("valueType", JsonUtil.absolutizePath("registry/value/" + aspect.getValueType().getTranslationKey().replace('.', '/')));
     }
