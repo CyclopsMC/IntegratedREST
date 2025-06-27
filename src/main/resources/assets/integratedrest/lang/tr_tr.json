@@ -9,7 +9,6 @@
   "http.integratedrest.error.http_invalid_type": "%s kimliğine sahip HTTP Proxy'sinin %s türünde bir değişken göstermesi %s bulunurken bekleniyor.",
   "info_book.integratedrest.section.main": "REST",
   "info_book.integratedrest.introduction": "Tanıtım",
-  "info_book.integratedrest.introduction.text1": "&lIntegrated REST&r, bir REST API aracılığıyla &lIntegrated Dynamics&r ağlarınızdan okuma ve bu ağlara yazma yapmanızı sağlayan bir moddur.",
   "info_book.integratedrest.introduction.text2": "Bu, Web protokolleri aracılığıyla ağlarınızın ve dünyalarınızın durumunu okumayı ve dünyanızdaki HTTP Proxy bloklarına POST değerleri göndererek onlarla etkileşime girmeyi mümkün kılar.",
   "info_book.integratedrest.introduction.text3": "Sunucunuzun nerede çalıştığını görmek için sunucu konsolunu kontrol edin ve ne tür bilgiler bulabileceğinize bakın. (Varsayılan değer &lhttp://localhost:3000/&r)",
   "info_book.integratedrest.http": "HTTP Proxy",
