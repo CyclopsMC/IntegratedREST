@@ -23,7 +23,7 @@ public abstract class ElementTypeRequestHandler implements IRequestHandler {
 
     @Override
     public HttpResponseStatus handle(String[] path, HttpRequest request, JsonObject responseObject) {
-        NetworkWorldStorage worldStorage = NetworkWorldStorage.getInstance(IntegratedDynamics._instance);
+        NetworkWorldStorage worldStorage = NetworkWorldStorage.Access.getInstance(IntegratedDynamics._instance).get();
         if (path.length == 1) {
             // A single part
             try {

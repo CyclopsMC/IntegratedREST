@@ -23,7 +23,7 @@ public class NetworkRequestHandler implements IRequestHandler {
             return HttpResponseStatus.BAD_REQUEST;
         }
 
-        NetworkWorldStorage worldStorage = NetworkWorldStorage.getInstance(IntegratedDynamics._instance);
+        NetworkWorldStorage worldStorage = NetworkWorldStorage.Access.getInstance(IntegratedDynamics._instance).get();
         if (path.length == 0) {
             // All networks
             JsonArray jsonNetworks = new JsonArray();

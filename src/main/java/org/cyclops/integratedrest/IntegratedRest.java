@@ -2,8 +2,6 @@ package org.cyclops.integratedrest;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -121,7 +119,6 @@ public class IntegratedRest extends ModBaseNeoForge<IntegratedRest> {
         configHandler.addConfigurable(new ContainerHttpConfig());
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     protected IClientProxy constructClientProxy() {
         return new ClientProxy();

@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 public class ElementRequestHandler implements IRequestHandler {
     @Override
     public HttpResponseStatus handle(String[] path, HttpRequest request, JsonObject responseObject) {
-        NetworkWorldStorage worldStorage = NetworkWorldStorage.getInstance(IntegratedDynamics._instance);
+        NetworkWorldStorage worldStorage = NetworkWorldStorage.Access.getInstance(IntegratedDynamics._instance).get();
         if (path.length == 0) {
             if (!request.method().equals(HttpMethod.GET)) {
                 return HttpResponseStatus.BAD_REQUEST;

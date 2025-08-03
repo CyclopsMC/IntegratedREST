@@ -1,7 +1,6 @@
 package org.cyclops.integratedrest.evaluate;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
 import org.cyclops.integrateddynamics.api.evaluate.variable.ValueDeseralizationContext;
@@ -36,10 +35,10 @@ public class HttpVariableFacadeHandler implements IVariableFacadeHandler<IHttpVa
 
     @Override
     public IHttpVariableFacade getVariableFacade(ValueDeseralizationContext valueDeseralizationContext, int id, CompoundTag tag) {
-        if(!tag.contains("partId", Tag.TAG_INT)) {
+        if(!tag.contains("partId")) {
             return INVALID_FACADE;
         }
-        return new HttpVariableFacade(id, tag.getInt("partId"));
+        return new HttpVariableFacade(id, tag.getInt("partId").orElseThrow());
     }
 
     @Override

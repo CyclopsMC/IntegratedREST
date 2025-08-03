@@ -1,9 +1,6 @@
 package org.cyclops.integratedrest.blockentity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.cyclops.cyclopscore.capability.item.ItemHandlerSlotMasked;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.integrateddynamics.Capabilities;
@@ -22,7 +21,6 @@ import org.cyclops.integrateddynamics.api.evaluate.expression.VariableAdapter;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValue;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
-import org.cyclops.integrateddynamics.api.evaluate.variable.ValueDeseralizationContext;
 import org.cyclops.integrateddynamics.api.item.IVariableFacadeHandlerRegistry;
 import org.cyclops.integrateddynamics.api.network.INetworkElement;
 import org.cyclops.integrateddynamics.api.network.INetworkElementProvider;
@@ -147,22 +145,19 @@ public class BlockEntityHttp extends BlockEntityProxy {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putString("valueType", this.variable.getValueTypeRaw().getUniqueName().toString());
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putString("valueType", this.variable.getValueTypeRaw().getUniqueName().toString());
         if (this.variable.getValueRaw() != null) {
-            tag.put("value", ValueHelpers.serialize(ValueDeseralizationContext.of(provider), this.variable.getValueRaw()));
+            ValueHelpers.serialize(output.child("value"), this.variable.getValueRaw());
         }
     }
 
     @Override
-    public void read(CompoundTag tag, HolderLookup.Provider provider) {
-        super.read(tag, provider);
-        this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(ResourceLocation.parse(tag.getString("valueType"))));
-        if (tag.contains("value", Tag.TAG_COMPOUND)) {
-            CompoundTag valueTag = tag.getCompound("value");
-            setValue(ValueHelpers.deserialize(ValueDeseralizationContext.of(getLevel()), valueTag));
-        }
+    public void read(ValueInput input) {
+        super.read(input);
+        this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(ResourceLocation.parse(input.getString("valueType").orElseThrow())));
+        input.child("value").ifPresent(value -> setValue(ValueHelpers.deserialize(value)));
     }
 
     public IValueType<IValue> getValueType() {
