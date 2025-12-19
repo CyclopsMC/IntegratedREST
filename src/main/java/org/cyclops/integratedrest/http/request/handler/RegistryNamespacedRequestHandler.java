@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cyclops.integratedrest.api.http.request.IRequestHandler;
 import org.cyclops.integratedrest.json.JsonUtil;
 
@@ -35,7 +35,7 @@ public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHan
             responseObject.add(getElementsName(), array);
             return HttpResponseStatus.OK;
         } else {
-            ResourceLocation resourceLocation = pathToResourceLocation(path);
+            Identifier resourceLocation = pathToIdentifier(path);
             T element = registry.getValue(resourceLocation);
             if (element != null) {
                 handleElement(element, responseObject);
@@ -45,7 +45,7 @@ public abstract class RegistryNamespacedRequestHandler<T> implements IRequestHan
         return HttpResponseStatus.NOT_FOUND;
     }
 
-    public static ResourceLocation pathToResourceLocation(String[] path) {
-        return ResourceLocation.parse(String.join("/", path).replaceFirst("\\/", ":"));
+    public static Identifier pathToIdentifier(String[] path) {
+        return Identifier.parse(String.join("/", path).replaceFirst("\\/", ":"));
     }
 }

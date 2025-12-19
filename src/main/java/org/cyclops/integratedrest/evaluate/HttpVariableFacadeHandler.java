@@ -1,7 +1,7 @@
 package org.cyclops.integratedrest.evaluate;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IVariable;
 import org.cyclops.integrateddynamics.api.evaluate.variable.ValueDeseralizationContext;
 import org.cyclops.integrateddynamics.api.item.IVariableFacade;
@@ -29,8 +29,8 @@ public class HttpVariableFacadeHandler implements IVariableFacadeHandler<IHttpVa
     }
 
     @Override
-    public ResourceLocation getUniqueName() {
-        return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "http");
+    public Identifier getUniqueName() {
+        return Identifier.fromNamespaceAndPath(Reference.MOD_ID, "http");
     }
 
     @Override

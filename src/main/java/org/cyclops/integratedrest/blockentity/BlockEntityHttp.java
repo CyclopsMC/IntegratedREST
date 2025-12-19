@@ -2,7 +2,7 @@ package org.cyclops.integratedrest.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -157,7 +157,7 @@ public class BlockEntityHttp extends BlockEntityProxy {
     @Override
     public void read(ValueInput input) {
         super.read(input);
-        this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(ResourceLocation.parse(input.getString("valueType").orElseThrow())));
+        this.variable.setValueTypeRaw(ValueTypes.REGISTRY.getValueType(Identifier.parse(input.getString("valueType").orElseThrow())));
         input.child("value").ifPresent(value -> setValue(ValueHelpers.deserialize(value)));
     }
 

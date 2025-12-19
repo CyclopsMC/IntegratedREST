@@ -30,7 +30,7 @@ public class RegistryAspectRequestHandler implements IRequestHandler {
             responseObject.add("aspects", array);
             return HttpResponseStatus.OK;
         } else {
-            IAspect element = registry.getAspect(RegistryNamespacedRequestHandler.pathToResourceLocation(path));
+            IAspect element = registry.getAspect(RegistryNamespacedRequestHandler.pathToIdentifier(path));
             if (element != null) {
                 JsonUtil.addAspectTypeInfo(responseObject, element);
                 return HttpResponseStatus.OK;

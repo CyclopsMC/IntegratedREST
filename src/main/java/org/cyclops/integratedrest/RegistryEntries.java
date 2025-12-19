@@ -1,7 +1,7 @@
 package org.cyclops.integratedrest;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -16,12 +16,12 @@ import org.cyclops.integratedrest.inventory.container.ContainerHttp;
  */
 public class RegistryEntries {
 
-    public static final DeferredHolder<Item, Item> ITEM_BLOCK_HTTP = DeferredHolder.create(Registries.ITEM, ResourceLocation.parse("integratedrest:http"));
+    public static final DeferredHolder<Item, Item> ITEM_BLOCK_HTTP = DeferredHolder.create(Registries.ITEM, Identifier.parse("integratedrest:http"));
 
-    public static final DeferredHolder<Block, Block> BLOCK_HTTP = DeferredHolder.create(Registries.BLOCK, ResourceLocation.parse("integratedrest:http"));
+    public static final DeferredHolder<Block, Block> BLOCK_HTTP = DeferredHolder.create(Registries.BLOCK, Identifier.parse("integratedrest:http"));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityHttp>> BLOCK_ENTITY_HTTP = DeferredHolder.create(Registries.BLOCK_ENTITY_TYPE, ResourceLocation.parse("integratedrest:http"));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityHttp>> BLOCK_ENTITY_HTTP = DeferredHolder.create(Registries.BLOCK_ENTITY_TYPE, Identifier.parse("integratedrest:http"));
 
-    public static final DeferredHolder<MenuType<?>, MenuType<ContainerHttp>> CONTAINER_HTTP = DeferredHolder.create(Registries.MENU, ResourceLocation.parse("integratedrest:http"));
+    public static final DeferredHolder<MenuType<?>, MenuType<ContainerHttp>> CONTAINER_HTTP = DeferredHolder.create(Registries.MENU, Identifier.parse("integratedrest:http"));
 
 }

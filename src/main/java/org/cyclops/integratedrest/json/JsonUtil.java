@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -167,7 +167,7 @@ public class JsonUtil {
 
     public static JsonObject posToJson(DimPos pos, @Nullable Direction side) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getLevelKey().location()));
+        jsonObject.addProperty("world", JsonUtil.resourceLocationToPath(pos.getLevelKey().identifier()));
         jsonObject.addProperty("x", pos.getBlockPos().getX());
         jsonObject.addProperty("y", pos.getBlockPos().getY());
         jsonObject.addProperty("z", pos.getBlockPos().getZ());
@@ -209,7 +209,7 @@ public class JsonUtil {
         return Optional.empty();
     }
 
-    public static String resourceLocationToPath(ResourceLocation resourceLocation) {
+    public static String resourceLocationToPath(Identifier resourceLocation) {
         return resourceLocation.getNamespace() + "/" + resourceLocation.getPath();
     }
 

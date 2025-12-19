@@ -9,7 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -191,7 +191,7 @@ public class ValueTypeJsonHandlers {
                             throw new IllegalStateException(e);
                         }
                     } else if (jsonObject.has("resourceLocation")) {
-                        ResourceLocation resourceLocation = ResourceLocation.parse(jsonObject.get("resourceLocation").getAsString());
+                        Identifier resourceLocation = Identifier.parse(jsonObject.get("resourceLocation").getAsString());
                         Block block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
                         return ValueObjectTypeBlock.ValueBlock.of(block.defaultBlockState());
                     } else {
@@ -225,7 +225,7 @@ public class ValueTypeJsonHandlers {
                     if (!jsonObject.has("resourceLocation")) {
                         return ValueObjectTypeItemStack.ValueItemStack.of(ItemStack.EMPTY);
                     } else {
-                        ResourceLocation resourceLocation = ResourceLocation.parse(jsonObject.get("resourceLocation").getAsString());
+                        Identifier resourceLocation = Identifier.parse(jsonObject.get("resourceLocation").getAsString());
                         Item item = BuiltInRegistries.ITEM.getValue(resourceLocation);
                         if (item != null) {
                             int count = 1;
@@ -307,7 +307,7 @@ public class ValueTypeJsonHandlers {
                     if (!jsonObject.has("fluidName")) {
                         return ValueObjectTypeFluidStack.ValueFluidStack.of(FluidStack.EMPTY);
                     } else {
-                        Fluid fluid = BuiltInRegistries.FLUID.getValue(ResourceLocation.parse(jsonObject.get("fluidName").getAsString()));
+                        Fluid fluid = BuiltInRegistries.FLUID.getValue(Identifier.parse(jsonObject.get("fluidName").getAsString()));
                         if (fluid != null) {
                             int count = IModHelpersNeoForge.get().getFluidHelpers().getBucketVolume();
                             if (jsonObject.has("count")) {

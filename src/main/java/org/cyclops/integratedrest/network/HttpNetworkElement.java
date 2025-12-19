@@ -1,6 +1,6 @@
 package org.cyclops.integratedrest.network;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cyclops.cyclopscore.datastructure.DimPos;
 import org.cyclops.integrateddynamics.network.ProxyNetworkElement;
 import org.cyclops.integratedrest.Reference;
@@ -11,14 +11,14 @@ import org.cyclops.integratedrest.Reference;
  */
 public class HttpNetworkElement extends ProxyNetworkElement {
 
-    public static final ResourceLocation GROUP = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "http");
+    public static final Identifier GROUP = Identifier.fromNamespaceAndPath(Reference.MOD_ID, "http");
 
     public HttpNetworkElement(DimPos pos) {
         super(pos);
     }
 
     @Override
-    public ResourceLocation getGroup() {
+    public Identifier getGroup() {
         return HttpNetworkElement.GROUP;
     }
 

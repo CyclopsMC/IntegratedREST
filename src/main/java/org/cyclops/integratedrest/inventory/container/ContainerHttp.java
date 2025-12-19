@@ -4,7 +4,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cyclops.cyclopscore.helper.ValueNotifierHelpers;
 import org.cyclops.cyclopscore.inventory.slot.SlotRemoveOnly;
 import org.cyclops.integrateddynamics.api.evaluate.variable.IValueType;
@@ -51,7 +51,7 @@ public class ContainerHttp extends ContainerActiveVariableBase<BlockEntityHttp> 
 
     public Optional<IValueType> getValueType() {
         String id = ValueNotifierHelpers.getValueString(this, getValueTypeId());
-        return id == null ? Optional.empty() : Optional.of(Objects.requireNonNull(ValueTypes.REGISTRY.getValueType(ResourceLocation.parse(id)), id));
+        return id == null ? Optional.empty() : Optional.of(Objects.requireNonNull(ValueTypes.REGISTRY.getValueType(Identifier.parse(id)), id));
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.cyclops.cyclopscore.client.gui.component.input.WidgetArrowedListField;
 import org.cyclops.cyclopscore.helper.ValueNotifierHelpers;
@@ -33,8 +33,8 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
     }
 
     @Override
-    protected ResourceLocation constructGuiTexture() {
-        return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "textures/gui/http.png");
+    protected Identifier constructGuiTexture() {
+        return Identifier.fromNamespaceAndPath(Reference.MOD_ID, "textures/gui/http.png");
     }
 
     @Override

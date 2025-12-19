@@ -357,7 +357,7 @@ ir:nbt a rdf:Property;
 
 ir:resourceLocation a rdf:Property;
     rdfs:label "resource location"@en;
-    rdfs:comment "The Minecraft ResourceLocation of something"@en;
+    rdfs:comment "The Minecraft Identifier of something"@en;
     rdfs:isDefinedBy <https://raw.githubusercontent.com/CyclopsMC/IntegratedREST/master-1.16/src/main/resources/vocabulary.ttl#>;
     rdfs:range xsd:string.
 
