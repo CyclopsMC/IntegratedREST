@@ -1,7 +1,7 @@
 package org.cyclops.integratedrest.client.gui;
 
 import com.google.common.collect.Lists;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -71,9 +71,9 @@ public class ContainerScreenHttp extends ContainerScreenActiveVariableBase<Conta
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
-        super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
-        valueTypeSelector.render(guiGraphics, mouseX, mouseY, partialTicks);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTicks);
+        valueTypeSelector.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
