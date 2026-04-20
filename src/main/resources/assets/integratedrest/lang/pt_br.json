@@ -1,1 +1,19 @@
-{}
+{
+  "_comment": "------ On the Dynamics of Integration contents ------",
+  "itemGroup.integratedrest": "Integrated REST",
+  "block.integratedrest.http": "Proxy HTTP",
+  "block.integratedrest.http.info": "Lê valores que foram fornecidos por chamadas externas HTTP POST.",
+  "http.integratedrest.tooltip.delay_id": "§e§oID do Proxy HTTP: §r§o%s",
+  "http.integratedrest.error.http_not_in_network": "O Proxy HTTP com ID %s não pôde ser encontrado dentro da rede atual.",
+  "http.integratedrest.error.http_invalid": "O Proxy HTTP com ID %s não está expondo uma variável válida.",
+  "http.integratedrest.error.http_invalid_type": "É esperado que o Proxy HTTP com ID %s exponha uma variável do tipo %s, mas %s foi encontrado.",
+  "info_book.integratedrest.section.main": "REST",
+  "info_book.integratedrest.introduction": "Introdução",
+  "info_book.integratedrest.introduction.text1": "&lIntegrated REST&r é um mod que permite ler e escrever em suas redes &lIntegrated Dynamics&r através de uma API REST.",
+  "info_book.integratedrest.introduction.text2": "Isso possibilita ler o status de suas redes e mundos via protocolos Web, e interagir com eles por meio do POST de valores para blocos Proxy HTTP em seu mundo.",
+  "info_book.integratedrest.introduction.text3": "Verifique o console do servidor para ver onde seu servidor está sendo executado e que tipo de informação você pode encontrar. (O padrão é &lhttp://localhost:3000/&r)",
+  "info_book.integratedrest.http": "Proxy HTTP",
+  "info_book.integratedrest.http.text1": "O Proxy HTTP tem um estado de valor interno que pode ser atualizado via requisições HTTP POST.",
+  "info_book.integratedrest.http.text2": "Um certo tipo de valor deve ser selecionado no Proxy HTTP, e apenas requisições desse tipo serão aceitas.",
+  "info_book.integratedrest.http.text3": "Mais informações podem ser encontradas na wiki do GitHub"
+}
